@@ -1,12 +1,10 @@
 {
   "name": "shareit",
-  "description": "Peer to Peer File Sharing with Node and Socket.io",
-  "author": "Rich Jones <rich@gun.io>",
+  "description": "Peer to Peer File Sharing",
+  "author": "Jesús Leganés Combarro <piranna@gmail.com>",
   "version": "0.1.0",
   "dependencies": {
-    "socket.io": "0.8.x",
-    "express": "2.5.x",
-    "config": "0.4.9"
+    "ws": "latest"
   },
   "engine": "node >= 0.4.1"
 }

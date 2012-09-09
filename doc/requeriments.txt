@@ -2,6 +2,10 @@
 Firefox 14
 Internet Explorer 10
 
-== Technologies ==
+== Html5 Technologies ==
 FileReader
 IndexedDB (with File support)
+
+== jQuery plugins ==
+jQuery-UI
+TreeTable

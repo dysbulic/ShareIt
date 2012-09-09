@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <title>ShareIt!</title>
+
+		<meta charset="utf-8">
+        <meta name="keywords" content="node, nodejs, javascript, p2p, filesharing, webp2p, web peer to peer, p2pweb, open source" />
+		<meta name="description" content="ShareIt!, Peer to Peer filesharing system written in pure Javascript" />
+
+        <LINK REL="SHORTCUT ICON" HREF="favicon.ico" />
+
+        <link type="text/css" rel="stylesheet" href="css/style.css" media="screen" />
+        <link type="text/css" rel="stylesheet" href="css/jquery.treeTable.css" />
+
+        <link type="text/css" rel="stylesheet" href="themes/ui-lightness/jquery-ui-1.8.23.custom.css" />  
+
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="https://raw.github.com/ludo/jquery-treetable/master/src/javascripts/jquery.treeTable.js"></script>
+        <script type="text/javascript" src="https://raw.github.com/taijinlee/humanize/master/humanize.js"></script>
+
+    	<script type="text/javascript" src="js/shareit/db.js"></script>
+    	<script type="text/javascript" src="js/shareit/host.js"></script>
+    	<script type="text/javascript" src="js/shareit/protocol.js"></script>
+    	<script type="text/javascript" src="js/shareit.js"></script>
+    	<script type="text/javascript" src="js/ui.js"></script>
+    </head>
+    <body>
+        <div id="tabs">
+            <ul>
+                <li>
+                    <a id="tools-menu">
+                        <img src="images/configure.png"/>
+                    </a>
+                    <div id="tools-menu-submenu">
+                        <ul>
+                            <li>
+                                <a onclick='$("#dialog-config").dialog("open")'>
+                                    <span class="preferences">Preferences</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a id="ConnectUser">
+                                    <span class="user">Connect to user</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li><a href="#Downloading">Downloading</a></li>
+                <li><a href="#Sharing">Sharing</a></li>
+            </ul>
+
+            <table id="Downloading">
+                <thead>
+                    <tr>
+                        <th scope="col" abbr="Filename" class="nobg" width="100%">Filename</th>
+                        <th scope="col" abbr="Type" class="nobg">Type</th>
+                        <th scope="col" abbr="Downloaded" class="nobg">Downloaded</th>
+                        <th scope="col" abbr="Size" class="nobg">Size</th>
+                        <th scope="col" abbr="Progress" class="nobg">Progress</th>
+                        <th scope="col" abbr="Status" class="nobg">Status</th>
+                        <th scope="col" abbr="TimeRemaining" class="nobg">Time remaining</th>
+                        <th scope="col" abbr="Speed" class="nobg">Speed</th>
+                        <th scope="col" abbr="Sources" class="nobg">Sources</th>
+                        <th scope="col" abbr="DateAdded" class="nobg">Date added</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="10" align="center">There are no downloads</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table id="Sharing">
+                <thead>
+                    <tr>
+                        <th scope="col" abbr="Filename" class="nobg" width="100%">Filename</th>
+                        <th scope="col" abbr="Type"     class="nobg">Type</th>
+                        <th scope="col" abbr="Size"     class="nobg">Size</th>
+                        <th scope="col" abbr="Status"   class="nobg">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="4" align="center">You are not sharing any file, please add a shared point on the preferences</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="dialog-config" title="Config">
+            <form>
+                <fieldset>
+                    <table id="Sharedpoints">
+                        <thead>
+                            <tr>
+                                <th width="100%">Path</th>
+                                <th>Shared</th>
+                                <th>Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="3" align="center">There are no shared points</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <a onClick="$('#files').click()">Add shared point</a>
+                    <input type="file" id="files" name="files[]" multiple style="height: 20px; opacity: 0; filter:alpha(opacity: 0);  position: relative; top: -40px; left: -20px;" />
+                </fieldset>
+            </form>
+            <br/>
+            <span id="UID"></span>
+        </div>
+    </body>
+</html>

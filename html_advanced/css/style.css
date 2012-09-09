@@ -1,0 +1,179 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+	font-family: Helvetica;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+a{
+	color: #dd0000;
+	text-decoration: underline;
+}
+
+html, body { height: 100%; }
+
+#tabs{
+    height: 95%;
+}
+
+#tabs .ui-tabs-panel
+{
+    padding: 0;
+}
+
+#Sharedpoints {
+    cursor: pointer;
+    width: 100%;
+    cellspacing: 0;
+    summary: ""
+}
+
+#Downloading {
+    cursor: pointer;
+    height: 95%;
+    cellspacing: 0;
+    summary: ""
+}
+
+#Sharing {
+    cursor: pointer;
+    height: 95%;
+    cellspacing: 0;
+    summary: ""
+}
+
+#Peer {
+    cursor: pointer;
+    height: 95%;
+    cellspacing: 0;
+    summary: ""
+}
+
+
+/* Tools menu
+ * ------------------------------------------------------------------------- */
+
+#tools-menu-submenu
+{
+    background: #de9a44;
+    width: 192px;
+    height: 96px;
+    display: none;
+    position: absolute;
+    top: 45px
+}
+
+li span {
+  background-position: center left;
+  background-repeat: no-repeat;
+  padding: .2em 0 .2em 1.5em;
+}
+
+li a {
+  cursor: "pointer"
+}
+
+li span.preferences {
+  background-image: url(../images/preferences.png);
+}
+
+li span.user {
+  background-image: url(../images/user.png);
+}
+
+
+/* TreeTable
+ * ------------------------------------------------------------------------- */
+
+/* Header
+ * ------------------------------------------------------------------------- */
+table thead {
+  background: #aaa url(../images/bg-table-thead.png) repeat-x top left;
+  font-size: .9em;
+}
+
+table thead tr th {
+  border: 1px solid #888;
+  font-weight: normal;
+  padding: .3em 1.67em .1em 1.67em;
+  text-align: left;
+}
+
+/* Body
+ * ------------------------------------------------------------------------- */
+table tbody tr td {
+  cursor: default;
+  padding: .3em 1.5em;
+}
+
+table tbody tr td.filesize {
+  white-space: nowrap;
+}
+
+table tbody tr.even {
+  background: #f3f3f3;
+}
+
+table tbody tr.odd {
+  background: #fff;
+}
+
+table span {
+  background-position: center left;
+  background-repeat: no-repeat;
+  padding: .2em 0 .2em 1.5em;
+}
+
+
+table span.file {
+  background-image: url(../images/page_white_text.png);
+}
+
+table span.folder {
+  background-image: url(../images/folder.png);
+}
+
+table span.image {
+  background-image: url(../images/image.png);
+}
+
+table span.video {
+  background-image: url(../images/video.png);
+}

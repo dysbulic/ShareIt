@@ -1,0 +1,41 @@
+= Web Accesibility Test =
+http://www.tawdis.net/
+
+= Static free hosting =
+== Amazon ==
+=== How to get a free trial Amazon AWS instance ===
+http://aws.amazon.com/es/free/
+
+=== How to deploy a sample web on the Amazon AWS free instance ===
+http://docs.amazonwebservices.com/gettingstarted/latest/awsgsg-freetier/deploy-sample-app.html
+
+=== Host and serve static files directly from Amazon S3 ===
+http://aws.typepad.com/aws/2011/02/host-your-static-website-on-amazon-s3.html
+
+== StatiCloud ==
+http://staticloud.com/
+Allow to host static files by free up to 1GB of transfers by month
+
+== DropBox ==
+http://www.kavoir.com/2009/10/free-2gb-html-static-web-pages-hosting.html
+https://www.dropbox.com/help/201/en
+DropBox could be used as a simple, free static HTML web hosting space with (potentially) unlimited transfer.
+
+= Node.js free hosting =
+Required for the socket.io websockets proxy, and probably in the future for the webrtc handshake
+
+== Nodejitsu & No.de ==
+It seems both have joined. Up to 10Gb/s and 20TB/month, after that $.08/GB.
+
+http://nodejitsu.com/paas/pricing.html
+https://no.de/
+
+== Nodester ==
+http://nodester.com/
+
+== NodeSocket ==
+http://www.nodesocket.com/
+
+== AppFog ==
+http://www.appfog.com/
+Free plan up to 2GB RAM, 1GB of database and 50GB data transfer
