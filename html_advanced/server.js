@@ -48,13 +48,8 @@ wss.on('connection', function(socket)
         }
     }
 
-    // Set and register a sockedId if it was not set previously
-    // Mainly for WebSockets server
-    if(socket.id == undefined)
-    {
-        socket.id = id()
-        wss.sockets[socket.id] = socket
-    }
+    socket.id = id()
+    wss.sockets[socket.id] = socket
 
     socket._emit('sessionId', socket.id)
     console.log("Connected socket.id: "+socket.id)
