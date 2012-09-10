@@ -19,17 +19,6 @@ wss.sockets = {}
 
 wss.on('connection', function(socket)
 {
-    socket._emit = function()
-    {
-        var args = Array.prototype.slice.call(arguments, 0);
-
-        socket.send(JSON.stringify(args), function(error)
-        {
-            if(error)
-                console.log(error);
-        });
-    }
-
     // Message received
     socket.onmessage = function(message)
     {
@@ -43,11 +32,11 @@ wss.on('connection', function(socket)
         {
             args[1] = socket.id
 
-            soc._emit.apply(soc, args);
+            soc.send(JSON.stringify(args));
         }
         else
         {
-            socket._emit(eventName+'.error', socketId);
+            socket.send(JSON.stringify([eventName+'.error', socketId]));
             console.warn(eventName+': '+socket.id+' -> '+socketId);
         }
     }
@@ -60,7 +49,7 @@ wss.on('connection', function(socket)
         wss.sockets[socket.id] = socket
     }
 
-    socket._emit('sessionId', socket.id)
+    socket.send(JSON.stringify(['sessionId', socket.id]))
     console.log("Connected socket.id: "+socket.id)
 })
 
