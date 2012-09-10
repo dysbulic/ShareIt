@@ -261,4 +261,9 @@ function Host_init(db, protocol, onsuccess)
             console.error("Transfer begin: '"+file.name+"' is already in database.")
         })
     }
+
+    host.fileslist_query = function(uid)
+    {
+        protocol.emit('fileslist.query', uid);
+    }
 }

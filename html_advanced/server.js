@@ -17,7 +17,6 @@ var wss = new WebSocketServer({server: server})
 //Array to store connections
 wss.sockets = {}
 
-//io.sockets.on('connection', function(socket)
 wss.on('connection', function(socket)
 {
     socket._emit = function()
@@ -32,15 +31,13 @@ wss.on('connection', function(socket)
     }
 
     // Message received
-    function onmessage(message)
+    socket.onmessage = function(message)
     {
-        console.log("socket.onmessage = '"+message+"'")
-        var args = JSON.parse(message)
+        var args = JSON.parse(message.data)
 
         var eventName = args[0]
         var socketId  = args[1]
 
-//        var soc = io.sockets.sockets[socketId]
         var soc = wss.sockets[socketId]
         if(soc)
         {
@@ -54,13 +51,6 @@ wss.on('connection', function(socket)
             console.warn(eventName+': '+socket.id+' -> '+socketId);
         }
     }
-
-    // Detect how to add the EventListener (mainly for Socket.io since don't
-    // follow the W3C WebSocket/DataChannel API)
-    if(socket.on)
-        socket.on('message', onmessage);
-    else
-        socket.onmessage = function(message){onmessage(message.data)};
 
     // Set and register a sockedId if it was not set previously
     // Mainly for WebSockets server
