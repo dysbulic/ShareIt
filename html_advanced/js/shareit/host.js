@@ -108,6 +108,9 @@ function Host_init(db, onsuccess)
 
     host.connectTo = function(uid, onsuccess)
     {
-        Peer_init(db, host, uid, onsuccess)
+        Peer_init(db, host, uid)
+
+        if(onsuccess)
+            onsuccess(channel)
     }
 }

@@ -1,4 +1,4 @@
-function Peer_init(db, host, uid, onsuccess)
+function Peer_init(db, host, uid)
 {
     Protocol_init(new WebSocket(), function(protocol)
     {
@@ -162,8 +162,5 @@ function Peer_init(db, host, uid, onsuccess)
         {
             protocol.emit('fileslist.query');
         }
-
-        if(onsuccess)
-            onsuccess(channel)
     })
 }
