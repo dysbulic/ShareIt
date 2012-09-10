@@ -108,9 +108,15 @@ function Host_init(db, onsuccess)
 
     host.connectTo = function(uid, onsuccess)
     {
-        Peer_init(db, host, uid)
+        // Search the peer between the list of currently connected peers
+        var peer = host._peers[uid]
+        if(!peer)
+            Peer_init(db, host, function(peer)
+            {
+                host._peers[uid] = peer
+            })
 
         if(onsuccess)
-            onsuccess(channel)
+	        onsuccess(peer)
     }
 }
