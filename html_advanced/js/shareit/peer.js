@@ -4,7 +4,7 @@ function Peer_init(db, host, uid, onsuccess)
     {
         // Host
 
-        protocol.addEventListener('fileslist.query', function(socketId)
+        protocol.addEventListener('fileslist.query', function()
         {
             db.sharepoints_getAll(null, function(fileslist)
             {
@@ -20,11 +20,11 @@ function Peer_init(db, host, uid, onsuccess)
                     files_send.push({"name": file.name, "size": file.size,
                                      "type": file.type});
 
-                protocol.emit('fileslist.send', socketId, files_send);
+                protocol.emit('fileslist.send', files_send);
             })
         })
 
-        protocol.addEventListener('fileslist.send', function(socketId, files)
+        protocol.addEventListener('fileslist.send', function(files)
         {
             // Check if we have already any of the files
             // It's stupid to try to download it... and also give errors
@@ -32,40 +32,40 @@ function Peer_init(db, host, uid, onsuccess)
             {
                 for(var i=0, file; file = files[i]; i++)
                 {
-                    // We add here ad-hoc the socketId of the peer where we got the
-                    // file since we currently don't have support for hashes nor
-                    // tracker systems
-                    file.socketId = socketId
-    
+                    // We add here ad-hoc the channel of the peer where we got
+                    // the file since we currently don't have support for hashes
+                    // nor tracker systems
+                    file.channel = protocol
+
                     for(var j=0, file_hosted; file_hosted = filelist[j]; j++)
                         if(file.name == file_hosted.name)
                         {
                             file.bitmap = file_hosted.bitmap
                             file.blob   = file_hosted.blob || file_hosted
-    
+
                             break;
                         }
                 }
-    
-                host.dispatchEvent("fileslist_peer.update", socketId, files)
+
+                host.dispatchEvent("fileslist_peer.update", files)
             })
         })
-    
+
         // Filereader support (be able to host files from the filesystem)
         if(typeof FileReader == "undefined")
             console.warn("'Filereader' is not available, can't be able to host files");
     
         else
-            protocol.addEventListener('transfer.query', function(socketId, filename, chunk)
+            protocol.addEventListener('transfer.query', function(filename, chunk)
             {
                 var reader = new FileReader();
                     reader.onerror = function(evt)
                     {
-                        console.error("peer.transfer_query("+socketId+", "+filename+", "+chunk+") = '"+evt.target.result+"'")
+                        console.error("peer.transfer_query("+filename+", "+chunk+") = '"+evt.target.result+"'")
                     }
                     reader.onload = function(evt)
                     {
-                        protocol.emit('transfer.send', socketId, filename, chunk, evt.target.result);
+                        protocol.emit('transfer.send', filename, chunk, evt.target.result);
                     }
     
                 var start = chunk * chunksize;
@@ -99,7 +99,7 @@ function Peer_init(db, host, uid, onsuccess)
             window.URL.revokeObjectURL(save.href)
         }
 
-        protocol.addEventListener('transfer.send', function(socketId, filename, chunk, data)
+        protocol.addEventListener('transfer.send', function(filename, chunk, data)
         {
             chunk = parseInt(chunk)
 
@@ -137,7 +137,7 @@ function Peer_init(db, host, uid, onsuccess)
                     // Demand more data from one of the pending chunks
                     db.sharepoints_put(file, function()
                     {
-                        protocol.emit('transfer.query', socketId, file.name,
+                        protocol.emit('transfer.query', file.name,
                                                         getRandom(file.bitmap));
                     })
                 }

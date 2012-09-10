@@ -69,13 +69,13 @@ function Host_init(db, protocol, onsuccess)
 	if(onsuccess)
 		onsuccess(host);
 
-    // Get the socketId of one of the peers that have the file from its hash.
+    // Get the channel of one of the peers that have the file from its hash.
     // Since the hash and the tracker system are currently not implemented we'll
-    // get just the socketId of the peer where we got the file that we added
+    // get just the channel of the peer where we got the file that we added
     // ad-hoc before
-    function getSocketId(file)
+    function getChannel(file)
     {
-        return file.socketId
+        return file.channel
     }
 
     host._transferbegin = function(file)
@@ -97,8 +97,8 @@ function Host_init(db, protocol, onsuccess)
             console.log("Transfer begin: '"+file.name+"' = "+JSON.stringify(file))
 
             // Demand data from the begining of the file
-            protocol.emit('transfer.query', getSocketId(file), file.name,
-                                            getRandom(file.bitmap))
+            getChannel(file).emit('transfer.query', file.name,
+                                                    getRandom(file.bitmap))
         },
         function(errorCode)
         {
