@@ -64,31 +64,17 @@ wss.on('connection', function(socket)
     console.log("Connected socket.id: "+socket.id)
 })
 
-// Proxy server
-var io = socket_io.listen(PORT_PROXY, options);
-    io.set('log level', 2);
+// DataChannel proxy server
+//var server = require('http').createServer().listen(PORT_PROXY);
+var server = require('https').createServer(options).listen(PORT_PROXY);
+var WebSocketServer = require('ws').Server
+var wss = new WebSocketServer({port: server})
 
-//var WebSocketServer = require('ws').Server
-//var wss = new WebSocketServer({port: PORT_PROXY})
-//var wss = {}
+//Array to store connections
+wss.sockets = {}
 
-////Array to store connections
-//wss.sockets = {}
-
-io.sockets.on('connection', function(socket)
-//wss.on('connection', function(socket)
+wss.on('connection', function(socket)
 {
-    socket.emit = function()
-    {
-        var args = Array.prototype.slice.call(arguments, 0);
-
-        socket.send(JSON.stringify(args), function(error)
-        {
-            if(error)
-                console.log(error);
-        });
-    }
-
     function connect_to(socketId)
     {
         // Find peer on socket connected peers
@@ -97,7 +83,7 @@ io.sockets.on('connection', function(socket)
         // Socket is already connected to the peer on a room
         if(room != undefined)
         {
-            socket.emit('connect_to.success', socketId, room);
+            socket.send(JSON.stringify(['connect_to.success', socketId, room]));
             return
         }
 
@@ -107,7 +93,7 @@ io.sockets.on('connection', function(socket)
         // Peer is not found, raise error
         if(peer == undefiend)
         {
-            socket.emit('connect_to.error', socketId);
+            socket.send(JSON.stringify(['connect_to.error', socketId]));
             return
         }
 
@@ -115,10 +101,10 @@ io.sockets.on('connection', function(socket)
     }
 
     // Message received
-    function onmessage(message)
+    socket.onmessage function(message)
     {
-        console.log("socket.onmessage = '"+message+"'")
-        var args = JSON.parse(message)
+        console.log("socket.onmessage = '"+message.data+"'")
+        var args = JSON.parse(message.data)
 
         var eventName = args[0]
         var socketId  = args[1]
@@ -137,21 +123,14 @@ io.sockets.on('connection', function(socket)
         {
             args[1] = socket.id
 
-            soc.emit.apply(soc, args);
+            soc.send(JSON.stringify(args));
         }
         else
         {
-            socket.emit(eventName+'.error', socketId);
+            socket.send(JSON.stringify([eventName+'.error', socketId]));
             console.warn(eventName+': '+socket.id+' -> '+socketId);
         }
     }
-
-    // Detect how to add the EventListener (mainly for Socket.io since don't
-    // follow the W3C WebSocket/DataChannel API)
-    if(socket.on)
-        socket.on('message', onmessage);
-    else
-        socket.onmessage = onmessage;
 })
 
 // generate a 4 digit hex code randomly
