@@ -29,7 +29,7 @@ function remove(bitmap, item)
 }
 
 
-function Host_init(db, protocol, onsuccess)
+function Host_init(db, onsuccess)
 {
 	var host = {}
 

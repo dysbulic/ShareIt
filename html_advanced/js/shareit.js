@@ -30,7 +30,7 @@ window.addEventListener("load", function()
         function(protocol)
         {
 	        // Init host
-		    Host_init(db, protocol, function(host)
+		    Host_init(db, function(host)
 		    {
                 var ui = UI_setHost(host)
 
