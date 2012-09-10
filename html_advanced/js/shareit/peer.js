@@ -1,6 +1,6 @@
-function Peer_init(db, host, onsuccess)
+function Peer_init(transport, db, host, onsuccess)
 {
-    Protocol_init(new WebSocket(), function(protocol)
+    Protocol_init(transport, function(protocol)
     {
         // Host
 

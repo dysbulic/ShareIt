@@ -111,7 +111,8 @@ function Host_init(db, onsuccess)
         // Search the peer between the list of currently connected peers
         var peer = host._peers[uid]
         if(!peer)
-            Peer_init(db, host, function(peer)
+            Peer_init(new WebSocket('wss://localhost:8001'), db, host,
+            function(peer)
             {
                 host._peers[uid] = peer
             })
