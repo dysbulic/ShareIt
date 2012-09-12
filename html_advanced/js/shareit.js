@@ -30,7 +30,7 @@ window.addEventListener("load", function()
         {
             var ui = UI_setHost(host)
 
-	        // Load websocket connection after IndexedDB is ready
+	        // Connect to the handshake server and get an ID
 	        Protocol_init(new WebSocket('wss://localhost:8001'),
 	        function(protocol)
 	        {
