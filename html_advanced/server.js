@@ -10,8 +10,11 @@ var server = require('https').createServer(options).listen(8001);
 var WebSocketServer = require('ws').Server
 var wss = new WebSocketServer({server: server})
 
+// Maximum number of connection to manage simultaneously before start clossing
+var MAX_SOCKETS = 1024
+
 //Array to store connections
-wss.sockets = {}
+wss.sockets = []
 
 wss.on('connection', function(socket)
 {
@@ -48,13 +51,20 @@ wss.on('connection', function(socket)
         }
     }
 
-    // Set and register a sockedId if it was not set previously
-    // Mainly for WebSockets server
-    if(socket.id == undefined)
+    socket.onclose = function()
     {
-        socket.id = id()
-        wss.sockets[socket.id] = socket
+        wss.sockets.splice(wss.sockets.IndexOf(socket), 1)
     }
+
+    // Close the oldest socket if we are managing too much (we earn memory,
+    // peer doesn't have to manage too much open connections and increage arity
+    // of the network forcing new peers to use other ones)
+    if(wss.sockets.length >= MAX_SOCKETS)
+        wss.sockets[0].close()
+
+    // Start managing the new socket
+    socket.id = id()
+    wss.sockets.push(socket)
 
     socket._emit('sessionId', socket.id)
     console.log("Connected socket.id: "+socket.id)
