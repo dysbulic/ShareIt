@@ -15,6 +15,15 @@ var MAX_SOCKETS = 1024
 
 //Array to store connections
 wss.sockets = []
+wss.sockets.find = function(socketId)
+{
+    for(var i = 0; i < wss.sockets.lenght; i++)
+    {
+        var socket = wss.sockets[i]
+        if(socket.id == socketId)
+            return socket
+    }
+}
 
 wss.on('connection', function(socket)
 {
@@ -37,7 +46,7 @@ wss.on('connection', function(socket)
         var eventName = args[0]
         var socketId  = args[1]
 
-        var soc = wss.sockets[socketId]
+        var soc = wss.sockets.find(socketId)
         if(soc)
         {
             args[1] = socket.id
