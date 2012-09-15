@@ -25,15 +25,15 @@ window.addEventListener("load", function()
             db.sharepoints_getAll(null, ui_update_fileslist_sharedpoints)
         })
 
-        // Load websocket connection after IndexedDB is ready
-        Protocol_init(new WebSocket('wss://localhost:8001'),
-        function(protocol)
+        // Init host
+        Host_init(db, function(host)
         {
-	        // Init host
-		    Host_init(db, protocol, function(host)
-		    {
-                var ui = UI_setHost(host)
+            var ui = UI_setHost(host)
 
+	        // Connect to the handshake server and get an ID
+	        Protocol_init(new WebSocket('wss://localhost:8001'),
+	        function(protocol)
+	        {
                 db.sharepoints_getAll(null, function(filelist)
                 {
                     ui.update_fileslist_sharing(filelist)
@@ -44,9 +44,9 @@ window.addEventListener("load", function()
 //                            protocol.emit('transfer.query', file.name,
 //                                                            getRandom(file.bitmap))
                 })
-	        })
 
-            UI_setProtocol(protocol)
+                UI_setProtocol(protocol)
+            })
 	    })
 	})
 })

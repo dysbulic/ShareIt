@@ -19,62 +19,66 @@ function UI_setHost(host)
         var uid = prompt("UID to connect")
         if(uid != null && uid != '')
         {
-            $("#tabs").tabs("add", "#tabs-"+uid, "UID: "+uid);
+            // Create connection with the other peer
+            host.connectTo(uid, function(channel)
+            {
+	            $("#tabs").tabs("add", "#tabs-"+uid, "UID: "+uid);
 
-            var tab = document.getElementById("tabs-"+uid)
+	            var tab = document.getElementById("tabs-"+uid)
 
-            var table = document.createElement("TABLE");
-                table.id = 'Peer'
-            tab.appendChild(table);
+	            var table = document.createElement("TABLE");
+	                table.id = 'Peer'
+	            tab.appendChild(table);
 
-            var thead = document.createElement("THEAD");
-            table.appendChild(thead);
+	            var thead = document.createElement("THEAD");
+	            table.appendChild(thead);
 
-            var tr = document.createElement("TR");
-            thead.appendChild(tr);
+	            var tr = document.createElement("TR");
+	            thead.appendChild(tr);
 
-            var th = document.createElement("TH");
-                th.scope='col'
-                th.abbr='Filename'
-                th.class='nobg'
-                th.width='100%'
-                th.appendChild(document.createTextNode("Filename"))
-            tr.appendChild(th);
+	            var th = document.createElement("TH");
+	                th.scope='col'
+	                th.abbr='Filename'
+	                th.class='nobg'
+	                th.width='100%'
+	                th.appendChild(document.createTextNode("Filename"))
+	            tr.appendChild(th);
 
-            var th = document.createElement("TH");
-                th.scope='col'
-                th.abbr='Type'
-                th.class='nobg'
-                th.appendChild(document.createTextNode("Type"))
-            tr.appendChild(th);
+	            var th = document.createElement("TH");
+	                th.scope='col'
+	                th.abbr='Type'
+	                th.class='nobg'
+	                th.appendChild(document.createTextNode("Type"))
+	            tr.appendChild(th);
 
-            var th = document.createElement("TH");
-                th.scope='col'
-                th.abbr='Size'
-                th.class='nobg'
-                th.appendChild(document.createTextNode("Size"))
-            tr.appendChild(th);
+	            var th = document.createElement("TH");
+	                th.scope='col'
+	                th.abbr='Size'
+	                th.class='nobg'
+	                th.appendChild(document.createTextNode("Size"))
+	            tr.appendChild(th);
 
-            var th = document.createElement("TH");
-                th.scope='col'
-                th.abbr='Action'
-                th.class='nobg'
-                th.appendChild(document.createTextNode("Action"))
-            tr.appendChild(th);
+	            var th = document.createElement("TH");
+	                th.scope='col'
+	                th.abbr='Action'
+	                th.class='nobg'
+	                th.appendChild(document.createTextNode("Action"))
+	            tr.appendChild(th);
 
-            var tbody = document.createElement("TBODY");
-            table.appendChild(tbody);
+	            var tbody = document.createElement("TBODY");
+	            table.appendChild(tbody);
 
-            var tr = document.createElement("TR");
-            tbody.appendChild(tr);
+	            var tr = document.createElement("TR");
+	            tbody.appendChild(tr);
 
-            var td = document.createElement("TD");
-                td.colspan='4'
-                td.align='center'
-                td.appendChild(document.createTextNode("Waiting for the peer data"))
-            tr.appendChild(td);
+	            var td = document.createElement("TD");
+	                td.colspan='4'
+	                td.align='center'
+	                td.appendChild(document.createTextNode("Waiting for the peer data"))
+	            tr.appendChild(td);
 
-            host.fileslist_query(uid);
+	            channel.fileslist_query();
+            })
         }
     })
 
