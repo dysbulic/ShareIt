@@ -9,6 +9,9 @@ if(typeof FileReader == "undefined")
 
 var chunksize = 65536
 
+// Holds the STUN server to use for PeerConnections.
+var STUN_SERVER = "STUN stun.l.google.com:19302";
+
 
 function Bitmap(size)
 {
@@ -110,18 +113,28 @@ function Host_init(db, onsuccess)
     {
         // Search the peer between the list of currently connected peers
         var peer = host._peers[uid]
+
+        // Peer is not connected, create a new channel
         if(!peer)
-            Protocol_init(new WebSocket('wss://localhost:8001'),
-            function(protocol)
-            {
-                host._peers[uid] = protocol
+        {
+            // Create PeerConnection
+            var pc = new PeerConnection(STUN_SERVER, function(){});
+                pc.onopen = function()
+                {
+			      Protocol_init(pc.createDataChannel(),
+			      function(peer)
+			      {
+			          host._peers[uid] = peer
 
-                Peer_init(protocol, db, host)
+			          Peer_init(protocol, db, host)
 
-                if(onsuccess)
-                    onsuccess(protocol)
-            })
+			          if(onsuccess)
+			              onsuccess(peer)
+			        })
+                }
+        }
 
+        // Peer is connected and we have defined an 'onsucess' callback
         else if(onsuccess)
 	        onsuccess(peer)
     }
