@@ -41,7 +41,9 @@ wss.on('connection', function(socket)
         var soc = wss.sockets.find(socketId)
         if(soc)
         {
-            if(eventName == 'connectTo')
+            if(eventName == 'connectTo'
+            || eventName == 'offer'
+            || eventName == 'answer')
             {
 	            args[1] = socket.id
 

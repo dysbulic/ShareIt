@@ -109,6 +109,27 @@ function Host_init(db, signaling, onsuccess)
         })
     }
 
+    host._peers = {}
+
+    signaling.addEventListener('offer', function(socketId, sdp)
+    {
+        var pc = host._peers[socketId];
+        pc.setRemoteDescription(pc.SDP_OFFER, new SessionDescription(sdp));
+
+        // Send answer
+        var answer = pc.createAnswer(pc.remoteDescription.toSdp());
+
+        signaling.emit("answer", socketId, answer.toSdp());
+
+        pc.setLocalDescription(pc.SDP_ANSWER, answer);
+    })
+
+    signaling.addEventListener('answer', function(socketId, sdp)
+    {
+		var pc = host._peers[socketId];
+		pc.setRemoteDescription(pc.SDP_ANSWER, new SessionDescription(sdp));
+    })
+
     host.connectTo = function(uid, onsuccess)
     {
         // Search the peer between the list of currently connected peers
@@ -122,16 +143,18 @@ function Host_init(db, signaling, onsuccess)
                 pc.onopen = function()
                 {
 			      Protocol_init(pc.createDataChannel(),
-			      function(peer)
+			      function(channel)
 			      {
-			          host._peers[uid] = peer
+			          pc._channel = channel
 
-			          Peer_init(peer, db, host)
+			          Peer_init(channel, db, host)
 
 			          if(onsuccess)
-			              onsuccess(peer)
+			              onsuccess(channel)
 			        })
                 }
+
+            host._peers[uid] = pc
 
             // Send offer to new PeerConnection
             var offer = pc.createOffer();
@@ -143,6 +166,6 @@ function Host_init(db, signaling, onsuccess)
 
         // Peer is connected and we have defined an 'onsucess' callback
         else if(onsuccess)
-	        onsuccess(peer)
+	        onsuccess(peer._channel)
     }
 }
