@@ -123,6 +123,19 @@ function Host_init(db, signaling, onsuccess)
         pc.setLocalDescription(pc.SDP_ANSWER, answer);
     }
 
+    function initDataChannel(pc, channel)
+    {
+		Protocol_init(channel, function(channel)
+		{
+	        pc._channel = channel
+
+	        Peer_init(channel, db, host)
+
+	        if(onsuccess)
+	            onsuccess(channel)
+		})
+    }
+
     signaling.addEventListener('connectTo', function(socketId, sdp)
     {
         // Search the peer between the list of currently connected peers
@@ -134,16 +147,7 @@ function Host_init(db, signaling, onsuccess)
 		    pc = new PeerConnection(STUN_SERVER, function(){});
 		    pc.ondatachannel = function(event)
 		    {
-              Protocol_init(event.channel,
-              function(channel)
-              {
-                  pc._channel = channel
-
-                  Peer_init(channel, db, host)
-
-                  if(onsuccess)
-                      onsuccess(channel)
-                })
+              initDataChannel(pc, event.channel)
 		    }
 
             host._peers[uid] = pc
@@ -177,16 +181,7 @@ function Host_init(db, signaling, onsuccess)
             var pc = new PeerConnection(STUN_SERVER, function(){});
                 pc.onopen = function()
                 {
-			      Protocol_init(pc.createDataChannel(),
-			      function(channel)
-			      {
-			          pc._channel = channel
-
-			          Peer_init(channel, db, host)
-
-			          if(onsuccess)
-			              onsuccess(channel)
-			        })
+			      initDataChannel(pc, pc.createDataChannel())
                 }
                 pc.onerror = function()
                 {
