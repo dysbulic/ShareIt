@@ -111,9 +111,8 @@ function Host_init(db, signaling, onsuccess)
 
     host._peers = {}
 
-    signaling.addEventListener('offer', function(socketId, sdp)
+    function processOffer(pc, sdp, socketId)
     {
-        var pc = host._peers[socketId];
         pc.setRemoteDescription(pc.SDP_OFFER, new SessionDescription(sdp));
 
         // Send answer
@@ -122,6 +121,42 @@ function Host_init(db, signaling, onsuccess)
         signaling.emit("answer", socketId, answer.toSdp());
 
         pc.setLocalDescription(pc.SDP_ANSWER, answer);
+    }
+
+    signaling.addEventListener('connectTo', function(socketId, sdp)
+    {
+        // Search the peer between the list of currently connected peers
+        var pc = host._peers[uid]
+
+        // Peer is not connected, create a new channel
+        if(!pc)
+        {
+		    pc = new PeerConnection(STUN_SERVER, function(){});
+		    pc.ondatachannel = function(event)
+		    {
+              Protocol_init(event.channel,
+              function(channel)
+              {
+                  pc._channel = channel
+
+                  Peer_init(channel, db, host)
+
+                  if(onsuccess)
+                      onsuccess(channel)
+                })
+		    }
+
+            host._peers[uid] = pc
+		}
+
+        processOffer(pc, sdp, socketId)
+    })
+
+    signaling.addEventListener('offer', function(socketId, sdp)
+    {
+        var pc = host._peers[socketId];
+
+        processOffer(pc, sdp, socketId)
     })
 
     signaling.addEventListener('answer', function(socketId, sdp)
@@ -130,7 +165,7 @@ function Host_init(db, signaling, onsuccess)
 		pc.setRemoteDescription(pc.SDP_ANSWER, new SessionDescription(sdp));
     })
 
-    host.connectTo = function(uid, onsuccess)
+    host.connectTo = function(uid, onsuccess, onerror)
     {
         // Search the peer between the list of currently connected peers
         var peer = host._peers[uid]
@@ -153,13 +188,18 @@ function Host_init(db, signaling, onsuccess)
 			              onsuccess(channel)
 			        })
                 }
+                pc.onerror = function()
+                {
+                    if(onerror)
+                        onerror()
+                }
 
             host._peers[uid] = pc
 
             // Send offer to new PeerConnection
             var offer = pc.createOffer();
 
-            signaling.emit("offer", uid, offer.toSdp());
+            signaling.emit("connectTo", uid, offer.toSdp());
 
             pc.setLocalDescription(pc.SDP_OFFER, offer);
         }
