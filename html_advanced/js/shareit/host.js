@@ -32,7 +32,7 @@ function remove(bitmap, item)
 }
 
 
-function Host_init(db, onsuccess)
+function Host_init(db, signaling, onsuccess)
 {
 	var host = {}
 
@@ -126,12 +126,19 @@ function Host_init(db, onsuccess)
 			      {
 			          host._peers[uid] = peer
 
-			          Peer_init(protocol, db, host)
+			          Peer_init(peer, db, host)
 
 			          if(onsuccess)
 			              onsuccess(peer)
 			        })
                 }
+
+            // Send offer to new PeerConnection
+            var offer = pc.createOffer();
+
+            signaling.emit("offer", uid, offer.toSdp());
+
+            pc.setLocalDescription(pc.SDP_OFFER, offer);
         }
 
         // Peer is connected and we have defined an 'onsucess' callback
