@@ -123,6 +123,14 @@ function Host_init(db, signaling, onsuccess)
         pc.setLocalDescription(pc.SDP_ANSWER, answer);
     }
 
+    function createPeerConnection()
+    {
+        var pc = new PeerConnection(STUN_SERVER, function(){});
+        host._peers[uid] = pc
+
+        return pc
+    }
+
     function initDataChannel(pc, channel)
     {
 		Protocol_init(channel, function(channel)
@@ -144,13 +152,11 @@ function Host_init(db, signaling, onsuccess)
         // Peer is not connected, create a new channel
         if(!pc)
         {
-		    pc = new PeerConnection(STUN_SERVER, function(){});
+		    pc = createPeerConnection();
 		    pc.ondatachannel = function(event)
 		    {
               initDataChannel(pc, event.channel)
 		    }
-
-            host._peers[uid] = pc
 		}
 
         processOffer(pc, sdp, socketId)
@@ -158,6 +164,7 @@ function Host_init(db, signaling, onsuccess)
 
     signaling.addEventListener('offer', function(socketId, sdp)
     {
+        // Search the peer between the list of currently connected peers
         var pc = host._peers[socketId];
 
         processOffer(pc, sdp, socketId)
@@ -165,7 +172,9 @@ function Host_init(db, signaling, onsuccess)
 
     signaling.addEventListener('answer', function(socketId, sdp)
     {
+        // Search the peer between the list of currently connected peers
 		var pc = host._peers[socketId];
+
 		pc.setRemoteDescription(pc.SDP_ANSWER, new SessionDescription(sdp));
     })
 
@@ -178,7 +187,7 @@ function Host_init(db, signaling, onsuccess)
         if(!peer)
         {
             // Create PeerConnection
-            var pc = new PeerConnection(STUN_SERVER, function(){});
+            var pc = createPeerConnection();
                 pc.onopen = function()
                 {
 			      initDataChannel(pc, pc.createDataChannel())
@@ -188,8 +197,6 @@ function Host_init(db, signaling, onsuccess)
                     if(onerror)
                         onerror()
                 }
-
-            host._peers[uid] = pc
 
             // Send offer to new PeerConnection
             var offer = pc.createOffer();
