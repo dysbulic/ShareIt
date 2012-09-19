@@ -23,6 +23,11 @@ http://www.kavoir.com/2009/10/free-2gb-html-static-web-pages-hosting.html
 https://www.dropbox.com/help/201/en
 DropBox could be used as a simple, free static HTML web hosting space with (potentially) unlimited transfer.
 
+== 5APPS ==
+Web service to create and host HTML 5 Apps for Chrome, Firefox and iOS
+
+https://5apps.com
+
 = Node.js free hosting =
 Required for the socket.io websockets proxy, and probably in the future for the webrtc handshake
 
