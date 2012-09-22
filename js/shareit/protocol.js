@@ -1,6 +1,6 @@
 function Protocol_init(transport, onsuccess)
 {
-    transport.onopen = function()
+    function onopen()
     {
 	    var protocol = {}
 
@@ -50,14 +50,28 @@ function Protocol_init(transport, onsuccess)
 	    }
 
 	    // Message received
-	    transport.onmessage = function(message)
+	    function onmessage(message)
 	    {
-	        console.log("protocol.onmessage = '"+message.data+"'")
+	        console.log("protocol.onmessage = '"+message+"'")
 
-            protocol.dispatchEvent.apply(protocol, JSON.parse(message.data))
+            protocol.dispatchEvent.apply(protocol, JSON.parse(message))
 	    }
+
+	    // Detect how to add the EventListener (mainly for Socket.io since don't
+	    // follow the W3C WebSocket/DataChannel API)
+	    if(transport.on)
+	        transport.on('message', onmessage);
+	    else
+	        transport.onmessage = function(message){onmessage(message.data)};
 
 	    if(onsuccess)
 	        onsuccess(protocol);
     }
+
+    // Detect how to add the EventListener (mainly for Socket.io since don't
+    // follow the W3C WebSocket/DataChannel API)
+    if(transport.on)
+        transport.on('connect', onopen);
+    else
+        transport.onopen = onopen;
 }

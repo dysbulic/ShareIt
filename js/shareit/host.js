@@ -9,9 +9,6 @@ if(typeof FileReader == "undefined")
 
 var chunksize = 65536
 
-// Holds the STUN server to use for PeerConnections.
-var STUN_SERVER = "STUN stun.l.google.com:19302";
-
 
 function Bitmap(size)
 {
@@ -32,7 +29,7 @@ function remove(bitmap, item)
 }
 
 
-function Host_init(db, signaling, onsuccess)
+function Host_init(db, onsuccess)
 {
 	var host = {}
 
@@ -109,105 +106,23 @@ function Host_init(db, signaling, onsuccess)
         })
     }
 
-    host._peers = {}
-
-    function processOffer(pc, sdp, socketId)
-    {
-        pc.setRemoteDescription(pc.SDP_OFFER, new SessionDescription(sdp));
-
-        // Send answer
-        var answer = pc.createAnswer(pc.remoteDescription.toSdp());
-
-        signaling.emit("answer", socketId, answer.toSdp());
-
-        pc.setLocalDescription(pc.SDP_ANSWER, answer);
-    }
-
-    function createPeerConnection()
-    {
-        var pc = new PeerConnection(STUN_SERVER, function(){});
-        host._peers[uid] = pc
-
-        return pc
-    }
-
-    function initDataChannel(pc, channel)
-    {
-		Protocol_init(channel, function(channel)
-		{
-	        pc._channel = channel
-
-	        Peer_init(channel, db, host)
-
-	        if(onsuccess)
-	            onsuccess(channel)
-		})
-    }
-
-    signaling.addEventListener('connectTo', function(socketId, sdp)
-    {
-        // Search the peer between the list of currently connected peers
-        var pc = host._peers[uid]
-
-        // Peer is not connected, create a new channel
-        if(!pc)
-        {
-		    pc = createPeerConnection();
-		    pc.ondatachannel = function(event)
-		    {
-              initDataChannel(pc, event.channel)
-		    }
-		}
-
-        processOffer(pc, sdp, socketId)
-    })
-
-    signaling.addEventListener('offer', function(socketId, sdp)
-    {
-        // Search the peer between the list of currently connected peers
-        var pc = host._peers[socketId];
-
-        processOffer(pc, sdp, socketId)
-    })
-
-    signaling.addEventListener('answer', function(socketId, sdp)
-    {
-        // Search the peer between the list of currently connected peers
-		var pc = host._peers[socketId];
-
-		pc.setRemoteDescription(pc.SDP_ANSWER, new SessionDescription(sdp));
-    })
-
-    host.connectTo = function(uid, onsuccess, onerror)
+    host.connectTo = function(uid, onsuccess)
     {
         // Search the peer between the list of currently connected peers
         var peer = host._peers[uid]
-
-        // Peer is not connected, create a new channel
         if(!peer)
-        {
-            // Create PeerConnection
-            var pc = createPeerConnection();
-                pc.onopen = function()
-                {
-			      initDataChannel(pc, pc.createDataChannel())
-                }
-                pc.onerror = function()
-                {
-                    if(onerror)
-                        onerror()
-                }
+            Protocol_init(new WebSocket('wss://localhost:8001'),
+            function(protocol)
+            {
+                host._peers[uid] = protocol
 
-            // Send offer to new PeerConnection
-            var offer = pc.createOffer();
+                Peer_init(protocol, db, host)
 
-            signaling.emit("connectTo", uid, offer.toSdp());
+                if(onsuccess)
+                    onsuccess(protocol)
+            })
 
-            pc.setLocalDescription(pc.SDP_OFFER, offer);
-        }
-
-        // Peer is connected and we have defined an 'onsucess' callback
         else if(onsuccess)
-	        onsuccess(peer._channel)
+	        onsuccess(peer)
     }
 }
