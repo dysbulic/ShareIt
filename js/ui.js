@@ -504,12 +504,12 @@ function UI_setProtocol(protocol)
 {
     // Set UID
     protocol.removeEventListener('sessionId')
-    protocol.addEventListener('sessionId', function(uid)
+    protocol.addEventListener('sessionId', function(event)
     {
 	    var span = document.getElementById("UID")
-	
+
 	    while(span.firstChild)
 	        span.removeChild(span.firstChild);
-	    span.appendChild(document.createTextNode("UID: "+uid))
+	    span.appendChild(document.createTextNode("UID: "+event.data[0]))
     })
 }

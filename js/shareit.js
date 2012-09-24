@@ -38,7 +38,7 @@ window.addEventListener("load", function()
                 {
                     ui.update_fileslist_sharing(filelist)
 
-//                    // Restard downloads
+//                    // Restart downloads
 //                    for(var i = 0, file; file = filelist[i]; i++)
 //                        if(file.bitmap)
 //                            protocol.emit('transfer.query', file.name,
