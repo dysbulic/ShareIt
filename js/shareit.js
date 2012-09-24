@@ -31,7 +31,7 @@ window.addEventListener("load", function()
             var ui = UI_setHost(host)
 
 	        // Connect to the handshake server and get an ID
-	        Protocol_init(new WebSocket('wss://localhost:8001'),
+	        Protocol_init(new WebSocket('wss://shareit.nodejitsu.com/'),
 	        function(protocol)
 	        {
                 db.sharepoints_getAll(null, function(filelist)
