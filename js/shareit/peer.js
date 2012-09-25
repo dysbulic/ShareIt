@@ -1,8 +1,8 @@
-function Peer_init(protocol, db, host)
+function Peer_init(transport, db, host)
 {
     // Host
 
-    protocol.addEventListener('fileslist.query', function()
+    transport.addEventListener('fileslist.query', function()
     {
         db.sharepoints_getAll(null, function(fileslist)
         {
@@ -18,11 +18,11 @@ function Peer_init(protocol, db, host)
                 files_send.push({"name": file.name, "size": file.size,
                                  "type": file.type});
 
-            protocol.emit('fileslist.send', files_send);
+            transport.emit('fileslist.send', files_send);
         })
     })
 
-    protocol.addEventListener('fileslist.send', function(files)
+    transport.addEventListener('fileslist.send', function(files)
     {
         // Check if we have already any of the files
         // It's stupid to try to download it... and also give errors
@@ -33,7 +33,7 @@ function Peer_init(protocol, db, host)
                 // We add here ad-hoc the channel of the peer where we got
                 // the file since we currently don't have support for hashes
                 // nor tracker systems
-                file.channel = protocol
+                file.channel = transport
 
                 for(var j=0, file_hosted; file_hosted = filelist[j]; j++)
                     if(file.name == file_hosted.name)
@@ -54,7 +54,7 @@ function Peer_init(protocol, db, host)
         console.warn("'Filereader' is not available, can't be able to host files");
 
     else
-        protocol.addEventListener('transfer.query', function(filename, chunk)
+        transport.addEventListener('transfer.query', function(filename, chunk)
         {
             var reader = new FileReader();
                 reader.onerror = function(evt)
@@ -63,7 +63,7 @@ function Peer_init(protocol, db, host)
                 }
                 reader.onload = function(evt)
                 {
-                    protocol.emit('transfer.send', filename, chunk, evt.target.result);
+                    transport.emit('transfer.send', filename, chunk, evt.target.result);
                 }
 
             var start = chunk * chunksize;
@@ -97,7 +97,7 @@ function Peer_init(protocol, db, host)
         window.URL.revokeObjectURL(save.href)
     }
 
-    protocol.addEventListener('transfer.send', function(filename, chunk, data)
+    transport.addEventListener('transfer.send', function(filename, chunk, data)
     {
         chunk = parseInt(chunk)
 
@@ -135,7 +135,7 @@ function Peer_init(protocol, db, host)
                 // Demand more data from one of the pending chunks
                 db.sharepoints_put(file, function()
                 {
-                    protocol.emit('transfer.query', file.name,
+                    transport.emit('transfer.query', file.name,
                                                     getRandom(file.bitmap));
                 })
             }
@@ -156,8 +156,8 @@ function Peer_init(protocol, db, host)
         })
     })
 
-    protocol.fileslist_query = function()
+    transport.fileslist_query = function()
     {
-        protocol.emit('fileslist.query');
+        transport.emit('fileslist.query');
     }
 }

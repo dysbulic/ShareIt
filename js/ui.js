@@ -500,11 +500,11 @@ function UI_init()
     });
 }
 
-function UI_setProtocol(protocol)
+function UI_setTransport(transport)
 {
     // Set UID
-    protocol.removeEventListener('sessionId')
-    protocol.addEventListener('sessionId', function(event)
+    transport.removeEventListener('sessionId')
+    transport.addEventListener('sessionId', function(event)
     {
 	    var span = document.getElementById("UID")
 

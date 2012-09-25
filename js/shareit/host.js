@@ -81,15 +81,15 @@ Host.prototype.connectTo = function(uid, onsuccess)
     {
         var self = this
 
-        Protocol_init(new WebSocket('wss://localhost:8001'),
-        function(protocol)
+        Transport_init(new WebSocket('wss://localhost:8001'),
+        function(transport)
         {
-            self._peers[uid] = protocol
+            self._peers[uid] = transport
 
-            Peer_init(protocol, db, self)
+            Peer_init(transport, db, self)
 
             if(onsuccess)
-                onsuccess(protocol)
+                onsuccess(transport)
         })
     }
 
