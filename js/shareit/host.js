@@ -33,38 +33,7 @@ function Host_init(db, onsuccess)
 {
 	var host = {}
 
-    // EventTarget interface
-    host._events = {};
-
-    host.addEventListener = function(type, listener)
-    {
-      host._events[type] = host._events[type] || [];
-      host._events[type].push(listener);
-    };
-
-    host.dispatchEvent = function(type)
-    {
-      var events = host._events[type];
-      if(!events)
-        return;
-
-      var args = Array.prototype.slice.call(arguments, 1);
-
-      for(var i = 0, len = events.length; i < len; i++)
-        events[i].apply(null, args);
-    };
-
-    host.removeEventListener = function(type, listener)
-    {
-      var events = host._events[type];
-      if(!events)
-        return;
-
-      events.splice(events.indexOf(listener), 1)
-
-      if(!events.length)
-        delete host._events[type]
-    };
+    EventTarget.call(host)
 
 	if(onsuccess)
 		onsuccess(host);
@@ -93,7 +62,7 @@ function Host_init(db, onsuccess)
         db.sharepoints_add(file,
         function()
         {
-            host.dispatchEvent("transfer.begin", file)
+            host.dispatchEvent({type:"transfer.begin", data:file})
             console.log("Transfer begin: '"+file.name+"' = "+JSON.stringify(file))
 
             // Demand data from the begining of the file

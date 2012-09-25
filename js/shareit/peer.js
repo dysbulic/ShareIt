@@ -45,7 +45,7 @@ function Peer_init(protocol, db, host)
                     }
             }
 
-            host.dispatchEvent("fileslist_peer.update", files)
+            host.dispatchEvent({type:"fileslist_peer.update", data:files})
         })
     })
 
@@ -129,8 +129,8 @@ function Peer_init(protocol, db, host)
                 if(chunks % 1 != 0)
                     chunks = Math.floor(chunks) + 1;
 
-                host.dispatchEvent("transfer.update", file,
-                                   1 - pending_chunks/chunks)
+                host.dispatchEvent({type:"transfer.update",
+                                    data:[file, 1 - pending_chunks/chunks]})
 
                 // Demand more data from one of the pending chunks
                 db.sharepoints_put(file, function()
@@ -149,7 +149,7 @@ function Peer_init(protocol, db, host)
                     // Auto-save downloaded file
                     _savetodisk(file)
 
-                    host.dispatchEvent("transfer.end", file)
+                    host.dispatchEvent({type:"transfer.end", file:file})
                     console.log("Transfer of "+file.name+" finished!");
                 })
             }
