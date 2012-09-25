@@ -32,67 +32,65 @@ function remove(bitmap, item)
 function Host(db)
 {
     EventTarget.call(this)
-}
 
-Host.prototype._transferbegin = function(file)
-{
-    // Get the channel of one of the peers that have the file from its hash.
-    // Since the hash and the tracker system are currently not implemented we'll
-    // get just the channel of the peer where we got the file that we added
-    // ad-hoc before
-    function getChannel(file)
-    {
-        return file.channel
-    }
-
-    // Calc number of necesary chunks to download
-    var chunks = file.size/chunksize;
-    if(chunks % 1 != 0)
-        chunks = Math.floor(chunks) + 1;
-
-    // Add a blob container and a bitmap to our file stub
-    file.blob = new Blob([''], {"type": file.type})
-    file.bitmap = Bitmap(chunks)
-
-    // Insert new "file" inside IndexedDB
     var self = this
 
-    db.sharepoints_add(file,
-    function()
-    {
-        self.dispatchEvent({type:"transfer.begin", data:file})
-        console.log("Transfer begin: '"+file.name+"' = "+JSON.stringify(file))
+	this._transferbegin = function(file)
+	{
+	    // Get the channel of one of the peers that have the file from its hash.
+	    // Since the hash and the tracker system are currently not implemented we'll
+	    // get just the channel of the peer where we got the file that we added
+	    // ad-hoc before
+	    function getChannel(file)
+	    {
+	        return file.channel
+	    }
 
-        // Demand data from the begining of the file
-        getChannel(file).emit('transfer.query', file.name,
-                                                getRandom(file.bitmap))
-    },
-    function(errorCode)
-    {
-        console.error("Transfer begin: '"+file.name+"' is already in database.")
-    })
-}
+	    // Calc number of necesary chunks to download
+	    var chunks = file.size/chunksize;
+	    if(chunks % 1 != 0)
+	        chunks = Math.floor(chunks) + 1;
 
-Host.prototype.connectTo = function(uid, onsuccess)
-{
-    // Search the peer between the list of currently connected peers
-    var peer = this._peers[uid]
-    if(!peer)
-    {
-        var self = this
+	    // Add a blob container and a bitmap to our file stub
+	    file.blob = new Blob([''], {"type": file.type})
+	    file.bitmap = Bitmap(chunks)
 
-        Transport_init(new WebSocket('wss://localhost:8001'),
-        function(transport)
-        {
-            self._peers[uid] = transport
+	    // Insert new "file" inside IndexedDB
+	    db.sharepoints_add(file,
+	    function()
+	    {
+	        self.dispatchEvent({type:"transfer.begin", data:file})
+	        console.log("Transfer begin: '"+file.name+"' = "+JSON.stringify(file))
 
-            Peer_init(transport, db, self)
+	        // Demand data from the begining of the file
+	        getChannel(file).emit('transfer.query', file.name,
+	                                                getRandom(file.bitmap))
+	    },
+	    function(errorCode)
+	    {
+	        console.error("Transfer begin: '"+file.name+"' is already in database.")
+	    })
+	}
 
-            if(onsuccess)
-                onsuccess(transport)
-        })
-    }
+	this.connectTo = function(uid, onsuccess)
+	{
+	    // Search the peer between the list of currently connected peers
+	    var peer = this._peers[uid]
+	    if(!peer)
+	    {
+	        Transport_init(new WebSocket('wss://localhost:8001'),
+	        function(transport)
+	        {
+	            self._peers[uid] = transport
 
-    else if(onsuccess)
-        onsuccess(peer)
+	            Peer_init(transport, db, self)
+
+	            if(onsuccess)
+	                onsuccess(transport)
+	        })
+	    }
+
+	    else if(onsuccess)
+	        onsuccess(peer)
+	}
 }
