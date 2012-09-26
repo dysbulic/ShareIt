@@ -9,39 +9,42 @@
  * @param {FileEntry} fileEntry The FileEntry associated with this writer.
  * @constructor
  */
-function FileWriter(fileEntry) {
+function FileWriter(fileEntry)
+{
   var position_ = 0;
   var length_ = 0;
   var fileEntry_ = fileEntry;
 
-  this.__defineGetter__('position', function() {
+  this.__defineGetter__('position', function()
+  {
     return position_;
   });
 
-  this.__defineGetter__('length', function() {
+  this.__defineGetter__('length', function()
+  {
     return length_;
   });
 
-  this.write = function(blob) {
-
-    if (!blob) {
+  this.write = function(blob)
+  {
+    if(!blob)
       throw Error('Expected blob argument to write.');
-    }
 
     // Set the blob we're writing on this file entry so we can recall it later.
     fileEntry_.file_.blob_ = blob;
 
     // Call onwritestart if it was defined.
-    if (this.onwritestart) {
+    if(this.onwritestart)
       this.onwritestart();
-    }
 
     // TODO: not handling onprogress, onwrite, onabort. Throw an error if
     // they're defined.
 
     var self = this;
-    idb_.put(fileEntry_, function(entry) {
-      if (self.onwriteend) {
+    idb_.put(fileEntry_, function(entry)
+    {
+      if(self.onwriteend)
+      {
         // Set writer.position == write.length.
         position_ = entry.file_.size;
         length_ = position_;
@@ -51,8 +54,10 @@ function FileWriter(fileEntry) {
   };
 }
 
-FileWriter.prototype = {
-  seek: function(offset) {
+FileWriter.prototype =
+{
+  seek: function(offset)
+  {
     this.position_ = offset
 
     if(this.position_ > this.length_)
@@ -63,7 +68,8 @@ FileWriter.prototype = {
     if(this.position_ < 0)
       this.position_ = 0
   },
-  truncate: function(size) {
+  truncate: function(size)
+  {
     var blob;
 
     if(size < this.length_)
