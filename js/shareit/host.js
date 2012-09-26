@@ -15,6 +15,8 @@ function Host(db, signaling)
 
     var self = this
 
+    Transport_Signaling_init(signaling)
+
 	this._transferbegin = function(file)
 	{
 	    // Get the channel of one of the peers that have the file from its hash.
