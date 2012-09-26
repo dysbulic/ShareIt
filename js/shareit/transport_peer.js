@@ -117,7 +117,9 @@ function Transport_Peer_init(transport, db, host)
 //            for(var i = 0; i < data.length; i++)
 //                byteArray[i] = data.charCodeAt(i) & 0xff;
 
-            fw.write(byteArray.buffer)
+            var blob = fw.write(byteArray.buffer)
+            if(blob != undefined)
+                file.blob = blob
 
             var pending_chunks = file.bitmap.length
             if(pending_chunks)

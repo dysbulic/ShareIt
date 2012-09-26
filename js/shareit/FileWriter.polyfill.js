@@ -58,6 +58,9 @@ function FileWriter(blob)
 
     if(self.onwriteend)
       self.onwriteend();
+
+    // This is not standard, but it's the only way to get out the created blob
+    return blob_
   };
 }
 
