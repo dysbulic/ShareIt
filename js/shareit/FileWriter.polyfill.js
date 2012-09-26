@@ -68,14 +68,9 @@ FileWriter.prototype =
   },
   truncate: function(size)
   {
-    var blob;
-
     if(size < this.length)
-      blob = this.fileEntry_.file_.blob_.slice(size)
+      this.blob_ = this.blob_.slice(size)
     else
-      blob = new Blob([this.fileEntry_.file_.blob_,
-                       ArrayBuffer(size - this.length)])
-
-    this.write(blob)
+      this.blob_ = new Blob([this.blob_, ArrayBuffer(size - this.length)])
   }
 }
