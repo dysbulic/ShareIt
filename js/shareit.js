@@ -45,7 +45,7 @@ window.addEventListener("load", function()
 //                                                        getRandom(file.bitmap))
             })
 
-            UI_setTransport(signaling)
+            UI_setSignaling(signaling)
         })
 	})
 })

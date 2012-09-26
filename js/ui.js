@@ -13,75 +13,6 @@ function ui_ready_fileschange(func)
 
 function UI_setHost(host)
 {
-    $("#ConnectUser").unbind('click')
-    $("#ConnectUser").click(function()
-    {
-        var uid = prompt("UID to connect")
-        if(uid != null && uid != '')
-        {
-            // Create connection with the other peer
-            host.connectTo(uid, function(channel)
-            {
-	            $("#tabs").tabs("add", "#tabs-"+uid, "UID: "+uid);
-
-	            var tab = document.getElementById("tabs-"+uid)
-
-	            var table = document.createElement("TABLE");
-	                table.id = 'Peer'
-	            tab.appendChild(table);
-
-	            var thead = document.createElement("THEAD");
-	            table.appendChild(thead);
-
-	            var tr = document.createElement("TR");
-	            thead.appendChild(tr);
-
-	            var th = document.createElement("TH");
-	                th.scope='col'
-	                th.abbr='Filename'
-	                th.class='nobg'
-	                th.width='100%'
-	                th.appendChild(document.createTextNode("Filename"))
-	            tr.appendChild(th);
-
-	            var th = document.createElement("TH");
-	                th.scope='col'
-	                th.abbr='Type'
-	                th.class='nobg'
-	                th.appendChild(document.createTextNode("Type"))
-	            tr.appendChild(th);
-
-	            var th = document.createElement("TH");
-	                th.scope='col'
-	                th.abbr='Size'
-	                th.class='nobg'
-	                th.appendChild(document.createTextNode("Size"))
-	            tr.appendChild(th);
-
-	            var th = document.createElement("TH");
-	                th.scope='col'
-	                th.abbr='Action'
-	                th.class='nobg'
-	                th.appendChild(document.createTextNode("Action"))
-	            tr.appendChild(th);
-
-	            var tbody = document.createElement("TBODY");
-	            table.appendChild(tbody);
-
-	            var tr = document.createElement("TR");
-	            tbody.appendChild(tr);
-
-	            var td = document.createElement("TD");
-	                td.colspan='4'
-	                td.align='center'
-	                td.appendChild(document.createTextNode("Waiting for the peer data"))
-	            tr.appendChild(td);
-
-	            channel.fileslist_query();
-            })
-        }
-    })
-
 	host.set_uid = function(uid)
 	{
 	    document.getElementById("UID").appendChild(document.createTextNode("UID: "+uid))
@@ -500,11 +431,80 @@ function UI_init()
     });
 }
 
-function UI_setTransport(transport)
+function UI_setSignaling(signaling)
 {
+    $("#ConnectUser").unbind('click')
+    $("#ConnectUser").click(function()
+    {
+        var uid = prompt("UID to connect")
+        if(uid != null && uid != '')
+        {
+            // Create connection with the other peer
+            signaling.connectTo(uid, function(channel)
+            {
+                $("#tabs").tabs("add", "#tabs-"+uid, "UID: "+uid);
+
+                var tab = document.getElementById("tabs-"+uid)
+
+                var table = document.createElement("TABLE");
+                    table.id = 'Peer'
+                tab.appendChild(table);
+
+                var thead = document.createElement("THEAD");
+                table.appendChild(thead);
+
+                var tr = document.createElement("TR");
+                thead.appendChild(tr);
+
+                var th = document.createElement("TH");
+                    th.scope='col'
+                    th.abbr='Filename'
+                    th.class='nobg'
+                    th.width='100%'
+                    th.appendChild(document.createTextNode("Filename"))
+                tr.appendChild(th);
+
+                var th = document.createElement("TH");
+                    th.scope='col'
+                    th.abbr='Type'
+                    th.class='nobg'
+                    th.appendChild(document.createTextNode("Type"))
+                tr.appendChild(th);
+
+                var th = document.createElement("TH");
+                    th.scope='col'
+                    th.abbr='Size'
+                    th.class='nobg'
+                    th.appendChild(document.createTextNode("Size"))
+                tr.appendChild(th);
+
+                var th = document.createElement("TH");
+                    th.scope='col'
+                    th.abbr='Action'
+                    th.class='nobg'
+                    th.appendChild(document.createTextNode("Action"))
+                tr.appendChild(th);
+
+                var tbody = document.createElement("TBODY");
+                table.appendChild(tbody);
+
+                var tr = document.createElement("TR");
+                tbody.appendChild(tr);
+
+                var td = document.createElement("TD");
+                    td.colspan='4'
+                    td.align='center'
+                    td.appendChild(document.createTextNode("Waiting for the peer data"))
+                tr.appendChild(td);
+
+                channel.fileslist_query();
+            })
+        }
+    })
+
     // Set UID
-    transport.removeEventListener('sessionId')
-    transport.addEventListener('sessionId', function(event)
+    signaling.removeEventListener('sessionId')
+    signaling.addEventListener('sessionId', function(event)
     {
 	    var span = document.getElementById("UID")
 
