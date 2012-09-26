@@ -32,10 +32,7 @@ window.addEventListener("load", function()
             // Apply signaling "interface" events and functions to transport
             Transport_Signaling_init(signaling)
 
-	        // Init host
-	        var host = new Host(db)
-
-	        var ui = UI_setHost(host)
+	        var ui = UI_setHost()
 
             db.sharepoints_getAll(null, function(filelist)
             {

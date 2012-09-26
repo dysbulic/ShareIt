@@ -11,13 +11,8 @@ function ui_ready_fileschange(func)
     }, false);
 }
 
-function UI_setHost(host)
+function UI_setHost()
 {
-	host.set_uid = function(uid)
-	{
-	    document.getElementById("UID").appendChild(document.createTextNode("UID: "+uid))
-	}
-
 	function _button_sharing(file)
 	{
 	    var div = document.createElement("DIV");
@@ -66,17 +61,17 @@ function UI_setHost(host)
 	    else
 	        div.open(file)
 
-	    host.addEventListener("transfer.begin", function(f)
+	    transport.addEventListener("transfer.begin", function(f)
 	    {
 	        if(file.name == f.name)
 	            div.progressbar()
 	    })
-	    host.addEventListener("transfer.update", function(f, value)
+	    transport.addEventListener("transfer.update", function(f, value)
 	    {
 	        if(file.name == f.name)
 	            div.progressbar(value)
 	    })
-	    host.addEventListener("transfer.end", function(f)
+	    transport.addEventListener("transfer.end", function(f)
 	    {
 	        if(file.name == f.name)
 	            div.open(f.blob)
@@ -146,17 +141,17 @@ function UI_setHost(host)
 	    else
 	        div.transfer()
 
-	    host.addEventListener("transfer.begin", function(f)
+	    transport.addEventListener("transfer.begin", function(f)
 	    {
 	        if(file.name == f.name)
 	            div.progressbar()
 	    })
-	    host.addEventListener("transfer.update", function(f, value)
+	    transport.addEventListener("transfer.update", function(f, value)
 	    {
 	        if(file.name == f.name)
 	            div.progressbar(value)
 	    })
-	    host.addEventListener("transfer.end", function(f)
+	    transport.addEventListener("transfer.end", function(f)
 	    {
 	        if(file.name == f.name)
 	            div.open(f.blob)
@@ -206,7 +201,7 @@ function UI_setHost(host)
 	    _ui_updatefiles(area, files, _ui_row_sharing, _button_sharing)
 	}
 
-    host.addEventListener("fileslist_peer.update", function(uid, fileslist)
+    transport.addEventListener("fileslist_peer.update", function(uid, fileslist)
     {
         var table = document.getElementById("tabs-"+uid).getElementsByTagName("tbody")[0]
         _ui_updatefiles(table, fileslist, _ui_row_sharing, _button_peer)
