@@ -12,7 +12,6 @@
 function FileWriter(blob)
 {
   var position_ = 0;
-  var length_ = blob.size;
   var blob_ = blob;
 
   this.__defineGetter__('position', function()
@@ -22,7 +21,7 @@ function FileWriter(blob)
 
   this.__defineGetter__('length', function()
   {
-    return length_;
+    return blob.size;
   });
 
   this.write = function(data)
@@ -47,7 +46,6 @@ function FileWriter(blob)
 
     // Set writer.position == write.length.
     position_ += data.size;
-    length_ = blob_.size;
 
     if(self.onwriteend)
       self.onwriteend();
@@ -60,10 +58,10 @@ FileWriter.prototype =
   {
     this.position_ = offset
 
-    if(this.position_ > this.length_)
-      this.position_ = this.length_
+    if(this.position_ > this.length)
+      this.position_ = this.length
     else if(this.position_ < 0)
-      this.position_ += this.length_
+      this.position_ += this.length
 
     if(this.position_ < 0)
       this.position_ = 0
@@ -72,11 +70,11 @@ FileWriter.prototype =
   {
     var blob;
 
-    if(size < this.length_)
+    if(size < this.length)
       blob = this.fileEntry_.file_.blob_.slice(size)
     else
       blob = new Blob([this.fileEntry_.file_.blob_,
-                       ArrayBuffer(size - this.length_)])
+                       ArrayBuffer(size - this.length)])
 
     this.write(blob)
   }
