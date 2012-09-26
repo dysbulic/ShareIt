@@ -95,7 +95,7 @@ function UI_setHost(host)
 	        var transfer = document.createElement("A");
 	            transfer.onclick = function()
 	            {
-	                host._transferbegin(file);
+	                signaling._transferbegin(file);
 	                return false;
 	            }
 	            transfer.appendChild(document.createTextNode("Transfer"));
