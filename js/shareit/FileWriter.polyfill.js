@@ -5,6 +5,10 @@
 if(FileWriter != undefined)
     return;
 
+Blob.slice = Blob.slice || Blob.webkitSlice || Blob.mozSlice
+if(Blob.slice != undefined)
+    alert("It won't work in your browser. Please use Chrome or Firefox.");
+
 /**
  * Interface to writing a Blob/File.
  *
