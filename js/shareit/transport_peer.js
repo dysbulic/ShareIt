@@ -1,25 +1,25 @@
 function Transport_Peer_init(transport, db, host)
 {
-    // Host
+    transport._send_files_list = function(filelist)
+    {
+        // Stupid conversion because JSON.stringify() doesn't parse
+        // File objects (use them as plain objects in the best case)
+        // Maybe add a File.toString() method would do the trick,
+        // but later would not be able to store them on IndexedDB...
+        //
+        // I miss you Python :-(
+        var files_send = []
+
+        for(var i = 0, file; file = filelist[i]; i++)
+            files_send.push({"name": file.name, "size": file.size,
+                             "type": file.type});
+
+        transport.emit('fileslist.send', files_send);
+    }
 
     transport.addEventListener('fileslist.query', function()
     {
-        db.sharepoints_getAll(null, function(fileslist)
-        {
-            // Stupid conversion because JSON.stringify() doesn't parse
-            // File objects (use them as plain objects in the best case)
-            // Maybe add a File.toString() method would do the trick,
-            // but later would not be able to store them on IndexedDB...
-            //
-            // I miss you Python :-(
-            var files_send = []
-
-            for(var i = 0, file; file = fileslist[i]; i++)
-                files_send.push({"name": file.name, "size": file.size,
-                                 "type": file.type});
-
-            transport.emit('fileslist.send', files_send);
-        })
+        db.sharepoints_getAll(null, transport._send_files_list)
     })
 
     transport.addEventListener('fileslist.send', function(files)
