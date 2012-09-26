@@ -1,4 +1,4 @@
-function Peer_init(transport, db, host)
+function Transport_Peer_init(transport, db, host)
 {
     // Host
 

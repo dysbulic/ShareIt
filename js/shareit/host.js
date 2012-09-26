@@ -60,7 +60,7 @@ function Host(db)
 	        {
 	            self._peers[uid] = transport
 
-	            Peer_init(transport, db, self)
+	            Transport_Peer_init(transport, db, self)
 
 	            if(onsuccess)
 	                onsuccess(transport)
