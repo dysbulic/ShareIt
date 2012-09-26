@@ -379,33 +379,33 @@ function UI_setHost()
 	function _ui_row_sharing(file, button_factory)
 	{
 	    var tr = document.createElement('TR');
-	
+
 	    var td = document.createElement('TD');
 	    tr.appendChild(td)
-	
+
 	    // Name & icon
 	    var span = document.createElement('SPAN');
 	        span.className = _ui_filetype2className(file.type)
 	        span.appendChild(document.createTextNode(file.name));
 	    td.appendChild(span)
-	
+
 	    // Type
 	    var td = document.createElement('TD');
 	        td.appendChild(document.createTextNode(file.type));
 	    tr.appendChild(td)
-	
+
 	    // Size
 	    var td = document.createElement('TD');
 	        td.className="filesize"
 	        td.appendChild(document.createTextNode(humanize.filesize(file.size)));
 	    tr.appendChild(td)
-	
+
 	    // Action
 	    var td = document.createElement('TD');
 	        td.class = "end"
 	        td.appendChild(button_factory(file));
 	    tr.appendChild(td)
-	
+
 	    return tr
 	}
 
