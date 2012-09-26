@@ -11,6 +11,222 @@ function ui_ready_fileschange(func)
     }, false);
 }
 
+function _ui_filetype2className(filetype)
+{
+    filetype = filetype.split('/')
+
+    switch(filetype[0])
+    {
+        case 'image':   return "image"
+        case 'video':   return "video"
+    }
+
+    // Unknown file type, return generic file
+    return "file"
+}
+
+function _ui_row_downloading(file)
+{
+    var tr = document.createElement('TR');
+
+    var td = document.createElement('TD');
+    tr.appendChild(td)
+
+    // Name & icon
+    var span = document.createElement('SPAN');
+        span.className = _ui_filetype2className(file.type)
+        span.appendChild(document.createTextNode(file.name));
+    td.appendChild(span)
+
+    // Type
+    var td = document.createElement('TD');
+        td.appendChild(document.createTextNode(file.type));
+    tr.appendChild(td)
+
+    // Downloaded
+    var td = document.createElement('TD');
+        td.className="filesize"
+        td.appendChild(document.createTextNode(humanize.filesize(0)));
+    tr.appendChild(td)
+
+    // Size
+    var td = document.createElement('TD');
+        td.className="filesize"
+        td.appendChild(document.createTextNode(humanize.filesize(file.size)));
+    tr.appendChild(td)
+
+    // Percentage
+    var td = document.createElement('TD');
+        td.appendChild(document.createTextNode("0%"));
+    tr.appendChild(td)
+
+    // Status
+    var td = document.createElement('TD');
+        td.appendChild(document.createTextNode("Paused"));
+    tr.appendChild(td)
+
+    // Time remaining
+    var td = document.createElement('TD');
+        td.appendChild(document.createTextNode("Unknown"));
+    tr.appendChild(td)
+
+    // Speed
+    var td = document.createElement('TD');
+        td.className="filesize"
+        td.appendChild(document.createTextNode(humanize.filesize(0)+"/s"));
+    tr.appendChild(td)
+
+    // Peers
+    var td = document.createElement('TD');
+        td.appendChild(document.createTextNode("0"));
+    tr.appendChild(td)
+
+    // Inclusion date
+    var td = document.createElement('TD');
+        td.class = "end"
+        td.appendChild(document.createTextNode("0-0-0000"));
+    tr.appendChild(td)
+
+    return tr
+}
+
+function _ui_row_sharedpoints(file)
+{
+    var tr = document.createElement('TR');
+
+    var td = document.createElement('TD');
+    tr.appendChild(td)
+
+    // Name & icon
+    var span = document.createElement('SPAN');
+        span.className = _ui_filetype2className(file.type)
+        span.appendChild(document.createTextNode(file.name));
+    td.appendChild(span)
+
+    // Shared size
+    var td = document.createElement('TD');
+        td.className="filesize"
+        td.appendChild(document.createTextNode(humanize.filesize(0)));
+    tr.appendChild(td)
+
+    var td = document.createElement('TD');
+        td.class = "end"
+    tr.appendChild(td)
+
+    var a = document.createElement("A");
+//        a.onclick = function()
+//        {
+//        }
+        a.appendChild(document.createTextNode("Delete"));
+    td.appendChild(a);
+
+    return tr
+}
+
+function _ui_updatefiles(area, files, row_factory, button_factory)
+{
+    // Remove old table and add new empty one
+    while(area.firstChild)
+        area.removeChild(area.firstChild);
+
+    for(var filename in files)
+        if(files.hasOwnProperty(filename))
+        {
+            var file = files[filename]
+            var path = ""
+            if(file.path)
+                path = file.path + '/';
+
+            var tr = row_factory(file, button_factory)
+                tr.id = path + file.name
+                if(path)
+                    tr.class = "child-of-" + path
+
+            area.appendChild(tr)
+        }
+}
+
+function ui_update_fileslist_downloading(files)
+{
+    var area = document.getElementById('Downloading').getElementsByTagName("tbody")[0]
+    _ui_updatefiles(area, files, _ui_row_downloading)
+}
+
+function ui_update_fileslist_sharedpoints(sharedpoints)
+{
+    var area = document.getElementById('Sharedpoints').getElementsByTagName("tbody")[0]
+    _ui_updatefiles(area, sharedpoints, _ui_row_sharedpoints)
+}
+
+function UI_init()
+{
+    $("#tabs").tabs(
+    {
+        tabTemplate: "<li><a href='#{href}'>#{label}</a> <span class='ui-icon ui-icon-close'>Remove Tab</span></li>",
+        add: function(event, ui)
+        {
+            $("#tabs").tabs('select', '#' + ui.panel.id);
+        }
+    }).find(".ui-tabs-nav").sortable({axis: "x"});
+
+    // close icon: removing the tab on click
+    // note: closable tabs gonna be an option in the future - see http://dev.jqueryui.com/ticket/3924
+    $("#tabs span.ui-icon-close").live("click", function()
+    {
+        var index = $("li", $("#tabs")).index($(this).parent());
+        $("#tabs").tabs("remove", index);
+    });
+
+    $("#dialog-config").dialog(
+    {
+        autoOpen: false,
+        resizable: false,
+        width: 800,
+        height: 600,
+        modal: true,
+//        show: "fold",
+//        hide: "fold"
+    });
+
+    $("#Downloading").treeTable();
+    $("#Sharing").treeTable();
+    $("#Sharedpoints").treeTable();
+
+    $("#tools-menu").click(function()
+    {
+        var submenu = $("#tools-menu-submenu")
+
+        if(submenu.is(":hidden"))
+        {
+            var submenu_active = false;
+
+            function timeout(ms)
+            {
+                setTimeout(function()
+                {
+                    if(submenu_active === false)
+                        submenu.slideUp();
+                }, ms);
+            }
+
+            submenu.mouseenter(function()
+            {
+                submenu_active = true;
+            });
+            submenu.mouseleave(function()
+            {
+                submenu_active = false;
+                timeout(400)
+            });
+
+            submenu.slideDown();
+            timeout(1000)
+        }
+        else
+            submenu.slideUp();
+    });
+}
+
 function UI_setHost()
 {
 	function _button_sharing(file)
@@ -210,221 +426,6 @@ function UI_setHost()
     return ui
 }
 
-function _ui_filetype2className(filetype)
-{
-    filetype = filetype.split('/')
-
-    switch(filetype[0])
-    {
-        case 'image':   return "image"
-        case 'video':   return "video"
-    }
-
-    // Unknown file type, return generic file
-    return "file"
-}
-
-function _ui_row_downloading(file)
-{
-    var tr = document.createElement('TR');
-
-    var td = document.createElement('TD');
-    tr.appendChild(td)
-
-    // Name & icon
-    var span = document.createElement('SPAN');
-        span.className = _ui_filetype2className(file.type)
-        span.appendChild(document.createTextNode(file.name));
-    td.appendChild(span)
-
-    // Type
-    var td = document.createElement('TD');
-        td.appendChild(document.createTextNode(file.type));
-    tr.appendChild(td)
-
-    // Downloaded
-    var td = document.createElement('TD');
-        td.className="filesize"
-        td.appendChild(document.createTextNode(humanize.filesize(0)));
-    tr.appendChild(td)
-
-    // Size
-    var td = document.createElement('TD');
-        td.className="filesize"
-        td.appendChild(document.createTextNode(humanize.filesize(file.size)));
-    tr.appendChild(td)
-
-    // Percentage
-    var td = document.createElement('TD');
-        td.appendChild(document.createTextNode("0%"));
-    tr.appendChild(td)
-
-    // Status
-    var td = document.createElement('TD');
-        td.appendChild(document.createTextNode("Paused"));
-    tr.appendChild(td)
-
-    // Time remaining
-    var td = document.createElement('TD');
-        td.appendChild(document.createTextNode("Unknown"));
-    tr.appendChild(td)
-
-    // Speed
-    var td = document.createElement('TD');
-        td.className="filesize"
-        td.appendChild(document.createTextNode(humanize.filesize(0)+"/s"));
-    tr.appendChild(td)
-
-    // Peers
-    var td = document.createElement('TD');
-        td.appendChild(document.createTextNode("0"));
-    tr.appendChild(td)
-
-    // Inclusion date
-    var td = document.createElement('TD');
-        td.class = "end"
-        td.appendChild(document.createTextNode("0-0-0000"));
-    tr.appendChild(td)
-
-    return tr
-}
-
-function _ui_row_sharedpoints(file)
-{
-    var tr = document.createElement('TR');
-
-    var td = document.createElement('TD');
-    tr.appendChild(td)
-
-    // Name & icon
-    var span = document.createElement('SPAN');
-        span.className = _ui_filetype2className(file.type)
-        span.appendChild(document.createTextNode(file.name));
-    td.appendChild(span)
-
-    // Shared size
-    var td = document.createElement('TD');
-        td.className="filesize"
-        td.appendChild(document.createTextNode(humanize.filesize(0)));
-    tr.appendChild(td)
-
-    var td = document.createElement('TD');
-        td.class = "end"
-    tr.appendChild(td)
-
-    var a = document.createElement("A");
-//        a.onclick = function()
-//        {
-//        }
-        a.appendChild(document.createTextNode("Delete"));
-    td.appendChild(a);
-
-    return tr
-}
-
-function _ui_updatefiles(area, files, row_factory, button_factory)
-{
-    // Remove old table and add new empty one
-    while(area.firstChild)
-        area.removeChild(area.firstChild);
-
-    for(var filename in files)
-        if(files.hasOwnProperty(filename))
-        {
-            var file = files[filename]
-            var path = ""
-            if(file.path)
-                path = file.path + '/';
-
-            var tr = row_factory(file, button_factory)
-		        tr.id = path + file.name
-		        if(path)
-		            tr.class = "child-of-" + path
-
-            area.appendChild(tr)
-        }
-}
-
-function ui_update_fileslist_downloading(files)
-{
-    var area = document.getElementById('Downloading').getElementsByTagName("tbody")[0]
-    _ui_updatefiles(area, files, _ui_row_downloading)
-}
-
-function ui_update_fileslist_sharedpoints(sharedpoints)
-{
-    var area = document.getElementById('Sharedpoints').getElementsByTagName("tbody")[0]
-    _ui_updatefiles(area, sharedpoints, _ui_row_sharedpoints)
-}
-
-function UI_init()
-{
-    $("#tabs").tabs(
-    {
-        tabTemplate: "<li><a href='#{href}'>#{label}</a> <span class='ui-icon ui-icon-close'>Remove Tab</span></li>",
-        add: function(event, ui)
-        {
-            $("#tabs").tabs('select', '#' + ui.panel.id);
-        }
-    }).find(".ui-tabs-nav").sortable({axis: "x"});
-
-    // close icon: removing the tab on click
-    // note: closable tabs gonna be an option in the future - see http://dev.jqueryui.com/ticket/3924
-    $("#tabs span.ui-icon-close").live("click", function()
-    {
-        var index = $("li", $("#tabs")).index($(this).parent());
-        $("#tabs").tabs("remove", index);
-    });
-
-    $("#dialog-config").dialog(
-    {
-        autoOpen: false,
-        resizable: false,
-        width: 800,
-        height: 600,
-        modal: true,
-//        show: "fold",
-//        hide: "fold"
-    });
-
-    $("#Downloading").treeTable();
-    $("#Sharing").treeTable();
-    $("#Sharedpoints").treeTable();
-
-    $("#tools-menu").click(function()
-    {
-        var submenu = $("#tools-menu-submenu")
-
-        if(submenu.is(":hidden"))
-        {
-            var submenu_active = false;
-
-            function timeout(ms)
-            {
-                setTimeout(function()
-                {
-                    if(submenu_active === false)
-                        submenu.slideUp();
-                }, ms);
-            }
-
-            submenu.mouseenter(function()
-            {
-                submenu_active = true;
-            });
-            submenu.mouseleave(function()
-            {
-                submenu_active = false;
-                timeout(400)
-            });
-
-            submenu.slideDown();
-            timeout(1000)
-        }
-        else
-            submenu.slideUp();
-    });
-}
 
 function UI_setSignaling(signaling)
 {
