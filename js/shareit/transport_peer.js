@@ -1,28 +1,28 @@
-function Peer_init(protocol, db, host)
+function Transport_Peer_init(transport, db, host)
 {
-    // Host
-
-    protocol.addEventListener('fileslist.query', function()
+    transport._send_files_list = function(filelist)
     {
-        db.sharepoints_getAll(null, function(fileslist)
-        {
-            // Stupid conversion because JSON.stringify() doesn't parse
-            // File objects (use them as plain objects in the best case)
-            // Maybe add a File.toString() method would do the trick,
-            // but later would not be able to store them on IndexedDB...
-            //
-            // I miss you Python :-(
-            var files_send = []
+        // Stupid conversion because JSON.stringify() doesn't parse
+        // File objects (use them as plain objects in the best case)
+        // Maybe add a File.toString() method would do the trick,
+        // but later would not be able to store them on IndexedDB...
+        //
+        // I miss you Python :-(
+        var files_send = []
 
-            for(var i = 0, file; file = fileslist[i]; i++)
-                files_send.push({"name": file.name, "size": file.size,
-                                 "type": file.type});
+        for(var i = 0, file; file = filelist[i]; i++)
+            files_send.push({"name": file.name, "size": file.size,
+                             "type": file.type});
 
-            protocol.emit('fileslist.send', files_send);
-        })
+        transport.emit('fileslist.send', files_send);
+    }
+
+    transport.addEventListener('fileslist.query', function()
+    {
+        db.sharepoints_getAll(null, transport._send_files_list)
     })
 
-    protocol.addEventListener('fileslist.send', function(files)
+    transport.addEventListener('fileslist.send', function(files)
     {
         // Check if we have already any of the files
         // It's stupid to try to download it... and also give errors
@@ -33,7 +33,7 @@ function Peer_init(protocol, db, host)
                 // We add here ad-hoc the channel of the peer where we got
                 // the file since we currently don't have support for hashes
                 // nor tracker systems
-                file.channel = protocol
+                file.channel = transport
 
                 for(var j=0, file_hosted; file_hosted = filelist[j]; j++)
                     if(file.name == file_hosted.name)
@@ -45,7 +45,7 @@ function Peer_init(protocol, db, host)
                     }
             }
 
-            host.dispatchEvent("fileslist_peer.update", files)
+            host.dispatchEvent({type:"fileslist_peer.update", data:files})
         })
     })
 
@@ -54,7 +54,7 @@ function Peer_init(protocol, db, host)
         console.warn("'Filereader' is not available, can't be able to host files");
 
     else
-        protocol.addEventListener('transfer.query', function(filename, chunk)
+        transport.addEventListener('transfer.query', function(filename, chunk)
         {
             var reader = new FileReader();
                 reader.onerror = function(evt)
@@ -63,7 +63,7 @@ function Peer_init(protocol, db, host)
                 }
                 reader.onload = function(evt)
                 {
-                    protocol.emit('transfer.send', filename, chunk, evt.target.result);
+                    transport.emit('transfer.send', filename, chunk, evt.target.result);
                 }
 
             var start = chunk * chunksize;
@@ -97,7 +97,7 @@ function Peer_init(protocol, db, host)
         window.URL.revokeObjectURL(save.href)
     }
 
-    protocol.addEventListener('transfer.send', function(filename, chunk, data)
+    transport.addEventListener('transfer.send', function(filename, chunk, data)
     {
         chunk = parseInt(chunk)
 
@@ -106,21 +106,18 @@ function Peer_init(protocol, db, host)
             remove(file.bitmap, chunk)
 
             // Update blob
-            var start = chunk * chunksize;
-            var stop  = start + chunksize;
+            var pos = chunk * chunksize;
 
-            var byteArray = new Uint8Array(data.length);
-            for(var i = 0; i < data.length; i++)
-                byteArray[i] = data.charCodeAt(i) & 0xff;
+            var fw = FileWriter(file.blob)
+            if(fw.length < pos)
+                fw.truncate(pos)
+            fw.seek(pos)
 
-            var blob = file.blob
-            var head = blob.slice(0, start)
-            var padding = start-head.size
-            if(padding < 0)
-                padding = 0;
-            file.blob = new Blob([head, ArrayBuffer(padding),
-                                  byteArray.buffer, blob.slice(stop)],
-                                 {"type": blob.type})
+//            var byteArray = new Uint8Array(data.length);
+//            for(var i = 0; i < data.length; i++)
+//                byteArray[i] = data.charCodeAt(i) & 0xff;
+
+            fw.write(byteArray.buffer)
 
             var pending_chunks = file.bitmap.length
             if(pending_chunks)
@@ -129,13 +126,13 @@ function Peer_init(protocol, db, host)
                 if(chunks % 1 != 0)
                     chunks = Math.floor(chunks) + 1;
 
-                host.dispatchEvent("transfer.update", file,
-                                   1 - pending_chunks/chunks)
+                host.dispatchEvent({type:"transfer.update",
+                                    data:[file, 1 - pending_chunks/chunks]})
 
                 // Demand more data from one of the pending chunks
                 db.sharepoints_put(file, function()
                 {
-                    protocol.emit('transfer.query', file.name,
+                    transport.emit('transfer.query', file.name,
                                                     getRandom(file.bitmap));
                 })
             }
@@ -149,15 +146,15 @@ function Peer_init(protocol, db, host)
                     // Auto-save downloaded file
                     _savetodisk(file)
 
-                    host.dispatchEvent("transfer.end", file)
+                    host.dispatchEvent({type:"transfer.end", file:file})
                     console.log("Transfer of "+file.name+" finished!");
                 })
             }
         })
     })
 
-    protocol.fileslist_query = function()
+    transport.fileslist_query = function()
     {
-        protocol.emit('fileslist.query');
+        transport.emit('fileslist.query');
     }
 }

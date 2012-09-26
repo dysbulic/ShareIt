@@ -1,7 +1,3 @@
-Blob.slice = Blob.slice || Blob.webkitSlice || Blob.mozSlice
-if(Blob.slice != undefined)
-	alert("It won't work in your browser. Please use Chrome or Firefox.");
-
 // Filereader support (be able to host files from the filesystem)
 if(typeof FileReader == "undefined")
 	oldBrowser();
@@ -10,119 +6,68 @@ if(typeof FileReader == "undefined")
 var chunksize = 65536
 
 
-function Bitmap(size)
+function Host(db)
 {
-  var bitmap = new Array(size)
-  for(var i=0; i<size; i++)
-    bitmap[i] = i;
-  return bitmap
-}
+    EventTarget.call(this)
 
-function getRandom(bitmap)
-{
-  return bitmap[Math.floor(Math.random() * bitmap.length)]
-}
+    var self = this
 
-function remove(bitmap, item)
-{
-  bitmap.splice(bitmap.indexOf(item), 1)
-}
+	this._transferbegin = function(file)
+	{
+	    // Get the channel of one of the peers that have the file from its hash.
+	    // Since the hash and the tracker system are currently not implemented we'll
+	    // get just the channel of the peer where we got the file that we added
+	    // ad-hoc before
+	    function getChannel(file)
+	    {
+	        return file.channel
+	    }
 
+	    // Calc number of necesary chunks to download
+	    var chunks = file.size/chunksize;
+	    if(chunks % 1 != 0)
+	        chunks = Math.floor(chunks) + 1;
 
-function Host_init(db, onsuccess)
-{
-	var host = {}
+	    // Add a blob container and a bitmap to our file stub
+	    file.blob = new Blob([''], {"type": file.type})
+	    file.bitmap = Bitmap(chunks)
 
-    // EventTarget interface
-    host._events = {};
+	    // Insert new "file" inside IndexedDB
+	    db.sharepoints_add(file,
+	    function()
+	    {
+	        self.dispatchEvent({type:"transfer.begin", data:file})
+	        console.log("Transfer begin: '"+file.name+"' = "+JSON.stringify(file))
 
-    host.addEventListener = function(type, listener)
-    {
-      host._events[type] = host._events[type] || [];
-      host._events[type].push(listener);
-    };
+	        // Demand data from the begining of the file
+	        getChannel(file).emit('transfer.query', file.name,
+	                                                getRandom(file.bitmap))
+	    },
+	    function(errorCode)
+	    {
+	        console.error("Transfer begin: '"+file.name+"' is already in database.")
+	    })
+	}
 
-    host.dispatchEvent = function(type)
-    {
-      var events = host._events[type];
-      if(!events)
-        return;
+	this.connectTo = function(uid, onsuccess)
+	{
+	    // Search the peer between the list of currently connected peers
+	    var peer = this._peers[uid]
+	    if(!peer)
+	    {
+	        Transport_init(new WebSocket('wss://localhost:8001'),
+	        function(transport)
+	        {
+	            self._peers[uid] = transport
 
-      var args = Array.prototype.slice.call(arguments, 1);
+	            Transport_Peer_init(transport, db, self)
 
-      for(var i = 0, len = events.length; i < len; i++)
-        events[i].apply(null, args);
-    };
+	            if(onsuccess)
+	                onsuccess(transport)
+	        })
+	    }
 
-    host.removeEventListener = function(type, listener)
-    {
-      var events = host._events[type];
-      if(!events)
-        return;
-
-      events.splice(events.indexOf(listener), 1)
-
-      if(!events.length)
-        delete host._events[type]
-    };
-
-	if(onsuccess)
-		onsuccess(host);
-
-    // Get the channel of one of the peers that have the file from its hash.
-    // Since the hash and the tracker system are currently not implemented we'll
-    // get just the channel of the peer where we got the file that we added
-    // ad-hoc before
-    function getChannel(file)
-    {
-        return file.channel
-    }
-
-    host._transferbegin = function(file)
-    {
-        // Calc number of necesary chunks to download
-        var chunks = file.size/chunksize;
-        if(chunks % 1 != 0)
-            chunks = Math.floor(chunks) + 1;
-
-        // Add a blob container and a bitmap to our file stub
-        file.blob = new Blob([''], {"type": file.type})
-        file.bitmap = Bitmap(chunks)
-
-        // Insert new "file" inside IndexedDB
-        db.sharepoints_add(file,
-        function()
-        {
-            host.dispatchEvent("transfer.begin", file)
-            console.log("Transfer begin: '"+file.name+"' = "+JSON.stringify(file))
-
-            // Demand data from the begining of the file
-            getChannel(file).emit('transfer.query', file.name,
-                                                    getRandom(file.bitmap))
-        },
-        function(errorCode)
-        {
-            console.error("Transfer begin: '"+file.name+"' is already in database.")
-        })
-    }
-
-    host.connectTo = function(uid, onsuccess)
-    {
-        // Search the peer between the list of currently connected peers
-        var peer = host._peers[uid]
-        if(!peer)
-            Protocol_init(new WebSocket('wss://localhost:8001'),
-            function(protocol)
-            {
-                host._peers[uid] = protocol
-
-                Peer_init(protocol, db, host)
-
-                if(onsuccess)
-                    onsuccess(protocol)
-            })
-
-        else if(onsuccess)
+	    else if(onsuccess)
 	        onsuccess(peer)
-    }
+	}
 }

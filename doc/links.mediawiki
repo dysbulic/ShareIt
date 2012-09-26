@@ -47,6 +47,11 @@ http://www.nodesocket.com/
 http://www.appfog.com/
 Free plan up to 2GB RAM, 1GB of database and 50GB data transfer
 
+== DotCloud ==
+https://www.dotcloud.com
+Support for WebSockets, they cash for RAM. 'Live' account cost about 5$/month,
+but 'sandbox' would be enought.
+
 = WebRTC webshims =
 http://code.google.com/p/webrtc4all/
 

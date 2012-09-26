@@ -26,27 +26,26 @@ window.addEventListener("load", function()
         })
 
         // Init host
-        Host_init(db, function(host)
+        var host = new Host(db)
+
+        var ui = UI_setHost(host)
+
+        // Connect to the handshake server and get an ID
+        Transport_init(new WebSocket('wss://shareit.nodejitsu.com/'),
+        function(transport)
         {
-            var ui = UI_setHost(host)
+            db.sharepoints_getAll(null, function(filelist)
+            {
+                ui.update_fileslist_sharing(filelist)
 
-	        // Connect to the handshake server and get an ID
-	        Protocol_init(new WebSocket('wss://localhost:8001'),
-	        function(protocol)
-	        {
-                db.sharepoints_getAll(null, function(filelist)
-                {
-                    ui.update_fileslist_sharing(filelist)
-
-//                    // Restard downloads
-//                    for(var i = 0, file; file = filelist[i]; i++)
-//                        if(file.bitmap)
-//                            protocol.emit('transfer.query', file.name,
-//                                                            getRandom(file.bitmap))
-                })
-
-                UI_setProtocol(protocol)
+//                // Restart downloads
+//                for(var i = 0, file; file = filelist[i]; i++)
+//                    if(file.bitmap)
+//                        transport.emit('transfer.query', file.name,
+//                                                        getRandom(file.bitmap))
             })
-	    })
+
+            UI_setTransport(transport)
+        })
 	})
 })
