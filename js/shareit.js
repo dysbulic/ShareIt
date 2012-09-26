@@ -25,15 +25,15 @@ window.addEventListener("load", function()
             db.sharepoints_getAll(null, ui_update_fileslist_sharedpoints)
         })
 
-        // Init host
-        var host = new Host(db)
-
-        var ui = UI_setHost(host)
-
-        // Connect to the handshake server and get an ID
+        // Connect a signaling channel to the handshake server and get an ID
         Transport_init(new WebSocket('wss://shareit.nodejitsu.com/'),
-        function(transport)
+        function(signaling)
         {
+	        // Init host
+	        var host = new Host(db, signaling)
+
+	        var ui = UI_setHost(host)
+
             db.sharepoints_getAll(null, function(filelist)
             {
                 ui.update_fileslist_sharing(filelist)
@@ -41,11 +41,11 @@ window.addEventListener("load", function()
 //                // Restart downloads
 //                for(var i = 0, file; file = filelist[i]; i++)
 //                    if(file.bitmap)
-//                        transport.emit('transfer.query', file.name,
+//                        signaling.emit('transfer.query', file.name,
 //                                                        getRandom(file.bitmap))
             })
 
-            UI_setTransport(transport)
+            UI_setTransport(signaling)
         })
 	})
 })
