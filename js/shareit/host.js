@@ -5,9 +5,6 @@ if(typeof FileReader == "undefined")
 
 var chunksize = 65536
 
-// Holds the STUN server to use for PeerConnections.
-var STUN_SERVER = "STUN stun.l.google.com:19302";
-
 
 function Host(db)
 {

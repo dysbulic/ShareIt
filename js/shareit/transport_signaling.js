@@ -1,5 +1,8 @@
 function Transport_Signaling_init(transport)
 {
+    // Holds the STUN server to use for PeerConnections.
+    var STUN_SERVER = "STUN stun.l.google.com:19302";
+
     var peers = {}
 
     function processOffer(pc, sdp, socketId)
