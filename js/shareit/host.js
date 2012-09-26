@@ -9,13 +9,11 @@ var chunksize = 65536
 var STUN_SERVER = "STUN stun.l.google.com:19302";
 
 
-function Host(db, signaling)
+function Host(db)
 {
     EventTarget.call(this)
 
     var self = this
-
-    Transport_Signaling_init(signaling)
 
 	this._transferbegin = function(file)
 	{

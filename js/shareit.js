@@ -29,8 +29,11 @@ window.addEventListener("load", function()
         Transport_init(new WebSocket('wss://shareit.nodejitsu.com/'),
         function(signaling)
         {
+            // Apply signaling "interface" events and functions to transport
+            Transport_Signaling_init(signaling)
+
 	        // Init host
-	        var host = new Host(db, signaling)
+	        var host = new Host(db)
 
 	        var ui = UI_setHost(host)
 

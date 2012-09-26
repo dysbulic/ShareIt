@@ -37,8 +37,10 @@ function Transport_Signaling_init(transport)
 
     signaling.addEventListener('connectTo', function(socketId, sdp)
     {
+        console.debug('connectTo() is called')
+
         // Search the peer between the list of currently connected peers
-        var pc = peers[uid]
+        var pc = peers[socketId]
 
         // Peer is not connected, create a new channel
         if(!pc)
@@ -50,11 +52,13 @@ function Transport_Signaling_init(transport)
             }
         }
 
-    processOffer(pc, sdp, socketId)
+        processOffer(pc, sdp, socketId)
     })
 
     signaling.addEventListener('offer', function(socketId, sdp)
     {
+        console.debug('offer() is called')
+
         // Search the peer between the list of currently connected peers
         var pc = peers[socketId];
 
