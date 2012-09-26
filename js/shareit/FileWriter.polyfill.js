@@ -9,11 +9,11 @@
  * @param {FileEntry} fileEntry The FileEntry associated with this writer.
  * @constructor
  */
-function FileWriter(fileEntry)
+function FileWriter(blob)
 {
   var position_ = 0;
-  var length_ = 0;
-  var fileEntry_ = fileEntry;
+  var length_ = blob.size;
+  var blob_ = blob;
 
   this.__defineGetter__('position', function()
   {
@@ -25,32 +25,32 @@ function FileWriter(fileEntry)
     return length_;
   });
 
-  this.write = function(blob)
+  this.write = function(data)
   {
     if(!blob)
       throw Error('Expected blob argument to write.');
-
-    // Set the blob we're writing on this file entry so we can recall it later.
-    fileEntry_.file_.blob_ = blob;
 
     // Call onwritestart if it was defined.
     if(this.onwritestart)
       this.onwritestart();
 
-    // TODO: not handling onprogress, onwrite, onabort. Throw an error if
-    // they're defined.
+    // Calc the fragments
+    var head = blob_.slice(0, position_)
+    var padding = position_-head.size
+    if(padding < 0)
+        padding = 0;
+    var stop = position_+data.size
 
-    var self = this;
-    idb_.put(fileEntry_, function(entry)
-    {
-      if(self.onwriteend)
-      {
-        // Set writer.position == write.length.
-        position_ = entry.file_.size;
-        length_ = position_;
-        self.onwriteend();
-      }
-    }, this.onerror);
+    // Do the "write" --in fact, a full overwrite of the Blob
+    blob_ = new Blob([head, ArrayBuffer(padding), data, blob_.slice(stop)],
+                     {"type": blob_.type})
+
+    // Set writer.position == write.length.
+    position_ += data.size;
+    length_ = blob_.size;
+
+    if(self.onwriteend)
+      self.onwriteend();
   };
 }
 
