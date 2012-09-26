@@ -1,4 +1,9 @@
 // FileWriter polyfill based on code from idb.filesystem.js by Eric Bidelman
+//
+// Copyright 2012 Jesus Leganes Combarro "Piranna"
+
+if(FileWriter != undefined)
+    return;
 
 /**
  * Interface to writing a Blob/File.
