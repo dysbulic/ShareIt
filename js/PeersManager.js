@@ -25,7 +25,7 @@ function PeersManager()
             // Send offer to new PeerConnection
             var offer = pc.createOffer();
 
-            signaling.emit("connectTo", offer.toSdp(), uid);
+            signaling.emit("offer", offer.toSdp(), uid);
 
             pc.setLocalDescription(pc.SDP_OFFER, offer);
         }
