@@ -39,4 +39,9 @@ function PeersManager()
     {
         return peers[socketId]
     }
+
+    this.setPeer(socketId, peerConnection)
+    {
+        peers[socketId] = peerConnection
+    }
 }
