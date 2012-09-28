@@ -21,7 +21,17 @@ function _initDataChannel(pc, channel)
 
 function Transport_Signaling_init(signaling, peersManager)
 {
-    function _processOffer(pc, sdp, socketId)
+    var getPeer = function(socketId)
+    {
+        return peersManager.getPeer(socketId)
+    }
+
+    // Use directly peersManager if in fact is a PeerConnection
+    if(peersManager instanceof PeerConnection)
+	    getPeer = function(){return peersManager}
+
+
+    function processOffer(pc, sdp, socketId)
     {
         pc.setRemoteDescription(pc.SDP_OFFER, new SessionDescription(sdp));
 
@@ -39,7 +49,7 @@ function Transport_Signaling_init(signaling, peersManager)
         console.debug('connectTo() is called')
 
         // Search the peer between the list of currently connected peers
-        var pc = peersManager.getPeer(socketId)
+        var pc = getPeer(socketId)
 
         // Peer is not connected, create a new channel
         if(!pc)
@@ -51,7 +61,7 @@ function Transport_Signaling_init(signaling, peersManager)
             }
         }
 
-        _processOffer(pc, sdp, socketId)
+        processOffer(pc, sdp, socketId)
     })
 
     signaling.addEventListener('offer', function(socketId, sdp)
@@ -59,15 +69,15 @@ function Transport_Signaling_init(signaling, peersManager)
         console.debug('offer() is called')
 
         // Search the peer between the list of currently connected peers
-        var pc = peersManager.getPeer(socketId)
+        var pc = getPeer(socketId)
         if(pc)
-            _processOffer(pc, sdp, socketId)
+            processOffer(pc, sdp, socketId)
     })
 
     signaling.addEventListener('answer', function(socketId, sdp)
     {
         // Search the peer between the list of currently connected peers
-        var pc = peersManager.getPeer(socketId)
+        var pc = getPeer(socketId)
         if(pc)
             pc.setRemoteDescription(pc.SDP_ANSWER, new SessionDescription(sdp));
     })
