@@ -68,27 +68,6 @@ a{
 	cursor: pointer;
 }
 
-#log{
-	font-size: 1.1em;
-	text-align: center;
-	padding-top: 20px;
-	width: 700px;
-	margin: 0 auto;
-	letter-spacing:1px;
-	line-height: 1.3em;
-	color:#999999;
-}
-
-#infoholder{
-    text-align: center;
-    width: 800px;
-	text-align: center;
-    margin: 0 auto;
-    display: block;
-    color: #BBBBBB;
-    padding: 5px;
-}
-
 #clicky{
     height: 200px;
 }
