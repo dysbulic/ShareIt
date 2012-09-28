@@ -34,4 +34,9 @@ function PeersManager()
         else if(onsuccess)
             onsuccess(peer._channel)
     }
+
+    this.getPeer(socketId)
+    {
+        return peers[socketId]
+    }
 }

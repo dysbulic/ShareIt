@@ -19,9 +19,9 @@ function _initDataChannel(pc, channel)
 }
 
 
-function Transport_Signaling_init(transport)
+function Transport_Signaling_init(signaling, peersManager)
 {
-    function processOffer(pc, sdp, socketId)
+    function _processOffer(pc, sdp, socketId)
     {
         pc.setRemoteDescription(pc.SDP_OFFER, new SessionDescription(sdp));
 
@@ -39,7 +39,7 @@ function Transport_Signaling_init(transport)
         console.debug('connectTo() is called')
 
         // Search the peer between the list of currently connected peers
-        var pc = peers[socketId]
+        var pc = peersManager.getPeer(socketId)
 
         // Peer is not connected, create a new channel
         if(!pc)
@@ -51,7 +51,7 @@ function Transport_Signaling_init(transport)
             }
         }
 
-        processOffer(pc, sdp, socketId)
+        _processOffer(pc, sdp, socketId)
     })
 
     signaling.addEventListener('offer', function(socketId, sdp)
@@ -59,16 +59,16 @@ function Transport_Signaling_init(transport)
         console.debug('offer() is called')
 
         // Search the peer between the list of currently connected peers
-        var pc = peers[socketId];
-
-        processOffer(pc, sdp, socketId)
+        var pc = peersManager.getPeer(socketId)
+        if(pc)
+            _processOffer(pc, sdp, socketId)
     })
 
     signaling.addEventListener('answer', function(socketId, sdp)
     {
         // Search the peer between the list of currently connected peers
-        var pc = peers[socketId];
-
-        pc.setRemoteDescription(pc.SDP_ANSWER, new SessionDescription(sdp));
+        var pc = peersManager.getPeer(socketId)
+        if(pc)
+            pc.setRemoteDescription(pc.SDP_ANSWER, new SessionDescription(sdp));
     })
 }
