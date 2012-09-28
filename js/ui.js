@@ -436,7 +436,7 @@ function UI_setSignaling(signaling)
         if(uid != null && uid != '')
         {
             // Create connection with the other peer
-            signaling.connectTo(uid, function(channel)
+            peersManager.connectTo(uid, function(channel)
             {
                 $("#tabs").tabs("add", "#tabs-"+uid, "UID: "+uid);
 
