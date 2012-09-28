@@ -11,23 +11,23 @@ function PeersManager()
         if(!peer)
         {
             // Create PeerConnection
-            var pc = _createPeerConnection();
-                pc.open = function()
-                {
-                    _initDataChannel(pc, pc.createDataChannel())
-                }
-                pc.onerror = function()
-                {
-                    if(onerror)
-                        onerror()
-                }
+            peer = peers[uid] = _createPeerConnection();
+            peer.open = function()
+            {
+                _initDataChannel(peer, peer.createDataChannel())
+            }
+            peer.onerror = function()
+            {
+                if(onerror)
+                    onerror()
+            }
 
             // Send offer to new PeerConnection
-            var offer = pc.createOffer();
+            var offer = peer.createOffer();
 
             signaling.emit("offer", offer.toSdp(), uid);
 
-            pc.setLocalDescription(pc.SDP_OFFER, offer);
+            peer.setLocalDescription(peer.SDP_OFFER, offer);
         }
 
         // Peer is connected and we have defined an 'onsucess' callback
