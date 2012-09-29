@@ -1,4 +1,4 @@
-function PeersManager()
+function PeersManager_multiple()
 {
     var peers = {}
 
@@ -40,8 +40,14 @@ function PeersManager()
         return peers[socketId]
     }
 
-    this.setPeer(socketId, peerConnection)
+    this.createPeer(socketId)
     {
-        peers[socketId] = peerConnection
+        var peer = peers[socketId] = _createPeerConnection()
+	        peer.ondatachannel = function(event)
+	        {
+	            _initDataChannel(peer, event.channel)
+	        }
+
+        return peer
     }
 }
