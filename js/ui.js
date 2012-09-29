@@ -417,7 +417,7 @@ function UI_setHost()
 	    _ui_updatefiles(area, files, _ui_row_sharing, _button_sharing)
 	}
 
-    transport.addEventListener("fileslist_peer.update", function(uid, fileslist)
+    host.addEventListener("fileslist_peer.update", function(uid, fileslist)
     {
         var table = document.getElementById("tabs-"+uid).getElementsByTagName("tbody")[0]
         _ui_updatefiles(table, fileslist, _ui_row_sharing, _button_peer)
@@ -427,7 +427,7 @@ function UI_setHost()
 }
 
 
-function UI_setSignaling(signaling)
+function UI_setSignaling(signaling, peersManager)
 {
     $("#ConnectUser").unbind('click')
     $("#ConnectUser").click(function()

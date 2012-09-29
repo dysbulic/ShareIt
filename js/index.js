@@ -29,8 +29,10 @@ window.addEventListener("load", function()
         Transport_init(new WebSocket('wss://shareit.nodejitsu.com/'),
         function(signaling)
         {
+            var peersManager = new PeersManager_multiple()
+
             // Apply signaling "interface" events and functions to transport
-            Transport_Signaling_init(signaling)
+            Transport_Signaling_init(signaling, peersManager)
 
 	        var ui = UI_setHost()
 
@@ -45,7 +47,7 @@ window.addEventListener("load", function()
 //                                                        getRandom(file.bitmap))
             })
 
-            UI_setSignaling(signaling)
+            UI_setSignaling(signaling, peersManager)
         })
 	})
 })
