@@ -227,7 +227,7 @@ function UI_init()
     });
 }
 
-function UI_setHost()
+function UI_setPeersManager(peersManager)
 {
 	function _button_sharing(file)
 	{
@@ -417,7 +417,8 @@ function UI_setHost()
 	    _ui_updatefiles(area, files, _ui_row_sharing, _button_sharing)
 	}
 
-    host.addEventListener("fileslist_peer.update", function(uid, fileslist)
+    peersManager.addEventListener("fileslist_peer.update",
+    function(uid, fileslist)
     {
         var table = document.getElementById("tabs-"+uid).getElementsByTagName("tbody")[0]
         _ui_updatefiles(table, fileslist, _ui_row_sharing, _button_peer)
@@ -499,7 +500,7 @@ function UI_setSignaling(signaling, peersManager)
     })
 
     // Set UID
-    signaling.removeEventListener('sessionId')
+//    signaling.removeEventListener('sessionId')
     signaling.addEventListener('sessionId', function(event)
     {
 	    var span = document.getElementById("UID")

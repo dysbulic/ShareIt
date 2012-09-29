@@ -1,11 +1,8 @@
-window.addEventListener("load", function()
+function load()
 {
-    // Init user interface
-    UI_init()
-
     // Init database
-	DB_init(function(db)
-	{
+    DB_init(function(db)
+    {
         // Get shared points and init them
         db.sharepoints_getAll(null, function(sharedpoints)
         {
@@ -34,7 +31,7 @@ window.addEventListener("load", function()
             // Apply signaling "interface" events and functions to transport
             Transport_Signaling_init(signaling, peersManager)
 
-	        var ui = UI_setHost()
+            var ui = UI_setPeersManager(peersManager)
 
             db.sharepoints_getAll(null, function(filelist)
             {
@@ -49,5 +46,21 @@ window.addEventListener("load", function()
 
             UI_setSignaling(signaling, peersManager)
         })
+    })
+}
+
+
+window.addEventListener("load", function()
+{
+    // Init user interface
+    UI_init()
+
+	// Check for IndexedDB support and if it store File objects
+	testIDBBlobSupport(function(supported)
+	{
+	    if(!supported)
+	       IdbJS_install();
+
+        load()
 	})
 })
