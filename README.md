@@ -1,11 +1,15 @@
 # ShareIt! - Pure Javascript Peer to Peer filesharing
 
 Jesús Leganés Combarro "Piranna" - [piranna@gmail.com]
+
 Based on code from Rich Jones - rich@[gun.io](http://gun.io)
 
 ShareIt! is a "Peer to Peer" filesharing system written in pure Javascript and
 based on the [DirtyShare](https://github.com/Miserlou/DirtyShare)
 proof-of-concept by Rich Jones.
+
+If you will fork the project (and more if you want to do modifications) please
+send me an email to let me know :-)
 
 ## About
 
@@ -23,6 +27,12 @@ quarter of 2012 or so, and we will be ready for it from the start.
 
 Let's make a purely browser based, ad-free, Free and Open Source private and
 anonymous filesharing system!
+
+## Future progress
+
+* Adapt protocol to connection + function, more in the way DataChannel will work
+* Integrate Javascript from 'html' and 'html_advance' folders to create a new
+  WebP2P framework
 
 ## Mailing List
 

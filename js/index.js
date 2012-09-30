@@ -35,7 +35,7 @@ function load()
                 {
                     ui.update_fileslist_sharing(filelist)
 
-//                    // Restard downloads
+//                    // Restart downloads
 //                    for(var i = 0, file; file = filelist[i]; i++)
 //                        if(file.bitmap)
 //                            signaling.emit('transfer.query', file.name,
@@ -57,7 +57,8 @@ window.addEventListener("load", function()
   // Check for IndexedDB support and if it store File objects
   testIDBBlobSupport(function(supported)
   {
-    if (!supported) IdbJS_install();
+    if(!supported)
+      IdbJS_install();
 
     load()
   })
