@@ -23,10 +23,11 @@ function load()
         })
 
         // Connect a signaling channel to the handshake server and get an ID
-        Transport_init(new WebSocket('wss://shareit.nodejitsu.com/'),
+        Transport_init(new WebSocket('ws://localhost:8001/'),
+//        Transport_init(new WebSocket('wss://shareit.nodejitsu.com/'),
         function(signaling)
         {
-            var peersManager = new PeersManager_multiple()
+            var peersManager = new PeersManager_multiple(signaling)
 
             // Apply signaling "interface" events and functions to transport
             Transport_Signaling_init(signaling, peersManager)
