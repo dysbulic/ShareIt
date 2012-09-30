@@ -125,8 +125,8 @@ function IdbJS_install()
 
             // Fill the cursor with the objectstore objects
             var cursor = new IDBCursor()
-            for(var obj in objects)
-                cursor._objects.push(obj)
+            for(var key in objects)
+                cursor._objects.push(objects[key])
 
             // Link the request and the cursor between them
             request.target.result = cursor
