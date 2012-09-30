@@ -1,11 +1,8 @@
-window.addEventListener("load", function()
+function load()
 {
-    // Init user interface
-    UI_init()
-
     // Init database
-	DB_init(function(db)
-	{
+    DB_init(function(db)
+    {
         // Get shared points and init them
         db.sharepoints_getAll(null, function(sharedpoints)
         {
@@ -29,9 +26,9 @@ window.addEventListener("load", function()
         Protocol_init(new WebSocket('wss://localhost:8001'),
         function(protocol)
         {
-	        // Init host
-		    Host_init(db, protocol, function(host)
-		    {
+            // Init host
+            Host_init(db, protocol, function(host)
+            {
                 var ui = UI_setHost(host)
 
                 db.sharepoints_getAll(null, function(filelist)
@@ -44,9 +41,24 @@ window.addEventListener("load", function()
 //                            protocol.emit('transfer.query', file.name,
 //                                                            getRandom(file.bitmap))
                 })
-	        })
+            })
 
             UI_setProtocol(protocol)
-	    })
-	})
+        })
+    })
+}
+
+
+window.addEventListener("load", function()
+{
+  // Init user interface
+  UI_init()
+
+  // Check for IndexedDB support and if it store File objects
+  testIDBBlobSupport(function(supported)
+  {
+    if (!supported) IdbJS_install();
+
+    load()
+  })
 })
