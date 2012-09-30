@@ -53,12 +53,12 @@ function IdbJS_install()
 	{
 	  this.target = {}
 	}
-
 	IDBRequest.prototype =
 	{
 	  set onsuccess(func)
 	  {
-	    console.log("IDBRequest.onsuccess")
+	    this._onsuccess = func
+	    console.log("target: "+this.target)
 	    var event = {target: this.target}
 	    func.call(this, event)
 	  }
@@ -79,10 +79,27 @@ function IdbJS_install()
 
 	function IDBCursor()
 	{
+	  this._objects = []
+	  this._index = 0
+
 	  this.continue = function()
 	  {
+	    this._index += 1
+
+        var event = {target: {}}
+        if(this.value)
+            event.target.result = this
+	    this._request._onsuccess(event)
 	  }
 	}
+    IDBCursor.prototype =
+    {
+      get value()
+      {
+        console.log(this._objects);
+        return this._objects[this._index]
+      }
+    }
 
 	function IDBObjectStore()
 	{
@@ -90,11 +107,7 @@ function IdbJS_install()
 
 	  this.add = function(value, key)
 	  {
-	    objects[key] = value
-
-	    var request = new IDBRequest()
-	        request.result = objects[key]
-	    return request
+	    return this.put(value, key)
 	  }
 	  this.get = function(key)
 	  {
@@ -104,12 +117,36 @@ function IdbJS_install()
 	  }
 	  this.openCursor = function(range)
 	  {
-	    var request = new IDBRequest()
-	        request.target.result = new IDBCursor()
+        var request = new IDBRequest()
+
+        if(Object.keys(objects).length)
+        {
+            console.log(objects);
+
+            // Fill the cursor with the objectstore objects
+            var cursor = new IDBCursor()
+            for(var obj in objects)
+                cursor._objects.push(obj)
+
+            // Link the request and the cursor between them
+            request.target.result = cursor
+            cursor._request = request
+        }
+
 	    return request
 	  }
 	  this.put = function(value, key)
 	  {
+	    if(this.keyPath)
+	    {
+	       if(key)
+	           throw DOMException
+	       key = value[this.keyPath]
+	    }
+
+       if(!key)
+           throw DOMException
+
 	    objects[key] = value
 
 	    var request = new IDBRequest()
@@ -132,7 +169,11 @@ function IdbJS_install()
 
       this.createObjectStore = function(name, optionalParameters)
       {
-        this._stores[name] = new IDBObjectStore()
+        var objectStore = new IDBObjectStore()
+        if(optionalParameters)
+            objectStore.keyPath = optionalParameters.keyPath
+
+        this._stores[name] = objectStore
       }
 
       this.setVersion = function(version)

@@ -78,8 +78,8 @@ function DB_init(onsuccess)
 	            var transaction = db.transaction(objectStore);
 	            var objectStore = transaction.objectStore(objectStore);
 
-		        var cursor = objectStore.openCursor(range)
-                    cursor.onsuccess = function(event)
+		        var request = objectStore.openCursor(range)
+                    request.onsuccess = function(event)
                     {
                         var cursor = event.target.result;
                         if(cursor)
@@ -88,10 +88,13 @@ function DB_init(onsuccess)
                             cursor.continue();
                         }
                         else
+                        {
+                            console.log(result)
                             onsuccess(result);
+                        }
                     };
                 if(onerror != undefined)
-                    cursor.onerror = function(event)
+                    request.onerror = function(event)
                     {
                         onerror(event.target.errorCode);
                     };
