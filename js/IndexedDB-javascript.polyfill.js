@@ -58,7 +58,6 @@ function IdbJS_install()
 	  set onsuccess(func)
 	  {
 	    this._onsuccess = func
-	    console.log("target: "+this.target)
 	    var event = {target: this.target}
 	    func.call(this, event)
 	  }
@@ -96,7 +95,6 @@ function IdbJS_install()
     {
       get value()
       {
-        console.log(this._objects);
         return this._objects[this._index]
       }
     }
@@ -121,8 +119,6 @@ function IdbJS_install()
 
         if(Object.keys(objects).length)
         {
-            console.log(objects);
-
             // Fill the cursor with the objectstore objects
             var cursor = new IDBCursor()
             for(var key in objects)

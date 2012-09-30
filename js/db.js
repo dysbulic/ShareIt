@@ -88,10 +88,7 @@ function DB_init(onsuccess)
                             cursor.continue();
                         }
                         else
-                        {
-                            console.log(result)
                             onsuccess(result);
-                        }
                     };
                 if(onerror != undefined)
                     request.onerror = function(event)

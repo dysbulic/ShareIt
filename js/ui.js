@@ -327,7 +327,6 @@ function UI_setPeersManager(peersManager)
 
 	    div.open = function(blob)
 	    {
-	        console.debug(JSON.stringify(file))
 	        var open = document.createElement("A");
 	            open.href = window.URL.createObjectURL(blob)
 	            open.target = "_blank"
