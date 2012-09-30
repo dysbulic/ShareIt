@@ -431,7 +431,7 @@ function UI_init()
     });
 }
 
-function UI_setProtocol(protocol)
+function UI_setSignaling(protocol)
 {
     $("#ConnectUser").unbind('click')
     $("#ConnectUser").click(function()

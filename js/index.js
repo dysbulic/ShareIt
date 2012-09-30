@@ -23,11 +23,11 @@ function load()
         })
 
         // Load websocket connection after IndexedDB is ready
-        Protocol_init(new WebSocket('wss://localhost:8001'),
-        function(protocol)
+        Transport_init(new WebSocket('wss://localhost:8001'),
+        function(signaling)
         {
             // Init host
-            Host_init(db, protocol, function(host)
+            Host_init(db, signaling, function(host)
             {
                 var ui = UI_setHost(host)
 
@@ -38,12 +38,12 @@ function load()
 //                    // Restard downloads
 //                    for(var i = 0, file; file = filelist[i]; i++)
 //                        if(file.bitmap)
-//                            protocol.emit('transfer.query', file.name,
+//                            signaling.emit('transfer.query', file.name,
 //                                                            getRandom(file.bitmap))
                 })
             })
 
-            UI_setProtocol(protocol)
+            UI_setSignaling(signaling)
         })
     })
 }
