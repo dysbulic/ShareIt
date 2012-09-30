@@ -1,9 +1,9 @@
 // SSL Certificates
 var fs = require('fs');
 
-var options = {key:  fs.readFileSync('../certs/privatekey.pem').toString(),
-			   cert: fs.readFileSync('../certs/certificate.pem').toString(),
-			   ca:   [fs.readFileSync('../certs/certrequest.csr').toString()]}
+var options = {key:  fs.readFileSync('certs/privatekey.pem').toString(),
+			   cert: fs.readFileSync('certs/certificate.pem').toString(),
+			   ca:   [fs.readFileSync('certs/certrequest.csr').toString()]}
 
 // P2P Stuff
 var server = require('https').createServer(options).listen(8001);
