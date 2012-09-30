@@ -51,7 +51,6 @@ function IdbJS_install()
 
 	function IDBRequest()
 	{
-	  console.log("IDBRequest")
 	  this.target = {}
 	}
 
@@ -67,8 +66,13 @@ function IdbJS_install()
 
 	function IDBOpenRequest()
 	{
-	  console.log("IDBOpenRequest")
 	  IDBRequest.call(this)
+
+//      this.prototype.__defineSetter__("onupgradeneeded", function(func)
+//      {
+//        var event = {target: this.target}
+//        func.call(this, event)
+//      })
 	}
 	IDBOpenRequest.prototype = new IDBRequest()
 
@@ -118,13 +122,25 @@ function IdbJS_install()
 	{
 	  this.objectStore = function(name)
 	  {
-	    return db._stores[name]
+	    return this.db._stores[name]
 	  }
 	}
 
 	function IDBDatabase()
 	{
 	  this._stores = {}
+
+      this.createObjectStore = function(name, optionalParameters)
+      {
+        this._stores[name] = new IDBObjectStore()
+      }
+
+      this.setVersion = function(version)
+      {
+        this.version = version
+
+        return new IDBRequest()
+      }
 
 	  this.transaction = function(storeNames, mode)
 	  {
@@ -142,7 +158,6 @@ function IdbJS_install()
 
 	  open: function(name, version)
 	  {
-	    console.log("open")
 	    this._dbs[name] = this._dbs[name] || new IDBDatabase()
 
 	    var request = new IDBOpenRequest()
