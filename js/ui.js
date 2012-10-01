@@ -513,7 +513,7 @@ function UI_setSignaling(signaling, peersManager)
                     td.appendChild(document.createTextNode("Waiting for the peer data"))
                 tr.appendChild(td);
 
-                signaling.fileslist_query(uid)
+                channel.fileslist_query(uid)
             })
         }
     })
