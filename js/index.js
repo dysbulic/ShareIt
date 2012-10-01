@@ -28,20 +28,19 @@ function load()
         function(signaling)
         {
             // Init host
-            Host_init(db, signaling, function(host)
+            var host = new Host(db, signaling)
+
+            var ui = UI_setHost(host)
+
+            db.sharepoints_getAll(null, function(filelist)
             {
-                var ui = UI_setHost(host)
+                ui.update_fileslist_sharing(filelist)
 
-                db.sharepoints_getAll(null, function(filelist)
-                {
-                    ui.update_fileslist_sharing(filelist)
-
-//                    // Restart downloads
-//                    for(var i = 0, file; file = filelist[i]; i++)
-//                        if(file.bitmap)
-//                            signaling.emit('transfer.query', file.name,
-//                                                            getRandom(file.bitmap))
-                })
+//                // Restart downloads
+//                for(var i = 0, file; file = filelist[i]; i++)
+//                    if(file.bitmap)
+//                        signaling.emit('transfer.query', file.name,
+//                                                        getRandom(file.bitmap))
             })
 
             UI_setSignaling(signaling)
