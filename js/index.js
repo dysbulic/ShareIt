@@ -27,7 +27,7 @@ function load()
 //        Transport_init(new WebSocket('wss://shareit.nodejitsu.com/'),
         function(signaling)
         {
-            var peersManager = new PeersManager_multiple(signaling)
+            var peersManager = new PeersManager(signaling, db)
 
             // Apply signaling "interface" events and functions to transport
             Transport_Signaling_init(signaling, peersManager)
