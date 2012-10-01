@@ -27,9 +27,10 @@ function load()
 //        Transport_init(new WebSocket('wss://shareit.nodejitsu.com'),
         function(signaling)
         {
-            // Init host
-            var host = new Host(signaling, db)
+            var host = new EventTarget()
 
+            // Init host
+            Transport_Host_init(signaling, db)
             Transport_Peer_init(signaling, db, host)
 
             var ui = UI_setHost(host)
