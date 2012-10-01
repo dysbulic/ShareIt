@@ -33,7 +33,7 @@ function load()
             Transport_Host_init(signaling, db)
             Transport_Peer_init(signaling, db, peersManager)
 
-            var ui = UI_setHost(peersManager)
+            var ui = UI_setPeersManager(peersManager)
 
             db.sharepoints_getAll(null, function(filelist)
             {

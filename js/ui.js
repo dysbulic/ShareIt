@@ -11,9 +11,9 @@ function ui_ready_fileschange(func)
     }, false);
 }
 
-function UI_setHost(host)
+function UI_setPeersManager(peersManager)
 {
-	host.set_uid = function(uid)
+	peersManager.set_uid = function(uid)
 	{
 	    document.getElementById("UID").appendChild(document.createTextNode("UID: "+uid))
 	}
@@ -66,14 +66,14 @@ function UI_setHost(host)
 	    else
 	        div.open(file)
 
-	    host.addEventListener("transfer.begin", function(event)
+	    peersManager.addEventListener("transfer.begin", function(event)
 	    {
 	        var f = event.data[0]
 
 	        if(file.name == f.name)
 	            div.progressbar()
 	    })
-	    host.addEventListener("transfer.update", function(event)
+	    peersManager.addEventListener("transfer.update", function(event)
 	    {
             var f = event.data[0]
             var value = event.data[1]
@@ -81,7 +81,7 @@ function UI_setHost(host)
 	        if(file.name == f.name)
 	            div.progressbar(value)
 	    })
-	    host.addEventListener("transfer.end", function(event)
+	    peersManager.addEventListener("transfer.end", function(event)
 	    {
             var f = event.data[0]
 
@@ -102,7 +102,7 @@ function UI_setHost(host)
 	        var transfer = document.createElement("A");
 	            transfer.onclick = function()
 	            {
-	                host._transferbegin(file);
+	                peersManager._transferbegin(file);
 	                return false;
 	            }
 	            transfer.appendChild(document.createTextNode("Transfer"));
@@ -153,14 +153,14 @@ function UI_setHost(host)
 	    else
 	        div.transfer()
 
-	    host.addEventListener("transfer.begin", function(event)
+	    peersManager.addEventListener("transfer.begin", function(event)
 	    {
             var f = event.data[0]
 
 	        if(file.name == f.name)
 	            div.progressbar()
 	    })
-	    host.addEventListener("transfer.update", function(event)
+	    peersManager.addEventListener("transfer.update", function(event)
 	    {
             var f = event.data[0]
             var value = event.data[1]
@@ -168,7 +168,7 @@ function UI_setHost(host)
 	        if(file.name == f.name)
 	            div.progressbar(value)
 	    })
-	    host.addEventListener("transfer.end", function(event)
+	    peersManager.addEventListener("transfer.end", function(event)
 	    {
             var f = event.data[0]
 
@@ -220,7 +220,7 @@ function UI_setHost(host)
 	    _ui_updatefiles(area, files, _ui_row_sharing, _button_sharing)
 	}
 
-    host.addEventListener("fileslist_peer.update", function(event)
+    peersManager.addEventListener("fileslist_peer.update", function(event)
     {
         var uid = event.data[0]
         var fileslist = event.data[1]
