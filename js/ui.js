@@ -11,227 +11,6 @@ function ui_ready_fileschange(func)
     }, false);
 }
 
-function UI_setPeersManager(peersManager)
-{
-	peersManager.set_uid = function(uid)
-	{
-	    document.getElementById("UID").appendChild(document.createTextNode("UID: "+uid))
-	}
-
-	function _button_sharing(file)
-	{
-	    var div = document.createElement("DIV");
-	    	div.id = file.name
-
-		div.progressbar = function(value)
-		{
-		    if(value == undefined)
-		       value = 0;
-
-			var progress = document.createTextNode(Math.floor(value*100)+"%")
-
-			while(div.firstChild)
-				div.removeChild(div.firstChild);
-			div.appendChild(progress);
-		}
-
-		div.open = function(blob)
-		{
-		    var open = document.createElement("A");
-		    	open.href = window.URL.createObjectURL(blob)
-		    	open.target = "_blank"
-				open.appendChild(document.createTextNode("Open"));
-
-			while(div.firstChild)
-			{
-				window.URL.revokeObjectURL(div.firstChild.href);
-				div.removeChild(div.firstChild);
-			}
-			div.appendChild(open);
-		}
-
-	    // Show if file have been downloaded previously or if we can transfer it
-	    if(file.bitmap)
-	    {
-			var chunks = file.size/chunksize;
-			if(chunks % 1 != 0)
-				chunks = Math.floor(chunks) + 1;
-
-			var value = chunks - file.bitmap.length
-
-	        div.progressbar(value/chunks)
-	    }
-	    else if(file.blob)
-	        div.open(file.blob)
-	    else
-	        div.open(file)
-
-	    peersManager.addEventListener("transfer.begin", function(event)
-	    {
-	        var f = event.data[0]
-
-	        if(file.name == f.name)
-	            div.progressbar()
-	    })
-	    peersManager.addEventListener("transfer.update", function(event)
-	    {
-            var f = event.data[0]
-            var value = event.data[1]
-
-	        if(file.name == f.name)
-	            div.progressbar(value)
-	    })
-	    peersManager.addEventListener("transfer.end", function(event)
-	    {
-            var f = event.data[0]
-
-	        if(file.name == f.name)
-	            div.open(f.blob)
-	    })
-
-	    return div
-	}
-
-	function _button_peer(file)
-	{
-	    var div = document.createElement("DIV");
-	        div.id = file.name
-
-	    div.transfer = function()
-	    {
-	        var transfer = document.createElement("A");
-	            transfer.onclick = function()
-	            {
-	                peersManager._transferbegin(file);
-	                return false;
-	            }
-	            transfer.appendChild(document.createTextNode("Transfer"));
-
-	        while(div.firstChild)
-	            div.removeChild(div.firstChild);
-	        div.appendChild(transfer);
-	    }
-
-	    div.progressbar = function()
-	    {
-	        var progress = document.createTextNode("0%")
-
-	        while(div.firstChild)
-	            div.removeChild(div.firstChild);
-	        div.appendChild(progress);
-	    }
-
-	    div.open = function(blob)
-	    {
-	        console.debug(JSON.stringify(file))
-	        var open = document.createElement("A");
-	            open.href = window.URL.createObjectURL(blob)
-	            open.target = "_blank"
-	            open.appendChild(document.createTextNode("Open"));
-
-	        while(div.firstChild)
-	        {
-	            window.URL.revokeObjectURL(div.firstChild.href);
-	            div.removeChild(div.firstChild);
-	        }
-	        div.appendChild(open);
-	    }
-
-	    // Show if file have been downloaded previously or if we can transfer it
-	    if(file.bitmap)
-	    {
-	        var chunks = file.size/chunksize;
-	        if(chunks % 1 != 0)
-	            chunks = Math.floor(chunks) + 1;
-
-	        var value = chunks - file.bitmap.length
-
-	        div.progressbar(value/chunks)
-	    }
-	    else if(file.blob)
-	        div.open(file.blob)
-	    else
-	        div.transfer()
-
-	    peersManager.addEventListener("transfer.begin", function(event)
-	    {
-            var f = event.data[0]
-
-	        if(file.name == f.name)
-	            div.progressbar()
-	    })
-	    peersManager.addEventListener("transfer.update", function(event)
-	    {
-            var f = event.data[0]
-            var value = event.data[1]
-
-	        if(file.name == f.name)
-	            div.progressbar(value)
-	    })
-	    peersManager.addEventListener("transfer.end", function(event)
-	    {
-            var f = event.data[0]
-
-	        if(file.name == f.name)
-	            div.open(f.blob)
-	    })
-
-	    return div
-	}
-
-	function _ui_row_sharing(file, button_factory)
-	{
-	    var tr = document.createElement('TR');
-	
-	    var td = document.createElement('TD');
-	    tr.appendChild(td)
-	
-	    // Name & icon
-	    var span = document.createElement('SPAN');
-	        span.className = _ui_filetype2className(file.type)
-	        span.appendChild(document.createTextNode(file.name));
-	    td.appendChild(span)
-	
-	    // Type
-	    var td = document.createElement('TD');
-	        td.appendChild(document.createTextNode(file.type));
-	    tr.appendChild(td)
-	
-	    // Size
-	    var td = document.createElement('TD');
-	        td.className="filesize"
-	        td.appendChild(document.createTextNode(humanize.filesize(file.size)));
-	    tr.appendChild(td)
-	
-	    // Action
-	    var td = document.createElement('TD');
-	        td.class = "end"
-	        td.appendChild(button_factory(file));
-	    tr.appendChild(td)
-	
-	    return tr
-	}
-
-    var ui = {}
-
-	ui.update_fileslist_sharing = function(files)
-	{
-	    var area = document.getElementById('Sharing').getElementsByTagName("tbody")[0]
-	    _ui_updatefiles(area, files, _ui_row_sharing, _button_sharing)
-	}
-
-    peersManager.addEventListener("fileslist_peer.update", function(event)
-    {
-        var uid = event.data[0]
-        var fileslist = event.data[1]
-
-        var table = document.getElementById("tabs-"+uid).getElementsByTagName("tbody")[0]
-        _ui_updatefiles(table, fileslist, _ui_row_sharing, _button_peer)
-    })
-
-    return ui
-}
-
 function _ui_filetype2className(filetype)
 {
     filetype = filetype.split('/')
@@ -367,6 +146,7 @@ function _ui_updatefiles(area, files, row_factory, button_factory)
         }
 }
 
+
 function ui_update_fileslist_downloading(files)
 {
     var area = document.getElementById('Downloading').getElementsByTagName("tbody")[0]
@@ -378,6 +158,7 @@ function ui_update_fileslist_sharedpoints(sharedpoints)
     var area = document.getElementById('Sharedpoints').getElementsByTagName("tbody")[0]
     _ui_updatefiles(area, sharedpoints, _ui_row_sharedpoints)
 }
+
 
 function UI_init()
 {
@@ -447,6 +228,224 @@ function UI_init()
             submenu.slideUp();
     });
 }
+
+function UI_setPeersManager(peersManager)
+{
+	function _button_sharing(file)
+	{
+	    var div = document.createElement("DIV");
+	    	div.id = file.name
+
+		div.progressbar = function(value)
+		{
+		    if(value == undefined)
+		       value = 0;
+
+			var progress = document.createTextNode(Math.floor(value*100)+"%")
+
+			while(div.firstChild)
+				div.removeChild(div.firstChild);
+			div.appendChild(progress);
+		}
+
+		div.open = function(blob)
+		{
+		    var open = document.createElement("A");
+		    	open.href = window.URL.createObjectURL(blob)
+		    	open.target = "_blank"
+				open.appendChild(document.createTextNode("Open"));
+
+			while(div.firstChild)
+			{
+				window.URL.revokeObjectURL(div.firstChild.href);
+				div.removeChild(div.firstChild);
+			}
+			div.appendChild(open);
+		}
+
+	    // Show if file have been downloaded previously or if we can transfer it
+	    if(file.bitmap)
+	    {
+			var chunks = file.size/chunksize;
+			if(chunks % 1 != 0)
+				chunks = Math.floor(chunks) + 1;
+
+			var value = chunks - file.bitmap.length
+
+	        div.progressbar(value/chunks)
+	    }
+	    else if(file.blob)
+	        div.open(file.blob)
+	    else
+	        div.open(file)
+
+	    peersManager.addEventListener("transfer.begin", function(event)
+	    {
+	        var f = event.data[0]
+
+	        if(file.name == f.name)
+	            div.progressbar()
+	    })
+	    peersManager.addEventListener("transfer.update", function(event)
+	    {
+            var f = event.data[0]
+            var value = event.data[1]
+
+	        if(file.name == f.name)
+	            div.progressbar(value)
+	    })
+	    peersManager.addEventListener("transfer.end", function(event)
+	    {
+            var f = event.data[0]
+
+	        if(file.name == f.name)
+	            div.open(f.blob)
+	    })
+
+	    return div
+	}
+
+	function _button_peer(file)
+	{
+	    var div = document.createElement("DIV");
+	        div.id = file.name
+
+	    div.transfer = function()
+	    {
+	        var transfer = document.createElement("A");
+	            transfer.onclick = function()
+	            {
+	                peersManager._transferbegin(file);
+	                return false;
+	            }
+	            transfer.appendChild(document.createTextNode("Transfer"));
+
+	        while(div.firstChild)
+	            div.removeChild(div.firstChild);
+	        div.appendChild(transfer);
+	    }
+
+	    div.progressbar = function()
+	    {
+	        var progress = document.createTextNode("0%")
+
+	        while(div.firstChild)
+	            div.removeChild(div.firstChild);
+	        div.appendChild(progress);
+	    }
+
+	    div.open = function(blob)
+	    {
+	        console.debug(JSON.stringify(file))
+
+	        var open = document.createElement("A");
+	            open.href = window.URL.createObjectURL(blob)
+	            open.target = "_blank"
+	            open.appendChild(document.createTextNode("Open"));
+
+	        while(div.firstChild)
+	        {
+	            window.URL.revokeObjectURL(div.firstChild.href);
+	            div.removeChild(div.firstChild);
+	        }
+	        div.appendChild(open);
+	    }
+
+	    // Show if file have been downloaded previously or if we can transfer it
+	    if(file.bitmap)
+	    {
+	        var chunks = file.size/chunksize;
+	        if(chunks % 1 != 0)
+	            chunks = Math.floor(chunks) + 1;
+
+	        var value = chunks - file.bitmap.length
+
+	        div.progressbar(value/chunks)
+	    }
+	    else if(file.blob)
+	        div.open(file.blob)
+	    else
+	        div.transfer()
+
+	    peersManager.addEventListener("transfer.begin", function(event)
+	    {
+            var f = event.data[0]
+
+	        if(file.name == f.name)
+	            div.progressbar()
+	    })
+	    peersManager.addEventListener("transfer.update", function(event)
+	    {
+            var f = event.data[0]
+            var value = event.data[1]
+
+	        if(file.name == f.name)
+	            div.progressbar(value)
+	    })
+	    peersManager.addEventListener("transfer.end", function(event)
+	    {
+            var f = event.data[0]
+
+	        if(file.name == f.name)
+	            div.open(f.blob)
+	    })
+
+	    return div
+	}
+
+	function _ui_row_sharing(file, button_factory)
+	{
+	    var tr = document.createElement('TR');
+
+	    var td = document.createElement('TD');
+	    tr.appendChild(td)
+
+	    // Name & icon
+	    var span = document.createElement('SPAN');
+	        span.className = _ui_filetype2className(file.type)
+	        span.appendChild(document.createTextNode(file.name));
+	    td.appendChild(span)
+
+	    // Type
+	    var td = document.createElement('TD');
+	        td.appendChild(document.createTextNode(file.type));
+	    tr.appendChild(td)
+
+	    // Size
+	    var td = document.createElement('TD');
+	        td.className="filesize"
+	        td.appendChild(document.createTextNode(humanize.filesize(file.size)));
+	    tr.appendChild(td)
+
+	    // Action
+	    var td = document.createElement('TD');
+	        td.class = "end"
+	        td.appendChild(button_factory(file));
+	    tr.appendChild(td)
+
+	    return tr
+	}
+
+    var ui = {}
+
+	ui.update_fileslist_sharing = function(files)
+	{
+	    var area = document.getElementById('Sharing').getElementsByTagName("tbody")[0]
+	    _ui_updatefiles(area, files, _ui_row_sharing, _button_sharing)
+	}
+
+    peersManager.addEventListener("fileslist_peer.update", function(event)
+    {
+        var uid = event.data[0]
+        var fileslist = event.data[1]
+
+        var table = document.getElementById("tabs-"+uid).getElementsByTagName("tbody")[0]
+        _ui_updatefiles(table, fileslist, _ui_row_sharing, _button_peer)
+    })
+
+    return ui
+}
+
 
 function UI_setSignaling(signaling, peersManager)
 {
