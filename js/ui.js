@@ -359,9 +359,9 @@ function _ui_updatefiles(area, files, row_factory, button_factory)
                 path = file.path + '/';
 
             var tr = row_factory(file, button_factory)
-		        tr.id = path + file.name
-		        if(path)
-		            tr.class = "child-of-" + path
+                tr.id = path + file.name
+                if(path)
+                    tr.class = "child-of-" + path
 
             area.appendChild(tr)
         }
@@ -522,7 +522,7 @@ function UI_setSignaling(protocol)
         var uid = event.data[0]
 
 	    var span = document.getElementById("UID")
-	
+
 	    while(span.firstChild)
 	        span.removeChild(span.firstChild);
 	    span.appendChild(document.createTextNode("UID: "+uid))
