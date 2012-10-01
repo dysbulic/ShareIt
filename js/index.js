@@ -28,7 +28,7 @@ function load()
         function(signaling)
         {
             // Init host
-            var host = new Host(db, signaling)
+            var host = new Host(signaling, db)
 
             Transport_Peer_init(signaling, db, host)
 
