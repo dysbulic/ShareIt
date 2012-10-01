@@ -22,18 +22,18 @@ function load()
             db.sharepoints_getAll(null, ui_update_fileslist_sharedpoints)
         })
 
-        // Load websocket connection after IndexedDB is ready
+        // Connect a signaling channel to the handshake server and get an ID
         Transport_init(new WebSocket('ws://localhost:8001'),
 //        Transport_init(new WebSocket('wss://shareit.nodejitsu.com'),
         function(signaling)
         {
-            var host = new EventTarget()
+            var peersManager = new PeersManager(db)
 
             // Init host
             Transport_Host_init(signaling, db)
-            Transport_Peer_init(signaling, db, host)
+            Transport_Peer_init(signaling, db, peersManager)
 
-            var ui = UI_setHost(host)
+            var ui = UI_setHost(peersManager)
 
             db.sharepoints_getAll(null, function(filelist)
             {
