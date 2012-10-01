@@ -23,7 +23,8 @@ function load()
         })
 
         // Load websocket connection after IndexedDB is ready
-        Transport_init(new WebSocket('wss://localhost:8001'),
+        Transport_init(new WebSocket('ws://localhost:8001'),
+//        Transport_init(new WebSocket('wss://localhost:8001'),
         function(signaling)
         {
             // Init host

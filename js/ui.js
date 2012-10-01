@@ -66,18 +66,25 @@ function UI_setHost(host)
 	    else
 	        div.open(file)
 
-	    host.addEventListener("transfer.begin", function(f)
+	    host.addEventListener("transfer.begin", function(event)
 	    {
+	        var f = event.data[0]
+
 	        if(file.name == f.name)
 	            div.progressbar()
 	    })
-	    host.addEventListener("transfer.update", function(f, value)
+	    host.addEventListener("transfer.update", function(event)
 	    {
+            var f = event.data[0]
+            var value = event.data[1]
+
 	        if(file.name == f.name)
 	            div.progressbar(value)
 	    })
-	    host.addEventListener("transfer.end", function(f)
+	    host.addEventListener("transfer.end", function(event)
 	    {
+            var f = event.data[0]
+
 	        if(file.name == f.name)
 	            div.open(f.blob)
 	    })
@@ -146,18 +153,25 @@ function UI_setHost(host)
 	    else
 	        div.transfer()
 
-	    host.addEventListener("transfer.begin", function(f)
+	    host.addEventListener("transfer.begin", function(event)
 	    {
+            var f = event.data[0]
+
 	        if(file.name == f.name)
 	            div.progressbar()
 	    })
-	    host.addEventListener("transfer.update", function(f, value)
+	    host.addEventListener("transfer.update", function(event)
 	    {
+            var f = event.data[0]
+            var value = event.data[1]
+
 	        if(file.name == f.name)
 	            div.progressbar(value)
 	    })
-	    host.addEventListener("transfer.end", function(f)
+	    host.addEventListener("transfer.end", function(event)
 	    {
+            var f = event.data[0]
+
 	        if(file.name == f.name)
 	            div.open(f.blob)
 	    })
@@ -206,8 +220,11 @@ function UI_setHost(host)
 	    _ui_updatefiles(area, files, _ui_row_sharing, _button_sharing)
 	}
 
-    host.addEventListener("fileslist_peer.update", function(uid, fileslist)
+    host.addEventListener("fileslist_peer.update", function(event)
     {
+        var uid = event.data[0]
+        var fileslist = event.data[1]
+
         var table = document.getElementById("tabs-"+uid).getElementsByTagName("tbody")[0]
         _ui_updatefiles(table, fileslist, _ui_row_sharing, _button_peer)
     })
@@ -499,9 +516,11 @@ function UI_setSignaling(protocol)
     })
 
     // Set UID
-    protocol.removeEventListener('sessionId')
-    protocol.addEventListener('sessionId', function(uid)
+//    protocol.removeEventListener('sessionId')
+    protocol.addEventListener('sessionId', function(event)
     {
+        var uid = event.data[0]
+
 	    var span = document.getElementById("UID")
 	
 	    while(span.firstChild)
