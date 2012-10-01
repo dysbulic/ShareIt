@@ -29,6 +29,9 @@ function load()
         {
             var peersManager = new PeersManager(db)
 
+            // Apply signaling "interface" events and functions to transport
+            Transport_Signaling_init(signaling, peersManager)
+
             // Init host
             Transport_Host_init(signaling, db)
             Transport_Peer_init(signaling, db, peersManager)
