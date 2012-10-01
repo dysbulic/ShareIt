@@ -448,7 +448,7 @@ function UI_init()
     });
 }
 
-function UI_setSignaling(protocol)
+function UI_setSignaling(transport)
 {
     $("#ConnectUser").unbind('click')
     $("#ConnectUser").click(function()
@@ -511,13 +511,13 @@ function UI_setSignaling(protocol)
                 td.appendChild(document.createTextNode("Waiting for the peer data"))
             tr.appendChild(td);
 
-            protocol.emit('fileslist.query', uid);
+            transport.fileslist_query(uid)
         }
     })
 
     // Set UID
-//    protocol.removeEventListener('sessionId')
-    protocol.addEventListener('sessionId', function(event)
+//    transport.removeEventListener('sessionId')
+    transport.addEventListener('sessionId', function(event)
     {
         var uid = event.data[0]
 
