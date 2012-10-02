@@ -362,14 +362,17 @@ function UI_setPeersManager(peersManager)
 	        div.appendChild(transfer);
 	    }
 
-	    div.progressbar = function()
-	    {
-	        var progress = document.createTextNode("0%")
+        div.progressbar = function(value)
+        {
+            if(value == undefined)
+               value = 0;
 
-	        while(div.firstChild)
-	            div.removeChild(div.firstChild);
-	        div.appendChild(progress);
-	    }
+            var progress = document.createTextNode(Math.floor(value*100)+"%")
+
+            while(div.firstChild)
+                div.removeChild(div.firstChild);
+            div.appendChild(progress);
+        }
 
 	    div.open = function(blob)
 	    {
