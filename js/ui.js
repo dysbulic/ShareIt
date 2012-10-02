@@ -146,6 +146,7 @@ function _ui_updatefiles(area, files, row_factory, button_factory)
         }
 }
 
+
 function ui_update_fileslist_downloading(files)
 {
     var area = document.getElementById('Downloading').getElementsByTagName("tbody")[0]
@@ -157,6 +158,7 @@ function ui_update_fileslist_sharedpoints(sharedpoints)
     var area = document.getElementById('Sharedpoints').getElementsByTagName("tbody")[0]
     _ui_updatefiles(area, sharedpoints, _ui_row_sharedpoints)
 }
+
 
 function UI_init()
 {
@@ -313,18 +315,25 @@ function UI_setPeersManager(peersManager)
 	    else
 	        div.open(file)
 
-	    peersManager.addEventListener("transfer.begin", function(f)
+	    peersManager.addEventListener("transfer.begin", function(event)
 	    {
+	        var f = event.data[0]
+
 	        if(file.name == f.name)
 	            div.progressbar()
 	    })
-	    peersManager.addEventListener("transfer.update", function(f, value)
+	    peersManager.addEventListener("transfer.update", function(event)
 	    {
+            var f = event.data[0]
+            var value = event.data[1]
+
 	        if(file.name == f.name)
 	            div.progressbar(value)
 	    })
-	    peersManager.addEventListener("transfer.end", function(f)
+	    peersManager.addEventListener("transfer.end", function(event)
 	    {
+            var f = event.data[0]
+
 	        if(file.name == f.name)
 	            div.open(f.blob)
 	    })
@@ -393,18 +402,25 @@ function UI_setPeersManager(peersManager)
 	    else
 	        div.transfer()
 
-	    peersManager.addEventListener("transfer.begin", function(f)
+	    peersManager.addEventListener("transfer.begin", function(event)
 	    {
+            var f = event.data[0]
+
 	        if(file.name == f.name)
 	            div.progressbar()
 	    })
-	    peersManager.addEventListener("transfer.update", function(f, value)
+	    peersManager.addEventListener("transfer.update", function(event)
 	    {
+            var f = event.data[0]
+            var value = event.data[1]
+
 	        if(file.name == f.name)
 	            div.progressbar(value)
 	    })
-	    peersManager.addEventListener("transfer.end", function(f)
+	    peersManager.addEventListener("transfer.end", function(event)
 	    {
+            var f = event.data[0]
+
 	        if(file.name == f.name)
 	            div.open(f.blob)
 	    })
@@ -496,9 +512,6 @@ function UI_setSignaling(signaling, peersManager)
 			    {
 			        var fileslist = event.data[0]
 
-			        console.log(uid)
-			        console.log(fileslist)
-
 			        _ui_updatefiles(tbody, fileslist, _ui_row_sharing, _ui_button_peer)
 			    })
 
@@ -511,10 +524,12 @@ function UI_setSignaling(signaling, peersManager)
 //    signaling.removeEventListener('sessionId')
     signaling.addEventListener('sessionId', function(event)
     {
+        var uid = event.data[0]
+
 	    var span = document.getElementById("UID")
 
 	    while(span.firstChild)
 	        span.removeChild(span.firstChild);
-	    span.appendChild(document.createTextNode("UID: "+event.data[0]))
+	    span.appendChild(document.createTextNode("UID: "+uid))
     })
 }
