@@ -62,3 +62,11 @@ Interesting link explaining in a simple way what is WebRTC, what would allow to
 do and what is the current status (2012-09-12)
 
 http://lincolnloop.com/blog/2012/sep/12/what-webrtc/
+
+= Font tutorials =
+== How to make a font in Ubuntu ==
+http://www.ehow.com/how_7205965_make-ttf-font-ubuntu.html
+
+== FontForge ==
+http://fontforge.org/overview.html
+http://fontforge.org/editexample.html
