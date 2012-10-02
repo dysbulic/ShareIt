@@ -23,8 +23,8 @@ function load()
         })
 
         // Connect a signaling channel to the handshake server and get an ID
-        var signaling = new WebSocket('ws://localhost:8001')
-//        var signaling = new WebSocket('wss://shareit.nodejitsu.com')
+//        var signaling = new WebSocket('ws://localhost:8001')
+        var signaling = new WebSocket('wss://shareit.nodejitsu.com')
 	    signaling.onopen = function()
 	    {
             Transport_init(signaling)
