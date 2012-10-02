@@ -227,6 +227,42 @@ function UI_init()
     });
 }
 
+function _ui_row_sharing(file, button_factory)
+{
+    var tr = document.createElement('TR');
+
+    var td = document.createElement('TD');
+    tr.appendChild(td)
+
+    // Name & icon
+    var span = document.createElement('SPAN');
+        span.className = _ui_filetype2className(file.type)
+        span.appendChild(document.createTextNode(file.name));
+    td.appendChild(span)
+
+    // Type
+    var td = document.createElement('TD');
+        td.appendChild(document.createTextNode(file.type));
+    tr.appendChild(td)
+
+    // Size
+    var td = document.createElement('TD');
+        td.className="filesize"
+        td.appendChild(document.createTextNode(humanize.filesize(file.size)));
+    tr.appendChild(td)
+
+    // Action
+    var td = document.createElement('TD');
+        td.class = "end"
+        td.appendChild(button_factory(file));
+    tr.appendChild(td)
+
+    return tr
+}
+
+
+var _ui_button_peer
+
 function UI_setPeersManager(peersManager)
 {
 	function _button_sharing(file)
@@ -277,17 +313,17 @@ function UI_setPeersManager(peersManager)
 	    else
 	        div.open(file)
 
-	    transport.addEventListener("transfer.begin", function(f)
+	    peersManager.addEventListener("transfer.begin", function(f)
 	    {
 	        if(file.name == f.name)
 	            div.progressbar()
 	    })
-	    transport.addEventListener("transfer.update", function(f, value)
+	    peersManager.addEventListener("transfer.update", function(f, value)
 	    {
 	        if(file.name == f.name)
 	            div.progressbar(value)
 	    })
-	    transport.addEventListener("transfer.end", function(f)
+	    peersManager.addEventListener("transfer.end", function(f)
 	    {
 	        if(file.name == f.name)
 	            div.open(f.blob)
@@ -296,7 +332,8 @@ function UI_setPeersManager(peersManager)
 	    return div
 	}
 
-	function _button_peer(file)
+
+	_ui_button_peer = function(file)
 	{
 	    var div = document.createElement("DIV");
 	        div.id = file.name
@@ -306,7 +343,7 @@ function UI_setPeersManager(peersManager)
 	        var transfer = document.createElement("A");
 	            transfer.onclick = function()
 	            {
-	                signaling._transferbegin(file);
+	                peersManager._transferbegin(file);
 	                return false;
 	            }
 	            transfer.appendChild(document.createTextNode("Transfer"));
@@ -356,56 +393,23 @@ function UI_setPeersManager(peersManager)
 	    else
 	        div.transfer()
 
-	    transport.addEventListener("transfer.begin", function(f)
+	    peersManager.addEventListener("transfer.begin", function(f)
 	    {
 	        if(file.name == f.name)
 	            div.progressbar()
 	    })
-	    transport.addEventListener("transfer.update", function(f, value)
+	    peersManager.addEventListener("transfer.update", function(f, value)
 	    {
 	        if(file.name == f.name)
 	            div.progressbar(value)
 	    })
-	    transport.addEventListener("transfer.end", function(f)
+	    peersManager.addEventListener("transfer.end", function(f)
 	    {
 	        if(file.name == f.name)
 	            div.open(f.blob)
 	    })
 
 	    return div
-	}
-
-	function _ui_row_sharing(file, button_factory)
-	{
-	    var tr = document.createElement('TR');
-
-	    var td = document.createElement('TD');
-	    tr.appendChild(td)
-
-	    // Name & icon
-	    var span = document.createElement('SPAN');
-	        span.className = _ui_filetype2className(file.type)
-	        span.appendChild(document.createTextNode(file.name));
-	    td.appendChild(span)
-
-	    // Type
-	    var td = document.createElement('TD');
-	        td.appendChild(document.createTextNode(file.type));
-	    tr.appendChild(td)
-
-	    // Size
-	    var td = document.createElement('TD');
-	        td.className="filesize"
-	        td.appendChild(document.createTextNode(humanize.filesize(file.size)));
-	    tr.appendChild(td)
-
-	    // Action
-	    var td = document.createElement('TD');
-	        td.class = "end"
-	        td.appendChild(button_factory(file));
-	    tr.appendChild(td)
-
-	    return tr
 	}
 
     var ui = {}
@@ -415,13 +419,6 @@ function UI_setPeersManager(peersManager)
 	    var area = document.getElementById('Sharing').getElementsByTagName("tbody")[0]
 	    _ui_updatefiles(area, files, _ui_row_sharing, _button_sharing)
 	}
-
-    peersManager.addEventListener("fileslist_peer.update",
-    function(uid, fileslist)
-    {
-        var table = document.getElementById("tabs-"+uid).getElementsByTagName("tbody")[0]
-        _ui_updatefiles(table, fileslist, _ui_row_sharing, _button_peer)
-    })
 
     return ui
 }
@@ -492,6 +489,18 @@ function UI_setSignaling(signaling, peersManager)
                     td.align='center'
                     td.appendChild(document.createTextNode("Waiting for the peer data"))
                 tr.appendChild(td);
+
+
+			    channel.addEventListener("fileslist.send.filtered",
+			    function(event)
+			    {
+			        var fileslist = event.data[0]
+
+			        console.log(uid)
+			        console.log(fileslist)
+
+			        _ui_updatefiles(tbody, fileslist, _ui_row_sharing, _ui_button_peer)
+			    })
 
                 channel.fileslist_query();
             })
