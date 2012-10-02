@@ -510,7 +510,8 @@ function UI_setSignaling(signaling, peersManager)
 			    channel.addEventListener("fileslist.send.filtered",
 			    function(event)
 			    {
-			        var fileslist = event.data[0]
+                    var socketId = event.data[0]
+                    var fileslist = event.data[1]
 
 			        _ui_updatefiles(tbody, fileslist, _ui_row_sharing, _ui_button_peer)
 			    })
