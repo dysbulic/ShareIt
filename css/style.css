@@ -83,7 +83,7 @@ a{
 html, body { height: 100%; }
 
 #tabs{
-    height: 95%;
+    height: 99%;
 }
 
 #tabs .ui-tabs-panel
@@ -100,14 +100,12 @@ html, body { height: 100%; }
 
 #Downloading {
     cursor: pointer;
-    height: 95%;
     cellspacing: 0;
     summary: ""
 }
 
 #Sharing {
     cursor: pointer;
-    height: 95%;
     cellspacing: 0;
     summary: ""
 }
