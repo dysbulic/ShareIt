@@ -194,7 +194,8 @@ function UI_init()
     $("#Sharing").treeTable();
     $("#Sharedpoints").treeTable();
 
-    $("#tools-menu").click(function()
+    var menu = $("#tools-menu")
+    menu.click(function()
     {
         var submenu = $("#tools-menu-submenu")
 
@@ -221,8 +222,14 @@ function UI_init()
                 timeout(400)
             });
 
+            menu.mouseleave(function()
+            {
+                submenu_active = false;
+                timeout(400)
+            });
+
             submenu.slideDown();
-            timeout(1000)
+//            timeout(1000)
         }
         else
             submenu.slideUp();
