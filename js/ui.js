@@ -169,6 +169,10 @@ function UI_init()
         {
             $("#tabs").tabs('select', '#' + ui.panel.id);
         },
+        show: function(event, ui)
+        {
+            $("#StartHere").remove()
+        },
         disabled: [0, 1],
         selected: -1
     }).find(".ui-tabs-nav").sortable({axis: "x"});
@@ -199,6 +203,10 @@ function UI_init()
     var menu = $("#tools-menu")
     menu.click(function()
     {
+        // [Hack] Enable tabs when menu is clicked. It's necesary to find how to
+        // do it only when there're downloads or sharing files
+	    $("#tabs").tabs("option", "disabled", [])
+
         var submenu = $("#tools-menu-submenu")
 
         if(submenu.is(":hidden"))
