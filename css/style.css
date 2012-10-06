@@ -149,7 +149,8 @@ li span.user {
 }
 
 #StartHere ul {
-    list-style: disc
+    list-style: disc;
+    line-height: 150%
 }
 
 #Preferences2 {
@@ -157,6 +158,14 @@ li span.user {
 }
 
 #ConnectUser2 {
+    cursor: pointer
+}
+
+#tools-menu2 {
+    cursor: pointer
+}
+
+#tools-menu3 {
     cursor: pointer
 }
 
