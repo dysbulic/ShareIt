@@ -200,8 +200,16 @@ function UI_init()
     $("#Sharing").treeTable();
     $("#Sharedpoints").treeTable();
 
+    // Main menu
+    var submenu_active = false;
+
     var menu = $("#tools-menu")
-    menu.click(function()
+    menu.mouseenter(function()
+    {
+        submenu_active = true;
+    });
+
+    function toolsMenu_open()
     {
         // [Hack] Enable tabs when menu is clicked. It's necesary to find how to
         // do it only when there're downloads or sharing files
@@ -211,8 +219,6 @@ function UI_init()
 
         if(submenu.is(":hidden"))
         {
-            var submenu_active = false;
-
             function timeout(ms)
             {
                 setTimeout(function()
@@ -229,21 +235,25 @@ function UI_init()
             submenu.mouseleave(function()
             {
                 submenu_active = false;
-                timeout(400)
+                timeout(1000)
             });
 
             menu.mouseleave(function()
             {
                 submenu_active = false;
-                timeout(400)
+                timeout(1000)
             });
 
             submenu.slideDown();
-//            timeout(1000)
+            timeout(3000)
         }
         else
             submenu.slideUp();
-    });
+    }
+
+    menu.click(toolsMenu_open)
+    $("#tools-menu2").click(toolsMenu_open)
+    $("#tools-menu3").click(toolsMenu_open)
 
     function dialogOpen()
     {
