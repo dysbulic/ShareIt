@@ -460,7 +460,7 @@ function UI_setPeersManager(peersManager)
 }
 
 
-function UI_setSignaling(signaling, peersManager)
+function UI_setPeersManager(peersManager)
 {
     $("#ConnectUser").unbind('click')
     $("#ConnectUser").click(function()
@@ -539,7 +539,10 @@ function UI_setSignaling(signaling, peersManager)
             })
         }
     })
+}
 
+function UI_setSignaling(signaling)
+{
     // Set UID
 //    signaling.removeEventListener('sessionId')
     signaling.addEventListener('sessionId', function(event)

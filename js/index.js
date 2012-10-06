@@ -47,7 +47,8 @@ function load()
 //                                                        getRandom(file.bitmap))
             })
 
-            UI_setSignaling(signaling, peersManager)
+            UI_setSignaling(signaling)
+            UI_setPeersManager(peersManager)
         }
     })
 }
