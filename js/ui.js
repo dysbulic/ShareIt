@@ -448,20 +448,6 @@ function UI_setPeersManager(peersManager)
 	    return div
 	}
 
-    var ui = {}
-
-	ui.update_fileslist_sharing = function(files)
-	{
-	    var area = document.getElementById('Sharing').getElementsByTagName("tbody")[0]
-	    _ui_updatefiles(area, files, _ui_row_sharing, _button_sharing)
-	}
-
-    return ui
-}
-
-
-function UI_setPeersManager(peersManager)
-{
     function ConnectUser()
     {
         var uid = prompt("UID to connect")
@@ -526,13 +512,13 @@ function UI_setPeersManager(peersManager)
                 tr.appendChild(td);
 
 
-			    channel.addEventListener("fileslist.send.filtered",
-			    function(event)
-			    {
-			        var fileslist = event.data[0]
+                channel.addEventListener("fileslist.send.filtered",
+                function(event)
+                {
+                    var fileslist = event.data[0]
 
-			        _ui_updatefiles(tbody, fileslist, _ui_row_sharing, _ui_button_peer)
-			    })
+                    _ui_updatefiles(tbody, fileslist, _ui_row_sharing, _ui_button_peer)
+                })
 
                 channel.fileslist_query();
             })
@@ -544,7 +530,18 @@ function UI_setPeersManager(peersManager)
 
     $("#ConnectUser2").unbind('click')
     $("#ConnectUser2").click(ConnectUser)
+
+    var ui = {}
+
+	ui.update_fileslist_sharing = function(files)
+	{
+	    var area = document.getElementById('Sharing').getElementsByTagName("tbody")[0]
+	    _ui_updatefiles(area, files, _ui_row_sharing, _button_sharing)
+	}
+
+    return ui
 }
+
 
 function UI_setSignaling(signaling)
 {

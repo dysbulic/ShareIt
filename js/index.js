@@ -48,7 +48,6 @@ function load()
             })
 
             UI_setSignaling(signaling)
-            UI_setPeersManager(peersManager)
         }
     })
 }
