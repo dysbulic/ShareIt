@@ -144,7 +144,12 @@ li span.user {
 
 
 #StartHere img {
+    float: left;
     vertical-align: middle
+}
+
+#StartHere ul {
+    list-style: disc
 }
 
 
