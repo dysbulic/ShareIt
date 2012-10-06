@@ -152,6 +152,10 @@ li span.user {
     list-style: disc
 }
 
+#ConnectUser2 {
+    cursor: pointer
+}
+
 
 /* TreeTable
  * ------------------------------------------------------------------------- */

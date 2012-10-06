@@ -462,8 +462,7 @@ function UI_setPeersManager(peersManager)
 
 function UI_setPeersManager(peersManager)
 {
-    $("#ConnectUser").unbind('click')
-    $("#ConnectUser").click(function()
+    function ConnectUser()
     {
         var uid = prompt("UID to connect")
         if(uid != null && uid != '')
@@ -538,7 +537,13 @@ function UI_setPeersManager(peersManager)
                 channel.fileslist_query();
             })
         }
-    })
+    }
+
+    $("#ConnectUser").unbind('click')
+    $("#ConnectUser").click(ConnectUser)
+
+    $("#ConnectUser2").unbind('click')
+    $("#ConnectUser2").click(ConnectUser)
 }
 
 function UI_setSignaling(signaling)
