@@ -168,7 +168,9 @@ function UI_init()
         add: function(event, ui)
         {
             $("#tabs").tabs('select', '#' + ui.panel.id);
-        }
+        },
+        disabled: [0, 1],
+        selected: -1
     }).find(".ui-tabs-nav").sortable({axis: "x"});
 
     // close icon: removing the tab on click
