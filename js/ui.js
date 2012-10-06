@@ -244,6 +244,14 @@ function UI_init()
         else
             submenu.slideUp();
     });
+
+    function dialogOpen()
+    {
+        $("#dialog-config").dialog("open")
+    }
+
+    $("#Preferences").click(dialogOpen)
+    $("#Preferences2").click(dialogOpen)
 }
 
 function _ui_row_sharing(file, button_factory)
