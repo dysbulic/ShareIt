@@ -148,6 +148,11 @@ li span.user {
     vertical-align: middle
 }
 
+#StartHere #logo {
+    float: right;
+    height: 120px
+}
+
 #StartHere ul {
     list-style: disc;
     line-height: 150%
