@@ -7,13 +7,16 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="391.27191"
-   height="323.59497"
-   viewBox="-141 -12 217.64536 174.66038"
+   width="399.99191"
+   height="399.99496"
+   viewBox="-141 -12 222.49586 215.89728"
    id="svg2"
    version="1.1"
    inkscape:version="0.48.3.1 r9886"
-   sodipodi:docname="favicon.svg">
+   sodipodi:docname="favicon.svg"
+   inkscape:export-filename="/home/piranna/Proyectos/Node.js/ShareIt/doc/logo/favicon.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
   <metadata
      id="metadata138">
     <rdf:RDF>
@@ -22,7 +25,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -37,24 +40,26 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="960"
+     inkscape:window-width="1920"
      inkscape:window-height="1032"
      id="namedview134"
      showgrid="false"
      inkscape:zoom="2"
-     inkscape:cx="188.09598"
-     inkscape:cy="198.05109"
-     inkscape:window-x="960"
+     inkscape:cx="192.45599"
+     inkscape:cy="218.12904"
+     inkscape:window-x="0"
      inkscape:window-y="24"
-     inkscape:window-maximized="0"
+     inkscape:window-maximized="1"
      inkscape:current-layer="svg2"
      showborder="true"
-     fit-margin-top="0"
-     fit-margin-left="0"
-     fit-margin-right="0"
-     fit-margin-bottom="0" />
+     fit-margin-top="38.2"
+     fit-margin-left="4.36"
+     fit-margin-right="4.36"
+     fit-margin-bottom="38.2"
+     borderlayer="false" />
   <g
-     id="background">
+     id="background"
+     transform="translate(2.4252578,20.204152)">
     <rect
        style="fill:#ff0000;fill-opacity:1;stroke:none"
        id="background patch"
@@ -81,7 +86,8 @@
        style="fill:#ff0000;stroke:none" />
   </g>
   <g
-     id="outline">
+     id="outline"
+     transform="translate(2.4252578,20.204152)">
     <path
        inkscape:connector-curvature="0"
        id="outline S"
@@ -107,7 +113,8 @@
     </g>
   </g>
   <g
-     id="text">
+     id="text"
+     transform="translate(2.4252578,20.204152)">
     <path
        sodipodi:nodetypes="ccsscscsssccssscscsssc"
        inkscape:connector-curvature="0"
