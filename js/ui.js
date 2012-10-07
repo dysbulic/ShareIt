@@ -175,7 +175,7 @@ function UI_init()
         },
         disabled: [0, 1],
         selected: -1
-    }).find(".ui-tabs-nav").sortable({axis: "x"});
+    })
 
     // close icon: removing the tab on click
     // note: closable tabs gonna be an option in the future - see http://dev.jqueryui.com/ticket/3924
