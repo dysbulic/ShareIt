@@ -3,6 +3,110 @@ function oldBrowser()
 	$('#Sharedpoints').html('Your browser is not modern enough to serve as a host. :(<br /><br />(Try Chrome or Firefox!)');
 }
 
+function UI()
+{
+    $("#tabs").tabs(
+    {
+        tabTemplate: "<li><a href='#{href}'>#{label}</a> <span class='ui-icon ui-icon-close'>Remove Tab</span></li>",
+        add: function(event, ui)
+        {
+            $("#tabs").tabs('select', '#' + ui.panel.id);
+        },
+        show: function(event, ui)
+        {
+            $("#StartHere").remove()
+        },
+        disabled: [0, 1],
+        selected: -1
+    })
+
+    // close icon: removing the tab on click
+    // note: closable tabs gonna be an option in the future - see http://dev.jqueryui.com/ticket/3924
+    $("#tabs span.ui-icon-close").live("click", function()
+    {
+        var index = $("li", $("#tabs")).index($(this).parent());
+        $("#tabs").tabs("remove", index);
+    });
+
+    $("#dialog-config").dialog(
+    {
+        autoOpen: false,
+        resizable: false,
+        width: 800,
+        height: 600,
+        modal: true,
+//        show: "fold",
+//        hide: "fold"
+    });
+
+    $("#Downloading").treeTable();
+    $("#Sharing").treeTable();
+    $("#Sharedpoints").treeTable();
+
+    // Main menu
+    var submenu_active = false;
+
+    var menu = $("#tools-menu")
+    menu.mouseenter(function()
+    {
+        submenu_active = true;
+    });
+
+    function toolsMenu_open()
+    {
+        // [Hack] Enable tabs when menu is clicked. It's necesary to find how to
+        // do it only when there're downloads or sharing files
+        $("#tabs").tabs("option", "disabled", [])
+
+        var submenu = $("#tools-menu-submenu")
+
+        if(submenu.is(":hidden"))
+        {
+            function timeout(ms)
+            {
+                setTimeout(function()
+                {
+                    if(submenu_active === false)
+                        submenu.slideUp();
+                }, ms);
+            }
+
+            submenu.mouseenter(function()
+            {
+                submenu_active = true;
+            });
+            submenu.mouseleave(function()
+            {
+                submenu_active = false;
+                timeout(1000)
+            });
+
+            menu.mouseleave(function()
+            {
+                submenu_active = false;
+                timeout(1000)
+            });
+
+            submenu.slideDown();
+            timeout(3000)
+        }
+        else
+            submenu.slideUp();
+    }
+
+    menu.click(toolsMenu_open)
+    $("#tools-menu2").click(toolsMenu_open)
+    $("#tools-menu3").click(toolsMenu_open)
+
+    function dialogOpen()
+    {
+        $("#dialog-config").dialog("open")
+    }
+
+    $("#Preferences").click(dialogOpen)
+    $("#Preferences2").click(dialogOpen)
+}
+
 function ui_ready_fileschange(func)
 {
 	document.getElementById('files').addEventListener('change', function(event)
@@ -159,110 +263,6 @@ function ui_update_fileslist_sharedpoints(sharedpoints)
     _ui_updatefiles(area, sharedpoints, _ui_row_sharedpoints)
 }
 
-
-function UI()
-{
-    $("#tabs").tabs(
-    {
-        tabTemplate: "<li><a href='#{href}'>#{label}</a> <span class='ui-icon ui-icon-close'>Remove Tab</span></li>",
-        add: function(event, ui)
-        {
-            $("#tabs").tabs('select', '#' + ui.panel.id);
-        },
-        show: function(event, ui)
-        {
-            $("#StartHere").remove()
-        },
-        disabled: [0, 1],
-        selected: -1
-    })
-
-    // close icon: removing the tab on click
-    // note: closable tabs gonna be an option in the future - see http://dev.jqueryui.com/ticket/3924
-    $("#tabs span.ui-icon-close").live("click", function()
-    {
-        var index = $("li", $("#tabs")).index($(this).parent());
-        $("#tabs").tabs("remove", index);
-    });
-
-    $("#dialog-config").dialog(
-    {
-        autoOpen: false,
-        resizable: false,
-        width: 800,
-        height: 600,
-        modal: true,
-//        show: "fold",
-//        hide: "fold"
-    });
-
-    $("#Downloading").treeTable();
-    $("#Sharing").treeTable();
-    $("#Sharedpoints").treeTable();
-
-    // Main menu
-    var submenu_active = false;
-
-    var menu = $("#tools-menu")
-    menu.mouseenter(function()
-    {
-        submenu_active = true;
-    });
-
-    function toolsMenu_open()
-    {
-        // [Hack] Enable tabs when menu is clicked. It's necesary to find how to
-        // do it only when there're downloads or sharing files
-	    $("#tabs").tabs("option", "disabled", [])
-
-        var submenu = $("#tools-menu-submenu")
-
-        if(submenu.is(":hidden"))
-        {
-            function timeout(ms)
-            {
-                setTimeout(function()
-                {
-                    if(submenu_active === false)
-                        submenu.slideUp();
-                }, ms);
-            }
-
-            submenu.mouseenter(function()
-            {
-                submenu_active = true;
-            });
-            submenu.mouseleave(function()
-            {
-                submenu_active = false;
-                timeout(1000)
-            });
-
-            menu.mouseleave(function()
-            {
-                submenu_active = false;
-                timeout(1000)
-            });
-
-            submenu.slideDown();
-            timeout(3000)
-        }
-        else
-            submenu.slideUp();
-    }
-
-    menu.click(toolsMenu_open)
-    $("#tools-menu2").click(toolsMenu_open)
-    $("#tools-menu3").click(toolsMenu_open)
-
-    function dialogOpen()
-    {
-        $("#dialog-config").dialog("open")
-    }
-
-    $("#Preferences").click(dialogOpen)
-    $("#Preferences2").click(dialogOpen)
-}
 
 function _ui_row_sharing(file, button_factory)
 {
