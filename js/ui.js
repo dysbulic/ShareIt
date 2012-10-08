@@ -189,7 +189,38 @@ UI.prototype =
 	update_fileslist_sharedpoints: function(sharedpoints)
 	{
 	    var area = document.getElementById('Sharedpoints').getElementsByTagName("tbody")[0]
-	    _ui_updatefiles(area, sharedpoints, _ui_row_sharedpoints)
+	    _ui_updatefiles(area, sharedpoints, function(file)
+		{
+		    var tr = document.createElement('TR');
+
+		    var td = document.createElement('TD');
+		    tr.appendChild(td)
+
+		    // Name & icon
+		    var span = document.createElement('SPAN');
+		        span.className = _ui_filetype2className(file.type)
+		        span.appendChild(document.createTextNode(file.name));
+		    td.appendChild(span)
+
+		    // Shared size
+		    var td = document.createElement('TD');
+		        td.className="filesize"
+		        td.appendChild(document.createTextNode(humanize.filesize(0)));
+		    tr.appendChild(td)
+
+		    var td = document.createElement('TD');
+		        td.class = "end"
+		    tr.appendChild(td)
+
+		    var a = document.createElement("A");
+		//        a.onclick = function()
+		//        {
+		//        }
+		        a.appendChild(document.createTextNode("Delete"));
+		    td.appendChild(a);
+
+		    return tr
+		})
 	},
 
     update_fileslist_sharing: function(files)
@@ -229,39 +260,6 @@ function _ui_filetype2className(filetype)
     return "file"
 }
 
-
-function _ui_row_sharedpoints(file)
-{
-    var tr = document.createElement('TR');
-
-    var td = document.createElement('TD');
-    tr.appendChild(td)
-
-    // Name & icon
-    var span = document.createElement('SPAN');
-        span.className = _ui_filetype2className(file.type)
-        span.appendChild(document.createTextNode(file.name));
-    td.appendChild(span)
-
-    // Shared size
-    var td = document.createElement('TD');
-        td.className="filesize"
-        td.appendChild(document.createTextNode(humanize.filesize(0)));
-    tr.appendChild(td)
-
-    var td = document.createElement('TD');
-        td.class = "end"
-    tr.appendChild(td)
-
-    var a = document.createElement("A");
-//        a.onclick = function()
-//        {
-//        }
-        a.appendChild(document.createTextNode("Delete"));
-    td.appendChild(a);
-
-    return tr
-}
 
 function _ui_updatefiles(area, files, row_factory, button_factory)
 {
