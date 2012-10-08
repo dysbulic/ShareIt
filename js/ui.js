@@ -322,95 +322,6 @@ UI.prototype =
 	        return div
 	    }
 
-	    function _button_peer(file)
-	    {
-	        var div = document.createElement("DIV");
-	            div.id = file.name
-
-	        div.transfer = function()
-	        {
-	            var transfer = document.createElement("A");
-	                transfer.onclick = function()
-	                {
-	                    peersManager._transferbegin(file);
-	                    return false;
-	                }
-	                transfer.appendChild(document.createTextNode("Transfer"));
-
-	            while(div.firstChild)
-	                div.removeChild(div.firstChild);
-	            div.appendChild(transfer);
-	        }
-
-	        div.progressbar = function(value)
-	        {
-	            if(value == undefined)
-	               value = 0;
-
-	            var progress = document.createTextNode(Math.floor(value*100)+"%")
-
-	            while(div.firstChild)
-	                div.removeChild(div.firstChild);
-	            div.appendChild(progress);
-	        }
-
-	        div.open = function(blob)
-	        {
-	            var open = document.createElement("A");
-	                open.href = window.URL.createObjectURL(blob)
-	                open.target = "_blank"
-	                open.appendChild(document.createTextNode("Open"));
-
-	            while(div.firstChild)
-	            {
-	                window.URL.revokeObjectURL(div.firstChild.href);
-	                div.removeChild(div.firstChild);
-	            }
-	            div.appendChild(open);
-	        }
-
-	        // Show if file have been downloaded previously or if we can transfer it
-	        if(file.bitmap)
-	        {
-	            var chunks = file.size/chunksize;
-	            if(chunks % 1 != 0)
-	                chunks = Math.floor(chunks) + 1;
-
-	            var value = chunks - file.bitmap.length
-
-	            div.progressbar(value/chunks)
-	        }
-	        else if(file.blob)
-	            div.open(file.blob)
-	        else
-	            div.transfer()
-
-	        peersManager.addEventListener("transfer.begin", function(event)
-	        {
-	            var f = event.data[0]
-
-	            if(file.name == f.name)
-	                div.progressbar()
-	        })
-	        peersManager.addEventListener("transfer.update", function(event)
-	        {
-	            var f = event.data[0]
-	            var value = event.data[1]
-
-	            if(file.name == f.name)
-	                div.progressbar(value)
-	        })
-	        peersManager.addEventListener("transfer.end", function(event)
-	        {
-	            var f = event.data[0]
-
-	            if(file.name == f.name)
-	                div.open(f.blob)
-	        })
-
-	        return div
-	    }
-
 	    function ConnectUser()
 	    {
 	        var uid = prompt("UID to connect")
@@ -480,7 +391,95 @@ UI.prototype =
 	                {
 	                    var fileslist = event.data[0]
 
-	                    this._updatefiles(tbody, fileslist, this._row_sharing, this._button_peer)
+	                    this._updatefiles(tbody, fileslist, this._row_sharing,
+	                    function(file)
+				        {
+				            var div = document.createElement("DIV");
+				                div.id = file.name
+
+				            div.transfer = function()
+				            {
+				                var transfer = document.createElement("A");
+				                    transfer.onclick = function()
+				                    {
+				                        peersManager._transferbegin(file);
+				                        return false;
+				                    }
+				                    transfer.appendChild(document.createTextNode("Transfer"));
+
+				                while(div.firstChild)
+				                    div.removeChild(div.firstChild);
+				                div.appendChild(transfer);
+				            }
+
+				            div.progressbar = function(value)
+				            {
+				                if(value == undefined)
+				                   value = 0;
+
+				                var progress = document.createTextNode(Math.floor(value*100)+"%")
+
+				                while(div.firstChild)
+				                    div.removeChild(div.firstChild);
+				                div.appendChild(progress);
+				            }
+
+				            div.open = function(blob)
+				            {
+				                var open = document.createElement("A");
+				                    open.href = window.URL.createObjectURL(blob)
+				                    open.target = "_blank"
+				                    open.appendChild(document.createTextNode("Open"));
+
+				                while(div.firstChild)
+				                {
+				                    window.URL.revokeObjectURL(div.firstChild.href);
+				                    div.removeChild(div.firstChild);
+				                }
+				                div.appendChild(open);
+				            }
+
+				            // Show if file have been downloaded previously or if we can transfer it
+				            if(file.bitmap)
+				            {
+				                var chunks = file.size/chunksize;
+				                if(chunks % 1 != 0)
+				                    chunks = Math.floor(chunks) + 1;
+
+				                var value = chunks - file.bitmap.length
+
+				                div.progressbar(value/chunks)
+				            }
+				            else if(file.blob)
+				                div.open(file.blob)
+				            else
+				                div.transfer()
+
+				            peersManager.addEventListener("transfer.begin", function(event)
+				            {
+				                var f = event.data[0]
+
+				                if(file.name == f.name)
+				                    div.progressbar()
+				            })
+				            peersManager.addEventListener("transfer.update", function(event)
+				            {
+				                var f = event.data[0]
+				                var value = event.data[1]
+
+				                if(file.name == f.name)
+				                    div.progressbar(value)
+				            })
+				            peersManager.addEventListener("transfer.end", function(event)
+				            {
+				                var f = event.data[0]
+
+				                if(file.name == f.name)
+				                    div.open(f.blob)
+				            })
+
+				            return div
+				        })
 	                })
 
 	                channel.fileslist_query();
