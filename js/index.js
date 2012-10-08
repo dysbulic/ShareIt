@@ -3,6 +3,9 @@ function load()
     // Init database
     DB_init(function(db)
     {
+        // Init user interface
+        var ui = new UI()
+
         // Get shared points and init them
         db.sharepoints_getAll(null, function(sharedpoints)
         {
@@ -55,9 +58,6 @@ function load()
 
 window.addEventListener("load", function()
 {
-    // Init user interface
-    UI_init()
-
 	// Check for IndexedDB support and if it store File objects
 	testIDBBlobSupport(function(supported)
 	{

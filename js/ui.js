@@ -160,7 +160,7 @@ function ui_update_fileslist_sharedpoints(sharedpoints)
 }
 
 
-function UI_init()
+function UI()
 {
     $("#tabs").tabs(
     {
