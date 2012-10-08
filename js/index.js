@@ -37,7 +37,7 @@ function load()
             // Apply signaling "interface" events and functions to transport
             Transport_Signaling_init(signaling, peersManager)
 
-            UI_setPeersManager(peersManager)
+            ui.setPeersManager(peersManager)
 
             db.sharepoints_getAll(null, function(filelist)
             {
