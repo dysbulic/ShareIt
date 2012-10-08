@@ -120,7 +120,70 @@ UI.prototype =
 	update_fileslist_downloading: function(files)
 	{
 	    var area = document.getElementById('Downloading').getElementsByTagName("tbody")[0]
-	    _ui_updatefiles(area, files, _ui_row_downloading)
+	    _ui_updatefiles(area, files, function(file)
+        {
+            var tr = document.createElement('TR');
+
+            var td = document.createElement('TD');
+            tr.appendChild(td)
+
+            // Name & icon
+            var span = document.createElement('SPAN');
+                span.className = _ui_filetype2className(file.type)
+                span.appendChild(document.createTextNode(file.name));
+            td.appendChild(span)
+
+            // Type
+            var td = document.createElement('TD');
+                td.appendChild(document.createTextNode(file.type));
+            tr.appendChild(td)
+
+            // Downloaded
+            var td = document.createElement('TD');
+                td.className="filesize"
+                td.appendChild(document.createTextNode(humanize.filesize(0)));
+            tr.appendChild(td)
+
+            // Size
+            var td = document.createElement('TD');
+                td.className="filesize"
+                td.appendChild(document.createTextNode(humanize.filesize(file.size)));
+            tr.appendChild(td)
+
+            // Percentage
+            var td = document.createElement('TD');
+                td.appendChild(document.createTextNode("0%"));
+            tr.appendChild(td)
+
+            // Status
+            var td = document.createElement('TD');
+                td.appendChild(document.createTextNode("Paused"));
+            tr.appendChild(td)
+
+            // Time remaining
+            var td = document.createElement('TD');
+                td.appendChild(document.createTextNode("Unknown"));
+            tr.appendChild(td)
+
+            // Speed
+            var td = document.createElement('TD');
+                td.className="filesize"
+                td.appendChild(document.createTextNode(humanize.filesize(0)+"/s"));
+            tr.appendChild(td)
+
+            // Peers
+            var td = document.createElement('TD');
+                td.appendChild(document.createTextNode("0"));
+            tr.appendChild(td)
+
+            // Inclusion date
+            var td = document.createElement('TD');
+                td.class = "end"
+                td.appendChild(document.createTextNode("0-0-0000"));
+            tr.appendChild(td)
+
+            return tr
+        })
 	},
 
 	update_fileslist_sharedpoints: function(sharedpoints)
@@ -166,70 +229,6 @@ function _ui_filetype2className(filetype)
     return "file"
 }
 
-function _ui_row_downloading(file)
-{
-    var tr = document.createElement('TR');
-
-    var td = document.createElement('TD');
-    tr.appendChild(td)
-
-    // Name & icon
-    var span = document.createElement('SPAN');
-        span.className = _ui_filetype2className(file.type)
-        span.appendChild(document.createTextNode(file.name));
-    td.appendChild(span)
-
-    // Type
-    var td = document.createElement('TD');
-        td.appendChild(document.createTextNode(file.type));
-    tr.appendChild(td)
-
-    // Downloaded
-    var td = document.createElement('TD');
-        td.className="filesize"
-        td.appendChild(document.createTextNode(humanize.filesize(0)));
-    tr.appendChild(td)
-
-    // Size
-    var td = document.createElement('TD');
-        td.className="filesize"
-        td.appendChild(document.createTextNode(humanize.filesize(file.size)));
-    tr.appendChild(td)
-
-    // Percentage
-    var td = document.createElement('TD');
-        td.appendChild(document.createTextNode("0%"));
-    tr.appendChild(td)
-
-    // Status
-    var td = document.createElement('TD');
-        td.appendChild(document.createTextNode("Paused"));
-    tr.appendChild(td)
-
-    // Time remaining
-    var td = document.createElement('TD');
-        td.appendChild(document.createTextNode("Unknown"));
-    tr.appendChild(td)
-
-    // Speed
-    var td = document.createElement('TD');
-        td.className="filesize"
-        td.appendChild(document.createTextNode(humanize.filesize(0)+"/s"));
-    tr.appendChild(td)
-
-    // Peers
-    var td = document.createElement('TD');
-        td.appendChild(document.createTextNode("0"));
-    tr.appendChild(td)
-
-    // Inclusion date
-    var td = document.createElement('TD');
-        td.class = "end"
-        td.appendChild(document.createTextNode("0-0-0000"));
-    tr.appendChild(td)
-
-    return tr
-}
 
 function _ui_row_sharedpoints(file)
 {
