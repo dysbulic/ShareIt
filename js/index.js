@@ -22,7 +22,10 @@ function load()
 
             // [To-Do] Start hashing of files in a new worker
 
-            db.sharepoints_getAll(null, ui.update_fileslist_sharedpoints)
+            db.sharepoints_getAll(null, function(sharedpoints)
+            {
+                ui.update_fileslist_sharedpoints(sharedpoints)
+            })
         })
 
         // Connect a signaling channel to the handshake server and get an ID
