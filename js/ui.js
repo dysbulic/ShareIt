@@ -319,8 +319,6 @@ function _ui_row_sharing(file, button_factory)
 }
 
 
-var _ui_button_peer
-
 function UI_setPeersManager(peersManager)
 {
 	function _button_sharing(file)
@@ -397,8 +395,7 @@ function UI_setPeersManager(peersManager)
 	    return div
 	}
 
-
-	_ui_button_peer = function(file)
+	function _ui_button_peer(file)
 	{
 	    var div = document.createElement("DIV");
 	        div.id = file.name
