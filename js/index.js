@@ -9,12 +9,12 @@ function load()
         // Get shared points and init them
         db.sharepoints_getAll(null, function(sharedpoints)
         {
-            ui_update_fileslist_sharedpoints(sharedpoints)
+            ui.update_fileslist_sharedpoints(sharedpoints)
 
             // [To-Do] Start hashing new files on the shared points
         })
 
-        ui_ready_fileschange(function(sharedpoints)
+        ui.ready_fileschange(function(sharedpoints)
         {
             // Loop through the FileList and add sharedpoints to list.
             for(var i = 0, sp; sp = sharedpoints[i]; i++)
@@ -22,7 +22,7 @@ function load()
 
             // [To-Do] Start hashing of files in a new worker
 
-            db.sharepoints_getAll(null, ui_update_fileslist_sharedpoints)
+            db.sharepoints_getAll(null, ui.update_fileslist_sharedpoints)
         })
 
         // Connect a signaling channel to the handshake server and get an ID
@@ -37,7 +37,7 @@ function load()
             // Apply signaling "interface" events and functions to transport
             Transport_Signaling_init(signaling, peersManager)
 
-            var ui = UI_setPeersManager(peersManager)
+            UI_setPeersManager(peersManager)
 
             db.sharepoints_getAll(null, function(filelist)
             {
@@ -50,7 +50,7 @@ function load()
 //                                                        getRandom(file.bitmap))
             })
 
-            UI_setSignaling(signaling)
+            ui.setSignaling(signaling)
         }
     })
 }

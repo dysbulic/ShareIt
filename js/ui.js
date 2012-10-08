@@ -107,12 +107,49 @@ function UI()
     $("#Preferences2").click(dialogOpen)
 }
 
-function ui_ready_fileschange(func)
+UI.prototype =
 {
-	document.getElementById('files').addEventListener('change', function(event)
+	ready_fileschange: function(func)
 	{
-		func(event.target.files); // FileList object
-    }, false);
+	    document.getElementById('files').addEventListener('change', function(event)
+	    {
+	        func(event.target.files); // FileList object
+	    }, false);
+	},
+
+	update_fileslist_downloading: function(files)
+	{
+	    var area = document.getElementById('Downloading').getElementsByTagName("tbody")[0]
+	    _ui_updatefiles(area, files, _ui_row_downloading)
+	},
+
+	update_fileslist_sharedpoints: function(sharedpoints)
+	{
+	    var area = document.getElementById('Sharedpoints').getElementsByTagName("tbody")[0]
+	    _ui_updatefiles(area, sharedpoints, _ui_row_sharedpoints)
+	},
+
+    update_fileslist_sharing: function(files)
+    {
+        var area = document.getElementById('Sharing').getElementsByTagName("tbody")[0]
+        _ui_updatefiles(area, files, _ui_row_sharing, _button_sharing)
+    },
+
+	setSignaling: function(signaling)
+	{
+	    // Set UID
+	//    signaling.removeEventListener('sessionId')
+	    signaling.addEventListener('sessionId', function(event)
+	    {
+	        var uid = event.data[0]
+
+	        var span = document.getElementById("UID")
+
+	        while(span.firstChild)
+	            span.removeChild(span.firstChild);
+	        span.appendChild(document.createTextNode("UID: "+uid))
+	    })
+	}
 }
 
 function _ui_filetype2className(filetype)
@@ -248,19 +285,6 @@ function _ui_updatefiles(area, files, row_factory, button_factory)
 
             area.appendChild(tr)
         }
-}
-
-
-function ui_update_fileslist_downloading(files)
-{
-    var area = document.getElementById('Downloading').getElementsByTagName("tbody")[0]
-    _ui_updatefiles(area, files, _ui_row_downloading)
-}
-
-function ui_update_fileslist_sharedpoints(sharedpoints)
-{
-    var area = document.getElementById('Sharedpoints').getElementsByTagName("tbody")[0]
-    _ui_updatefiles(area, sharedpoints, _ui_row_sharedpoints)
 }
 
 
@@ -548,31 +572,4 @@ function UI_setPeersManager(peersManager)
 
     $("#ConnectUser2").unbind('click')
     $("#ConnectUser2").click(ConnectUser)
-
-    var ui = {}
-
-	ui.update_fileslist_sharing = function(files)
-	{
-	    var area = document.getElementById('Sharing').getElementsByTagName("tbody")[0]
-	    _ui_updatefiles(area, files, _ui_row_sharing, _button_sharing)
-	}
-
-    return ui
-}
-
-
-function UI_setSignaling(signaling)
-{
-    // Set UID
-//    signaling.removeEventListener('sessionId')
-    signaling.addEventListener('sessionId', function(event)
-    {
-        var uid = event.data[0]
-
-	    var span = document.getElementById("UID")
-
-	    while(span.firstChild)
-	        span.removeChild(span.firstChild);
-	    span.appendChild(document.createTextNode("UID: "+uid))
-    })
 }
