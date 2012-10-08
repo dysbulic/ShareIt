@@ -120,7 +120,7 @@ UI.prototype =
 	update_fileslist_downloading: function(files)
 	{
 	    var area = document.getElementById('Downloading').getElementsByTagName("tbody")[0]
-	    _ui_updatefiles(area, files, function(file)
+	    this._updatefiles(area, files, function(file)
         {
             var tr = document.createElement('TR');
 
@@ -129,7 +129,7 @@ UI.prototype =
 
             // Name & icon
             var span = document.createElement('SPAN');
-                span.className = _ui_filetype2className(file.type)
+                span.className = this._filetype2className(file.type)
                 span.appendChild(document.createTextNode(file.name));
             td.appendChild(span)
 
@@ -189,7 +189,7 @@ UI.prototype =
 	update_fileslist_sharedpoints: function(sharedpoints)
 	{
 	    var area = document.getElementById('Sharedpoints').getElementsByTagName("tbody")[0]
-	    _ui_updatefiles(area, sharedpoints, function(file)
+	    this._updatefiles(area, sharedpoints, function(file)
 		{
 		    var tr = document.createElement('TR');
 
@@ -198,7 +198,7 @@ UI.prototype =
 
 		    // Name & icon
 		    var span = document.createElement('SPAN');
-		        span.className = _ui_filetype2className(file.type)
+		        span.className = this._filetype2className(file.type)
 		        span.appendChild(document.createTextNode(file.name));
 		    td.appendChild(span)
 
@@ -226,8 +226,9 @@ UI.prototype =
     update_fileslist_sharing: function(files)
     {
         var area = document.getElementById('Sharing').getElementsByTagName("tbody")[0]
-        _ui_updatefiles(area, files, _ui_row_sharing, _button_sharing)
+        this._updatefiles(area, files, this._row_sharing, _button_sharing)
     },
+
 
 	setSignaling: function(signaling)
 	{
@@ -321,7 +322,7 @@ UI.prototype =
 	        return div
 	    }
 
-	    function _ui_button_peer(file)
+	    function _button_peer(file)
 	    {
 	        var div = document.createElement("DIV");
 	            div.id = file.name
@@ -479,7 +480,7 @@ UI.prototype =
 	                {
 	                    var fileslist = event.data[0]
 
-	                    _ui_updatefiles(tbody, fileslist, _ui_row_sharing, _ui_button_peer)
+	                    this._updatefiles(tbody, fileslist, this._row_sharing, this._button_peer)
 	                })
 
 	                channel.fileslist_query();
@@ -492,77 +493,76 @@ UI.prototype =
 
 	    $("#ConnectUser2").unbind('click')
 	    $("#ConnectUser2").click(ConnectUser)
-	}
-}
+	},
 
-function _ui_filetype2className(filetype)
-{
-    filetype = filetype.split('/')
 
-    switch(filetype[0])
+	_filetype2className: function(filetype)
+	{
+	    filetype = filetype.split('/')
+	
+	    switch(filetype[0])
+	    {
+	        case 'image':   return "image"
+	        case 'video':   return "video"
+	    }
+	
+	    // Unknown file type, return generic file
+	    return "file"
+	},
+
+	_row_sharing: function(file, button_factory)
+	{
+	    var tr = document.createElement('TR');
+
+	    var td = document.createElement('TD');
+	    tr.appendChild(td)
+
+	    // Name & icon
+	    var span = document.createElement('SPAN');
+	        span.className = this._filetype2className(file.type)
+	        span.appendChild(document.createTextNode(file.name));
+	    td.appendChild(span)
+
+	    // Type
+	    var td = document.createElement('TD');
+	        td.appendChild(document.createTextNode(file.type));
+	    tr.appendChild(td)
+
+	    // Size
+	    var td = document.createElement('TD');
+	        td.className="filesize"
+	        td.appendChild(document.createTextNode(humanize.filesize(file.size)));
+	    tr.appendChild(td)
+
+	    // Action
+	    var td = document.createElement('TD');
+	        td.class = "end"
+	        td.appendChild(button_factory(file));
+	    tr.appendChild(td)
+
+	    return tr
+	},
+
+    _updatefiles: function(area, files, row_factory, button_factory)
     {
-        case 'image':   return "image"
-        case 'video':   return "video"
+        // Remove old table and add new empty one
+        while(area.firstChild)
+            area.removeChild(area.firstChild);
+
+        for(var filename in files)
+            if(files.hasOwnProperty(filename))
+            {
+                var file = files[filename]
+                var path = ""
+                if(file.path)
+                    path = file.path + '/';
+
+                var tr = row_factory(file, button_factory)
+                    tr.id = path + file.name
+                    if(path)
+                        tr.class = "child-of-" + path
+
+                area.appendChild(tr)
+            }
     }
-
-    // Unknown file type, return generic file
-    return "file"
-}
-
-
-function _ui_updatefiles(area, files, row_factory, button_factory)
-{
-    // Remove old table and add new empty one
-    while(area.firstChild)
-        area.removeChild(area.firstChild);
-
-    for(var filename in files)
-        if(files.hasOwnProperty(filename))
-        {
-            var file = files[filename]
-            var path = ""
-            if(file.path)
-                path = file.path + '/';
-
-            var tr = row_factory(file, button_factory)
-                tr.id = path + file.name
-                if(path)
-                    tr.class = "child-of-" + path
-
-            area.appendChild(tr)
-        }
-}
-
-
-function _ui_row_sharing(file, button_factory)
-{
-    var tr = document.createElement('TR');
-
-    var td = document.createElement('TD');
-    tr.appendChild(td)
-
-    // Name & icon
-    var span = document.createElement('SPAN');
-        span.className = _ui_filetype2className(file.type)
-        span.appendChild(document.createTextNode(file.name));
-    td.appendChild(span)
-
-    // Type
-    var td = document.createElement('TD');
-        td.appendChild(document.createTextNode(file.type));
-    tr.appendChild(td)
-
-    // Size
-    var td = document.createElement('TD');
-        td.className="filesize"
-        td.appendChild(document.createTextNode(humanize.filesize(file.size)));
-    tr.appendChild(td)
-
-    // Action
-    var td = document.createElement('TD');
-        td.class = "end"
-        td.appendChild(button_factory(file));
-    tr.appendChild(td)
-
-    return tr
 }
