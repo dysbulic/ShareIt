@@ -3,6 +3,17 @@ function load()
     // Init database
     DB_init(function(db)
     {
+        var worker = new Worker('js/webp2p/hasher.js');
+            worker.onmessage = function(event)
+            {
+                db.sharepoints_add(event.data)
+
+	            db.sharepoints_getAll(null, function(sharedpoints)
+	            {
+	                ui.update_fileslist_sharedpoints(sharedpoints)
+	            })
+            }
+
         // Init user interface
         var ui = new UI()
 
@@ -16,16 +27,8 @@ function load()
 
         ui.ready_fileschange(function(sharedpoints)
         {
-            // Loop through the FileList and add sharedpoints to list.
-            for(var i = 0, sp; sp = sharedpoints[i]; i++)
-                db.sharepoints_add(sp)
-
-            // [To-Do] Start hashing of files in a new worker
-
-            db.sharepoints_getAll(null, function(sharedpoints)
-            {
-                ui.update_fileslist_sharedpoints(sharedpoints)
-            })
+            // Hash files on the worker
+            worker.postMessage(sharedpoints)
         })
 
         // Connect a signaling channel to the handshake server and get an ID
