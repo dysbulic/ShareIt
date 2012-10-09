@@ -6,11 +6,11 @@ function load()
         var worker = new Worker('js/webp2p/hasher.js');
             worker.onmessage = function(event)
             {
-                db.sharepoints_add(event.data)
+                db.files_add(event.data)
 
-	            db.sharepoints_getAll(null, function(sharedpoints)
+	            db.files_getAll(null, function(files)
 	            {
-	                ui.update_fileslist_sharedpoints(sharedpoints)
+	                ui.update_fileslist_sharing(files)
 	            })
             }
 
@@ -29,6 +29,15 @@ function load()
         {
             // Hash files on the worker
             worker.postMessage(sharedpoints)
+
+            // Loop through the FileList and add sharedpoints to list.
+            for(var i = 0, sp; sp = sharedpoints[i]; i++)
+                db.sharepoints_add(sp)
+
+            db.sharepoints_getAll(null, function(sharedpoints)
+            {
+                ui.update_fileslist_sharedpoints(sharedpoints)
+            })
         })
 
         // Connect a signaling channel to the handshake server and get an ID
