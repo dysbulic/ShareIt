@@ -396,19 +396,19 @@ UI.prototype =
 	                {
 	                    var fileslist = event.data[0]
 
-	                    self._updatefiles(tbody, fileslist, function(file)
+	                    self._updatefiles(tbody, fileslist, function(fileentry)
 	                    {
-	                        return self._row_sharing(file, function(file)
+	                        return self._row_sharing(fileentry, function()
 	                        {
 	                            var div = document.createElement("DIV");
-	                                div.id = file.name
+	                                div.id = fileentry.name
 
 	                            div.transfer = function()
 	                            {
 	                                var transfer = document.createElement("A");
 	                                    transfer.onclick = function()
 	                                    {
-	                                        peersManager._transferbegin(file);
+	                                        peersManager._transferbegin(fileentry)
 	                                        return false;
 	                                    }
 	                                    transfer.appendChild(document.createTextNode("Transfer"));
@@ -446,18 +446,18 @@ UI.prototype =
 	                            }
 
 	                            // Show if file have been downloaded previously or if we can transfer it
-	                            if(file.bitmap)
+	                            if(fileentry.bitmap)
 	                            {
-	                                var chunks = file.size/chunksize;
+	                                var chunks = fileentry.size/chunksize;
 	                                if(chunks % 1 != 0)
 	                                    chunks = Math.floor(chunks) + 1;
 
-	                                var value = chunks - file.bitmap.length
+	                                var value = chunks - fileentry.bitmap.length
 
 	                                div.progressbar(value/chunks)
 	                            }
-	                            else if(file.blob)
-	                                div.open(file.blob)
+	                            else if(fileentry.blob)
+	                                div.open(fileentry.blob)
 	                            else
 	                                div.transfer()
 
@@ -465,7 +465,7 @@ UI.prototype =
 	                            {
 	                                var f = event.data[0]
 
-	                                if(file.name == f.name)
+	                                if(fileentry.name == f.name)
 	                                    div.progressbar()
 	                            })
 	                            peersManager.addEventListener("transfer.update", function(event)
@@ -473,14 +473,14 @@ UI.prototype =
 	                                var f = event.data[0]
 	                                var value = event.data[1]
 
-	                                if(file.name == f.name)
+	                                if(fileentry.name == f.name)
 	                                    div.progressbar(value)
 	                            })
 	                            peersManager.addEventListener("transfer.end", function(event)
 	                            {
 	                                var f = event.data[0]
 
-	                                if(file.name == f.name)
+	                                if(fileentry.name == f.name)
 	                                    div.open(f.blob)
 	                            })
 
@@ -549,26 +549,24 @@ UI.prototype =
 	    return tr
 	},
 
-    _updatefiles: function(area, files, row_factory)
+    _updatefiles: function(area, fileslist, row_factory)
     {
         // Remove old table and add new empty one
         while(area.firstChild)
             area.removeChild(area.firstChild);
 
-        for(var filename in files)
-            if(files.hasOwnProperty(filename))
-            {
-                var file = files[filename]
-                var path = ""
-                if(file.path)
-                    path = file.path + '/';
+        for(var i=0, fileentry; fileentry=fileslist[i]; i++)
+        {
+            var path = ""
+            if(fileentry.path)
+                path = fileentry.path + '/';
 
-                var tr = row_factory(file)
-                    tr.id = path + file.name
-                    if(path)
-                        tr.class = "child-of-" + path
+            var tr = row_factory(fileentry)
+                tr.id = path + fileentry.name
+                if(path)
+                    tr.class = "child-of-" + path
 
-                area.appendChild(tr)
-            }
+            area.appendChild(tr)
+        }
     }
 }

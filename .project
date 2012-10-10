@@ -5,7 +5,13 @@
 	<projects>
 	</projects>
 	<buildSpec>
+		<buildCommand>
+			<name>dk.olav.mascaraplugin.mascaraBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
 	</buildSpec>
 	<natures>
+		<nature>dk.olav.mascaraplugin.mascaraNature</nature>
 	</natures>
 </projectDescription>

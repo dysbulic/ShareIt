@@ -6,7 +6,6 @@ function load()
         var worker = new Worker('js/webp2p/hasher.js');
             worker.onmessage = function(event)
             {
-                console.log(event.data);
                 db.files_add(event.data)
 
 	            db.files_getAll(null, function(files)
