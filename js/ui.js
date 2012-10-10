@@ -249,79 +249,82 @@ UI.prototype =
 	    this.update_fileslist_sharing = function(files)
 	    {
 	        var area = document.getElementById('Sharing').getElementsByTagName("tbody")[0]
-	        self._updatefiles(area, files, self._row_sharing, function(file)
+	        self._updatefiles(area, files, function(file)
 	        {
-	            var div = document.createElement("DIV");
-	                div.id = file.name
+	            self._row_sharing(file, function(file)
+		        {
+		            var div = document.createElement("DIV");
+		                div.id = file.name
 
-	            div.progressbar = function(value)
-	            {
-	                if(value == undefined)
-	                   value = 0;
+		            div.progressbar = function(value)
+		            {
+		                if(value == undefined)
+		                   value = 0;
 
-	                var progress = document.createTextNode(Math.floor(value*100)+"%")
+		                var progress = document.createTextNode(Math.floor(value*100)+"%")
 
-	                while(div.firstChild)
-	                    div.removeChild(div.firstChild);
-	                div.appendChild(progress);
-	            }
+		                while(div.firstChild)
+		                    div.removeChild(div.firstChild);
+		                div.appendChild(progress);
+		            }
 
-	            div.open = function(blob)
-	            {
-	                var open = document.createElement("A");
-	                    open.href = window.URL.createObjectURL(blob)
-	                    open.target = "_blank"
-	                    open.appendChild(document.createTextNode("Open"));
+		            div.open = function(blob)
+		            {
+		                var open = document.createElement("A");
+		                    open.href = window.URL.createObjectURL(blob)
+		                    open.target = "_blank"
+		                    open.appendChild(document.createTextNode("Open"));
 
-	                while(div.firstChild)
-	                {
-	                    window.URL.revokeObjectURL(div.firstChild.href);
-	                    div.removeChild(div.firstChild);
-	                }
-	                div.appendChild(open);
-	            }
+		                while(div.firstChild)
+		                {
+		                    window.URL.revokeObjectURL(div.firstChild.href);
+		                    div.removeChild(div.firstChild);
+		                }
+		                div.appendChild(open);
+		            }
 
-	            // Show if file have been downloaded previously or if we can transfer it
-	            if(file.bitmap)
-	            {
-	                var chunks = file.size/chunksize;
-	                if(chunks % 1 != 0)
-	                    chunks = Math.floor(chunks) + 1;
+		            // Show if file have been downloaded previously or if we can transfer it
+		            if(file.bitmap)
+		            {
+		                var chunks = file.size/chunksize;
+		                if(chunks % 1 != 0)
+		                    chunks = Math.floor(chunks) + 1;
 
-	                var value = chunks - file.bitmap.length
+		                var value = chunks - file.bitmap.length
 
-	                div.progressbar(value/chunks)
-	            }
-	            else if(file.blob)
-	                div.open(file.blob)
-	            else
-	                div.open(file)
+		                div.progressbar(value/chunks)
+		            }
+		            else if(file.blob)
+		                div.open(file.blob)
+		            else
+		                div.open(file)
 
-	            peersManager.addEventListener("transfer.begin", function(event)
-	            {
-	                var f = event.data[0]
+		            peersManager.addEventListener("transfer.begin", function(event)
+		            {
+		                var f = event.data[0]
 
-	                if(file.name == f.name)
-	                    div.progressbar()
-	            })
-	            peersManager.addEventListener("transfer.update", function(event)
-	            {
-	                var f = event.data[0]
-	                var value = event.data[1]
+		                if(file.name == f.name)
+		                    div.progressbar()
+		            })
+		            peersManager.addEventListener("transfer.update", function(event)
+		            {
+		                var f = event.data[0]
+		                var value = event.data[1]
 
-	                if(file.name == f.name)
-	                    div.progressbar(value)
-	            })
-	            peersManager.addEventListener("transfer.end", function(event)
-	            {
-	                var f = event.data[0]
+		                if(file.name == f.name)
+		                    div.progressbar(value)
+		            })
+		            peersManager.addEventListener("transfer.end", function(event)
+		            {
+		                var f = event.data[0]
 
-	                if(file.name == f.name)
-	                    div.open(f.blob)
-	            })
+		                if(file.name == f.name)
+		                    div.open(f.blob)
+		            })
 
-	            return div
-	        })
+		            return div
+		        })
+		    })
 	    }
 
 	    function ConnectUser()
@@ -546,7 +549,7 @@ UI.prototype =
 	    return tr
 	},
 
-    _updatefiles: function(area, files, row_factory, button_factory)
+    _updatefiles: function(area, files, row_factory)
     {
         // Remove old table and add new empty one
         while(area.firstChild)
@@ -560,7 +563,7 @@ UI.prototype =
                 if(file.path)
                     path = file.path + '/';
 
-                var tr = row_factory(file, button_factory)
+                var tr = row_factory(file)
                     tr.id = path + file.name
                     if(path)
                         tr.class = "child-of-" + path
