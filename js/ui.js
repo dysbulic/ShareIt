@@ -249,9 +249,9 @@ UI.prototype =
 	    this.update_fileslist_sharing = function(files)
 	    {
 	        var area = document.getElementById('Sharing').getElementsByTagName("tbody")[0]
-	        self._updatefiles(area, files, function(file)
+	        self._updatefiles(area, files, function(fileentry)
 	        {
-	            self._row_sharing(file, function(file)
+	            return self._row_sharing(fileentry.file, function(file)
 		        {
 		            var div = document.createElement("DIV");
 		                div.id = file.name
