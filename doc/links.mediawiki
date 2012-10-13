@@ -77,3 +77,10 @@ http://www.sipml5.org
 http://code.google.com/p/sim-js
 http://bloggeek.me/html-sip
 https://github.com/versatica/JsSIP
+
+== Public SIP servers ==
+http://www.cs.columbia.edu/sip/servers.html
+http://code.google.com/p/sipml5/wiki/Public_SIP_Servers
+
+== Public STUN servers ==
+http://www.stunserver.org/
