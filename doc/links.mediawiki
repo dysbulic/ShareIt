@@ -70,3 +70,10 @@ http://www.ehow.com/how_7205965_make-ttf-font-ubuntu.html
 == FontForge ==
 http://fontforge.org/overview.html
 http://fontforge.org/editexample.html
+
+= SIP over HTML =
+http://sip-on-the-web.aliax.net
+http://www.sipml5.org
+http://code.google.com/p/sim-js
+http://bloggeek.me/html-sip
+https://github.com/versatica/JsSIP
