@@ -63,6 +63,8 @@ do and what is the current status (2012-09-12)
 
 http://lincolnloop.com/blog/2012/sep/12/what-webrtc/
 
+http://bloggeek.me/resources/webrtc-series/
+
 = Font tutorials =
 == How to make a font in Ubuntu ==
 http://www.ehow.com/how_7205965_make-ttf-font-ubuntu.html
@@ -74,7 +76,7 @@ http://fontforge.org/editexample.html
 = SIP over HTML =
 http://sip-on-the-web.aliax.net
 http://www.sipml5.org
-http://code.google.com/p/sim-js
+http://code.google.com/p/sip-js
 http://bloggeek.me/html-sip
 https://github.com/versatica/JsSIP
 
