@@ -250,13 +250,7 @@ UI.prototype =
 	//    signaling.removeEventListener('sessionId')
 	    signaling.addEventListener('sessionId', function(event)
 	    {
-	        var uid = event.data[0]
-
-	        var span = document.getElementById("UID")
-
-	        while(span.firstChild)
-	            span.removeChild(span.firstChild);
-	        span.appendChild(document.createTextNode("UID: "+uid))
+	        document.getElementById("UID").value = event.data[0]
 	    })
 	},
 

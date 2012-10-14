@@ -183,6 +183,24 @@ li span.about {
     height: 120px
 }
 
+#dialog-about h1,p,br,span {
+    margin-bottom: 12px;
+}
+
+#dialog-about div {
+    margin-top: 12px;
+}
+
+#fork_me {
+    border: none;
+    position: fixed; 
+    bottom: 0; 
+    right: 0; 
+    border-radius: 0px 8px 8px 0px;
+    box-shadow: 3px 3px 3px #666;
+}
+
+
 /* TreeTable
  * ------------------------------------------------------------------------- */
 
