@@ -33,15 +33,18 @@ function load()
 
             ui.setPeersManager(peersManager)
 
-            db.sharepoints_getAll(null, function(filelist)
+            db.files_getAll(null, function(filelist)
             {
                 ui.update_fileslist_sharing(filelist)
 
 //                // Restart downloads
-//                for(var i = 0, file; file = filelist[i]; i++)
-//                    if(file.bitmap)
-//                        signaling.emit('transfer.query', file.name,
-//                                                        getRandom(file.bitmap))
+//                for(var i=0, fileentry; fileentry=filelist[i]; i++)
+//                    if(fileentry.bitmap)
+//                    {
+//                        var channel = peersManager.getChannel(fileentry)
+//                        channel.emit('transfer.query', fileentry.hash,
+//                                                       getRandom(fileentry.bitmap))
+//                    }
             })
 
             ui.setSignaling(signaling)
