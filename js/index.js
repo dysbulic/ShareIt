@@ -24,7 +24,8 @@ function load()
         {
             ui.update_fileslist_sharedpoints(sharedpoints)
 
-            // [To-Do] Start hashing new files on the shared points
+            // Start hashing new files from the shared points on boot
+            hasher.hash(sharedpoints)
         })
 
         // Connect a signaling channel to the handshake server and get an ID
