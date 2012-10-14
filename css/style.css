@@ -178,6 +178,11 @@ li span.about {
 }
 
 
+#dialog-about #logo {
+    float: right;
+    height: 120px
+}
+
 /* TreeTable
  * ------------------------------------------------------------------------- */
 

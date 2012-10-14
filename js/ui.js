@@ -116,6 +116,11 @@ function UI(db)
 
     $("#Preferences").click(dialogOpen)
     $("#Preferences2").click(dialogOpen)
+
+    $("#About").click(function()
+    {
+        $("#dialog-about").dialog("open")
+    })
 }
 
 UI.prototype =
