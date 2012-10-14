@@ -117,8 +117,7 @@ html, body { height: 100%; }
 #tools-menu-submenu
 {
     background: #de9a44;
-    width: 192px;
-    height: 96px;
+    width: 192px;   /* If this is commented, tools menu is showed horizontal */
     display: none;
     position: absolute;
     top: 45px

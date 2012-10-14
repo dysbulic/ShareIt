@@ -28,7 +28,7 @@ function UI(db)
         $("#tabs").tabs("remove", index);
     });
 
-    $("#dialog-config").dialog(
+    var dialog_options =
     {
         autoOpen: false,
         resizable: false,
@@ -37,7 +37,10 @@ function UI(db)
         modal: true,
 //        show: "fold",
 //        hide: "fold"
-    });
+    }
+
+    $("#dialog-about").dialog(dialog_options);
+    $("#dialog-config").dialog(dialog_options);
 
     $("#Downloading").treeTable();
     $("#Sharing").treeTable();
