@@ -53,7 +53,8 @@ function load()
 }
 
 
-window.addEventListener("load", function()
+window.addEventListener("DOMContentLoaded", function()
+//window.addEventListener("load", function()
 {
 	// Check for IndexedDB support and if it store File objects
 	testIDBBlobSupport(function(supported)
