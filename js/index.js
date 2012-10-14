@@ -17,7 +17,7 @@ function load()
 	            })
             }
 
-        ui.setHasher(hasher)
+        ui.setHasher(hasher, db)
 
         // Connect a signaling channel to the handshake server and get an ID
 //        var signaling = new WebSocket('ws://localhost:8001')
