@@ -109,14 +109,6 @@ function UI()
 
 UI.prototype =
 {
-	ready_fileschange: function(func)
-	{
-	    document.getElementById('files').addEventListener('change', function(event)
-	    {
-	        func(event.target.files); // FileList object
-	    }, false);
-	},
-
 	update_fileslist_downloading: function(files)
 	{
 	    var area = document.getElementById('Downloading').getElementsByTagName("tbody")[0]
@@ -225,6 +217,24 @@ UI.prototype =
 		})
 	},
 
+
+    setHasher: function(hasher, db)
+    {
+        var self = this
+
+        document.getElementById('files').addEventListener('change', function(event)
+        {
+            var sharedpoints = event.target.files; // FileList object
+
+            // Hash files
+            hasher.hash(sharedpoints)
+
+            db.sharepoints_getAll(null, function(sharedpoints)
+            {
+                self.update_fileslist_sharedpoints(sharedpoints)
+            })
+        }, false);
+    },
 
 	setSignaling: function(signaling)
 	{

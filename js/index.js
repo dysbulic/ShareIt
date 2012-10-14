@@ -15,23 +15,14 @@ function load()
 	            })
             }
 
+        ui.setHasher(hasher, db)
+
         // Get shared points and init them
         db.sharepoints_getAll(null, function(sharedpoints)
         {
             ui.update_fileslist_sharedpoints(sharedpoints)
 
             // [To-Do] Start hashing new files on the shared points
-        })
-
-        ui.ready_fileschange(function(sharedpoints)
-        {
-            // Hash files
-            hasher.hash(sharedpoints)
-
-            db.sharepoints_getAll(null, function(sharedpoints)
-            {
-                ui.update_fileslist_sharedpoints(sharedpoints)
-            })
         })
 
         // Connect a signaling channel to the handshake server and get an ID
