@@ -3,7 +3,7 @@ function No_FileReader()
 	$('#Sharedpoints').html('Your browser is not modern enough to serve as a host. :(<br /><br />(Try Chrome or Firefox!)');
 }
 
-function UI()
+function UI(db)
 {
     $("#tabs").tabs(
     {
@@ -98,8 +98,16 @@ function UI()
     $("#tools-menu2").click(toolsMenu_open)
     $("#tools-menu3").click(toolsMenu_open)
 
+    var self = this
+
     function dialogOpen()
     {
+        // Get shared points and init them
+        db.sharepoints_getAll(null, function(sharedpoints)
+        {
+            self.update_fileslist_sharedpoints(sharedpoints)
+        })
+
         $("#dialog-config").dialog("open")
     }
 
@@ -218,21 +226,13 @@ UI.prototype =
 	},
 
 
-    setHasher: function(hasher, db)
+    setHasher: function(hasher)
     {
         var self = this
 
         document.getElementById('files').addEventListener('change', function(event)
         {
-            var sharedpoints = event.target.files; // FileList object
-
-            // Hash files
-            hasher.hash(sharedpoints)
-
-            db.sharepoints_getAll(null, function(sharedpoints)
-            {
-                self.update_fileslist_sharedpoints(sharedpoints)
-            })
+            hasher.hash(event.target.files)
         }, false);
     },
 

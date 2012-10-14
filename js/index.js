@@ -4,7 +4,7 @@ function load()
     DB_init(function(db)
     {
         // Init user interface
-        var ui = new UI()
+        var ui = new UI(db)
 
         var hasher = new Hasher(db)
             hasher.onhashed = function(fileentry)
@@ -17,13 +17,7 @@ function load()
 	            })
             }
 
-        ui.setHasher(hasher, db)
-
-        // Get shared points and init them
-        db.sharepoints_getAll(null, function(sharedpoints)
-        {
-            ui.update_fileslist_sharedpoints(sharedpoints)
-        })
+        ui.setHasher(hasher)
 
         // Connect a signaling channel to the handshake server and get an ID
 //        var signaling = new WebSocket('ws://localhost:8001')
