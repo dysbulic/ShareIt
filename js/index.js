@@ -3,7 +3,7 @@ function load()
     // Init database
     DB_init(function(db)
     {
-        var worker = new Worker('js/webp2p/hasher.js');
+        var worker = new Worker('js/webp2p/hasher_worker.js');
             worker.onmessage = function(event)
             {
                 db.files_add(event.data)
