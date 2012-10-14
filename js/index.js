@@ -3,19 +3,17 @@ function load()
     // Init database
     DB_init(function(db)
     {
-        var worker = new Worker('js/webp2p/hasher_worker.js');
-            worker.onmessage = function(event)
-            {
-                db.files_add(event.data)
+        // Init user interface
+        var ui = new UI()
 
+        var hasher = new Hasher(db)
+            hasher.onsuccess = function()
+            {
 	            db.files_getAll(null, function(files)
 	            {
 	                ui.update_fileslist_sharing(files)
 	            })
             }
-
-        // Init user interface
-        var ui = new UI()
 
         // Get shared points and init them
         db.sharepoints_getAll(null, function(sharedpoints)
@@ -27,12 +25,8 @@ function load()
 
         ui.ready_fileschange(function(sharedpoints)
         {
-            // Hash files on the worker
-            worker.postMessage(sharedpoints)
-
-            // Loop through the FileList and add sharedpoints to list.
-            for(var i = 0, sp; sp = sharedpoints[i]; i++)
-                db.sharepoints_add(sp)
+            // Hash files
+            hasher.hash(sharedpoints)
 
             db.sharepoints_getAll(null, function(sharedpoints)
             {
