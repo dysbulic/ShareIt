@@ -142,6 +142,10 @@ li span.user {
   background-image: url(../images/user.png);
 }
 
+li span.about {
+  background-image: url(../images/about.png);
+}
+
 
 #StartHere img {
     float: left;
