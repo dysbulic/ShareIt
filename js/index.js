@@ -7,8 +7,10 @@ function load()
         var ui = new UI()
 
         var hasher = new Hasher(db)
-            hasher.onsuccess = function()
+            hasher.onsuccess = function(fileentry)
             {
+                db.files_put(fileentry)
+
 	            db.files_getAll(null, function(files)
 	            {
 	                ui.update_fileslist_sharing(files)
