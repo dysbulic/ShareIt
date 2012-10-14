@@ -35,8 +35,10 @@ function UI(db)
         width: 800,
         height: 600,
         modal: true,
-//        show: "fold",
-//        hide: "fold"
+
+        /* This effects would fail on Firefox */
+        show: "fold",
+        hide: "fold"
     }
 
     $("#dialog-about").dialog(dialog_options);
