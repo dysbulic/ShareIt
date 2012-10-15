@@ -7,7 +7,7 @@ function UI(db)
 {
     $("#tabs").tabs(
     {
-        tabTemplate: "<li><a href='#{href}'>#{label}</a> <span class='ui-icon ui-icon-close'>Remove Tab</span></li>",
+        tabTemplate: "<li><a href='#{href}'>#{label}</a><span class='ui-icon ui-icon-closethick'>Remove Tab</span></li>",
         add: function(event, ui)
         {
             $("#tabs").tabs('select', '#' + ui.panel.id);
@@ -22,9 +22,9 @@ function UI(db)
 
     // close icon: removing the tab on click
     // note: closable tabs gonna be an option in the future - see http://dev.jqueryui.com/ticket/3924
-    $("#tabs span.ui-icon-close").live("click", function()
+    $("#tabs span.ui-icon-closethick").live("click", function()
     {
-        var index = $("li", $("#tabs")).index($(this).parent());
+        var index = $("#ui-corner-top", $("#tabs")).index($(this).parent());
         $("#tabs").tabs("remove", index);
     });
 
