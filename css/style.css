@@ -94,6 +94,7 @@ html, body { height: 100%; }
 #Sharedpoints {
     cursor: pointer;
     width: 100%;
+    height: 500px;
     cellspacing: 0;
     summary: ""
 }
@@ -110,38 +111,45 @@ html, body { height: 100%; }
     summary: ""
 }
 
+span.add-sharedpoint {
+  background-image: url(../images/add-folder.png);
+  background-position: center left;
+  background-repeat: no-repeat;
+  padding: .2em 0 .2em 1.5em;
+  cursor: pointer
+}
+
 
 /* Tools menu
  * ------------------------------------------------------------------------- */
 
 #tools-menu-submenu
 {
-    background: #de9a44;
     width: 192px;   /* If this is commented, tools menu is showed horizontal */
     display: none;
     position: absolute;
     top: 45px
 }
 
-li span {
+#tools-menu span {
   background-position: center left;
   background-repeat: no-repeat;
   padding: .2em 0 .2em 1.5em;
 }
 
-li a {
+#tools-menu a {
   cursor: "pointer"
 }
 
-li span.preferences {
+span.preferences {
   background-image: url(../images/preferences.png);
 }
 
-li span.user {
+span.user {
   background-image: url(../images/user.png);
 }
 
-li span.about {
+span.about {
   background-image: url(../images/about.png);
 }
 
@@ -156,6 +164,12 @@ li span.about {
     height: 120px
 }
 
+#StartHere span {
+  background-position: center left;
+  background-repeat: no-repeat;
+  padding: .2em 0 .2em 1.5em;
+}
+
 #StartHere ul {
     list-style: disc;
     line-height: 150%
@@ -166,6 +180,10 @@ li span.about {
 }
 
 #ConnectUser2 {
+    cursor: pointer
+}
+
+#About2 {
     cursor: pointer
 }
 

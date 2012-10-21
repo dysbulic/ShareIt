@@ -84,8 +84,10 @@ new browser on the current running up.
 
 ## License
 
-For now, consider this code to be under the Affero GNU General Public License.
-I am willing to relicense it under the BSD/MIT/Apache license, I simply ask that
-you email me and tell me why. I'll almost certainly agree.
+All this code is under the Affero GNU General Public License. Regarding to the
+core of the application at js/webp2p (that I'll distribute as an independent
+library/framework some date in the future) I am willing to relicense it under
+the BSD/MIT/Apache license, I simply ask that you email me and tell me why. I'll
+almost certainly agree.
 
 Patches graciously accepted!

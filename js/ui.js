@@ -7,7 +7,7 @@ function UI(db)
 {
     $("#tabs").tabs(
     {
-        tabTemplate: "<li><a href='#{href}'>#{label}</a> <span class='ui-icon ui-icon-close'>Remove Tab</span></li>",
+        tabTemplate: "<li><a href='#{href}'>#{label}</a><span class='ui-icon ui-icon-closethick'>Remove Tab</span></li>",
         add: function(event, ui)
         {
             $("#tabs").tabs('select', '#' + ui.panel.id);
@@ -22,9 +22,9 @@ function UI(db)
 
     // close icon: removing the tab on click
     // note: closable tabs gonna be an option in the future - see http://dev.jqueryui.com/ticket/3924
-    $("#tabs span.ui-icon-close").live("click", function()
+    $("#tabs span.ui-icon-closethick").live("click", function()
     {
-        var index = $("li", $("#tabs")).index($(this).parent());
+        var index = $("#ui-corner-top", $("#tabs")).index($(this).parent());
         $("#tabs").tabs("remove", index);
     });
 
@@ -105,7 +105,7 @@ function UI(db)
 
     var self = this
 
-    function dialogOpen()
+    function preferencesDialogOpen()
     {
         // Get shared points and init them
         db.sharepoints_getAll(null, function(sharedpoints)
@@ -116,13 +116,16 @@ function UI(db)
         $("#dialog-config").dialog("open")
     }
 
-    $("#Preferences").click(dialogOpen)
-    $("#Preferences2").click(dialogOpen)
+    $("#Preferences").click(preferencesDialogOpen)
+    $("#Preferences2").click(preferencesDialogOpen)
 
-    $("#About").click(function()
+    function aboutDialogOpen()
     {
         $("#dialog-about").dialog("open")
-    })
+    }
+
+    $("#About").click(aboutDialogOpen)
+    $("#About").click(aboutDialogOpen)
 }
 
 UI.prototype =
@@ -575,16 +578,29 @@ UI.prototype =
         while(area.firstChild)
             area.removeChild(area.firstChild);
 
-        for(var i=0, fileentry; fileentry=fileslist[i]; i++)
-        {
-            var path = ""
-            if(fileentry.path)
-                path = fileentry.path + '/';
+        if(fileslist.lenght)
+            for(var i=0, fileentry; fileentry=fileslist[i]; i++)
+            {
+                var path = ""
+                if(fileentry.path)
+                    path = fileentry.path + '/';
 
-            var tr = row_factory(fileentry)
-                tr.id = path + fileentry.name
-                if(path)
-                    tr.class = "child-of-" + path
+                var tr = row_factory(fileentry)
+                    tr.id = path + fileentry.name
+                    if(path)
+                        tr.class = "child-of-" + path
+
+                area.appendChild(tr)
+            }
+        else
+        {
+            var tr = document.createElement('TR')
+
+            var td = document.createElement('TD');
+                td.colSpan = 3
+                td.align = 'center'
+                td.appendChild(document.createTextNode("There are no shared points. Please add some files to be shared."));
+            tr.appendChild(td)
 
             area.appendChild(tr)
         }
