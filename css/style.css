@@ -125,7 +125,6 @@ span.add-sharedpoint {
 
 #tools-menu-submenu
 {
-    background: #de9a44;
     width: 192px;   /* If this is commented, tools menu is showed horizontal */
     display: none;
     position: absolute;
