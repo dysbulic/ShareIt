@@ -133,15 +133,15 @@ html, body { height: 100%; }
   cursor: "pointer"
 }
 
-#tools-menu span.preferences {
+span.preferences {
   background-image: url(../images/preferences.png);
 }
 
-#tools-menu span.user {
+span.user {
   background-image: url(../images/user.png);
 }
 
-#tools-menu span.about {
+span.about {
   background-image: url(../images/about.png);
 }
 
@@ -154,6 +154,12 @@ html, body { height: 100%; }
 #StartHere #logo {
     float: right;
     height: 120px
+}
+
+#StartHere span {
+  background-position: center left;
+  background-repeat: no-repeat;
+  padding: .2em 0 .2em 1.5em;
 }
 
 #StartHere ul {
