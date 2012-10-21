@@ -596,7 +596,7 @@ UI.prototype =
             var td = document.createElement('TD');
                 td.colSpan = 3
                 td.align = 'center'
-                td.appendChild(document.createTextNode("There are no shared points"));
+                td.appendChild(document.createTextNode("There are no shared points. Please add some files to be shared."));
             tr.appendChild(td)
 
             area.appendChild(tr)
