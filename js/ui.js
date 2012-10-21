@@ -105,7 +105,7 @@ function UI(db)
 
     var self = this
 
-    function dialogOpen()
+    function preferencesDialogOpen()
     {
         // Get shared points and init them
         db.sharepoints_getAll(null, function(sharedpoints)
@@ -116,13 +116,16 @@ function UI(db)
         $("#dialog-config").dialog("open")
     }
 
-    $("#Preferences").click(dialogOpen)
-    $("#Preferences2").click(dialogOpen)
+    $("#Preferences").click(preferencesDialogOpen)
+    $("#Preferences2").click(preferencesDialogOpen)
 
-    $("#About").click(function()
+    function aboutDialogOpen()
     {
         $("#dialog-about").dialog("open")
-    })
+    }
+
+    $("#About").click(aboutDialogOpen)
+    $("#About").click(aboutDialogOpen)
 }
 
 UI.prototype =
