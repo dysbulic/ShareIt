@@ -575,16 +575,29 @@ UI.prototype =
         while(area.firstChild)
             area.removeChild(area.firstChild);
 
-        for(var i=0, fileentry; fileentry=fileslist[i]; i++)
-        {
-            var path = ""
-            if(fileentry.path)
-                path = fileentry.path + '/';
+        if(fileslist.lenght)
+            for(var i=0, fileentry; fileentry=fileslist[i]; i++)
+            {
+                var path = ""
+                if(fileentry.path)
+                    path = fileentry.path + '/';
 
-            var tr = row_factory(fileentry)
-                tr.id = path + fileentry.name
-                if(path)
-                    tr.class = "child-of-" + path
+                var tr = row_factory(fileentry)
+                    tr.id = path + fileentry.name
+                    if(path)
+                        tr.class = "child-of-" + path
+
+                area.appendChild(tr)
+            }
+        else
+        {
+            var tr = document.createElement('TR')
+
+            var td = document.createElement('TD');
+                td.colSpan = 3
+                td.align = 'center'
+                td.appendChild(document.createTextNode("There are no shared points"));
+            tr.appendChild(td)
 
             area.appendChild(tr)
         }
