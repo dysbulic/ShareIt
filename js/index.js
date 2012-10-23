@@ -60,7 +60,14 @@ window.addEventListener("DOMContentLoaded", function()
 	testIDBBlobSupport(function(supported)
 	{
 	    if(!supported)
+	    {
+	    	alert("Your IndexedDB implementation doesn't support storing File or "+
+		          "Blob objects (maybe are you using Chrome?), required by this app"+
+		          " to work correctly. I'm going to insert a custom implementation "+
+		          "using JavaScript objects but, unluckily, data will not persists.")
+
 	       IdbJS_install();
+	    }
 
         load()
 	})
