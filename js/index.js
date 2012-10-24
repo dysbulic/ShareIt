@@ -56,9 +56,21 @@ function load()
 window.addEventListener("DOMContentLoaded", function()
 //window.addEventListener("load", function()
 {
-    if(DCPF_install("wss://datachannel-polyfill.nodejitsu.com") == "old browser")
-        alert("Your browser doesn't support RTCPeerConnection, please use"+
-              " one of the latest versions of Chrome/Chromium or Firefox.");
+	var errors = {}
+	var warnings = {}
+
+	// DataChannel polyfill
+    switch(DCPF_install("wss://datachannel-polyfill.nodejitsu.com"))
+    {
+		case "old browser":
+			errors["DataChannel"] = "Your browser doesn't support PeerConnection."
+	        break
+
+		case "polyfill":
+	        warnings["DataChannel"] = "Your browser doesn't support DataChannels"+
+	        						  " natively, so file transfers performance "+
+	        						  "would be affected or not work at all.";
+    }
 
     // Check for IndexedDB support and if it store File objects
 	testIDBBlobSupport(function(supported)
@@ -75,4 +87,10 @@ window.addEventListener("DOMContentLoaded", function()
 
         load()
 	})
+
+	// Show alert if browser requeriments are not meet
+	if(errors)
+        alert("ShareIt! will not work on your browser because the following "+
+        	  "errors '"+errors+"' and warnings '"+warnings+"'. "+
+        	  "Please use one of the latest versions of Chrome/Chromium or Firefox.");
 })
