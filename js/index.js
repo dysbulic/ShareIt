@@ -56,7 +56,11 @@ function load()
 window.addEventListener("DOMContentLoaded", function()
 //window.addEventListener("load", function()
 {
-	// Check for IndexedDB support and if it store File objects
+    if(DCPF_install("wss://datachannel-polyfill.nodejitsu.com") == "old browser")
+        alert("Your browser doesn't support RTCPeerConnection, please use"+
+              " one of the latest versions of Chrome/Chromium or Firefox.");
+
+    // Check for IndexedDB support and if it store File objects
 	testIDBBlobSupport(function(supported)
 	{
 	    if(!supported)
