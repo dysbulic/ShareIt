@@ -23,7 +23,7 @@
 
         <script src="https://raw.github.com/piranna/DataChannel-polyfill/master/datachannel.js"></script>
         <script>
-        	if(DCPF_install("wss://datachannel-polyfill.nodejitsu.com") == undefined)
+        	if(DCPF_install("wss://datachannel-polyfill.nodejitsu.com") == "old browser")
         		alert("Your browser doesn't support RTCPeerConnection, please use"+
         			  " one of the latest versions of Chrome/Chromium or Firefox.");
         </script>
