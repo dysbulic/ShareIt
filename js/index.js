@@ -73,30 +73,66 @@ function CompatibilityManager()
 
 	this.show = function()
 	{
-		var msg = "ShareIt! will not work "
+		var msg = "<p>ShareIt! will not work "
+		var icon
 
 		if(errors)
 		{
-	        msg += "on your browser because it doesn't meet the following requeriments:\n\n"
-            for(var key in errors)
-            	msg += key+': '+errors[key]+'\n';
+			icon = "images/smiley-sad.svg"
+
+			msg += "on your browser because it doesn't meet the following requeriments:\n\n"
+
+	        msg += '<ul>'
+			for(var key in errors)
+            	msg += '<li><b>'+key+'</b>: '+errors[key]+'</li>';
+	        msg += '</ul>'
+
+	        msg += '</p>'
 
 	        if(warnings)
 	        {
-	            msg += "\nAlso, it wouldn't work optimally because the following issues:\n\n"
+	            msg += "<p>Also, it wouldn't work optimally because the following issues:\n\n"
+
+    	        msg += '<ul>'
 	            for(var key in warnings)
-	            	msg += key+': '+warnings[key]+'\n';
+	            	msg += '<li><b>'+key+'</b>: '+warnings[key]+'</li>';
+		        msg += '</ul>'
+
+		        msg += '</p>'
 	        }
 		}
 		else if(warnings)
-	        msg += "optimally on your browser because the following issues:\n\n"
-            for(var key in warnings)
-            	msg += key+': '+warnings[key]+'\n';
+		{
+			icon = "images/smiley-quiet.svg"
+
+	        msg += "optimally on your browser because the following issues:"
+
+	        msg += '<ul>'
+        	for(var key in warnings)
+            	msg += '<li><b>'+key+'</b>: '+warnings[key]+'</li>';
+	        msg += '</ul>'
+
+	        msg += '</p>'
+		}
 
 		if(errors || warnings)
 		{
-			msg += "\nPlease upgrade to the latest version of Chrome/Chromium or Firefox."
-			alert(msg);
+			msg += "<p>Please upgrade to the latest version of Chrome/Chromium or Firefox.</p>"
+
+			var alert = $("#dialog-alert")
+				alert.find("#icon")[0].src = icon
+				alert.find("#msg").html(msg)
+
+			alert.dialog({
+	            modal: true,
+	            buttons:
+	            {
+	                Ok: function()
+	                {
+	                    $(this).dialog("close");
+	                }
+	            }
+	        });
 		}
 	}
 }
@@ -143,6 +179,7 @@ window.addEventListener("DOMContentLoaded", function()
 		// Show alert if browser requeriments are not meet
 	    cm.show()
 
+	    // Start loading the webapp
 		load()
 	})
 })
