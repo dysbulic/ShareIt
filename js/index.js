@@ -63,7 +63,8 @@ window.addEventListener("DOMContentLoaded", function()
     switch(DCPF_install("wss://datachannel-polyfill.nodejitsu.com"))
     {
 		case "old browser":
-			errors["DataChannel"] = "Your browser doesn't support PeerConnection."
+			errors["DataChannel"] = "Your browser doesn't support PeerConnection"+
+									" so ShareIt! can't work."
 	        break
 
 		case "polyfill":
@@ -77,20 +78,20 @@ window.addEventListener("DOMContentLoaded", function()
 	{
 	    if(!supported)
 	    {
-	    	alert("Your IndexedDB implementation doesn't support storing File or "+
-		          "Blob objects (maybe are you using Chrome?), required by this app"+
-		          " to work correctly. I'm going to insert a custom implementation "+
-		          "using JavaScript objects but, unluckily, data will not persists.")
+	    	warnings["IndexedDB"] = "Your browser doesn't support storing File"+
+	    							" or Blob objects. Data will not persists "+
+	    							"between each time you run the webapp."
 
 	       IdbJS_install();
 	    }
 
-        load()
-	})
 
-	// Show alert if browser requeriments are not meet
-	if(errors)
-        alert("ShareIt! will not work on your browser because the following "+
-        	  "errors '"+errors+"' and warnings '"+warnings+"'. "+
-        	  "Please use one of the latest versions of Chrome/Chromium or Firefox.");
+		// Show alert if browser requeriments are not meet
+		if(errors)
+	        alert("ShareIt! will not work on your browser because the following "+
+	        	  "errors '"+errors+"' and warnings '"+warnings+"'. "+
+	        	  "Please update to the latest version of Chrome/Chromium or Firefox.");
+
+		load()
+	})
 })
