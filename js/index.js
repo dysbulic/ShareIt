@@ -53,30 +53,51 @@ function load()
 }
 
 
-// Show and alert about the compatibility issues for the webapp on the browser
-function showCompatibility(errors, warnings)
+// Show an alert about the compatibility issues for the webapp on the browser
+function CompatibilityManager()
 {
-	var msg = "ShareIt! will not work "
+	var errors
+	var warnings
 
-	if(errors)
+	this.addError = function(component, msg)
 	{
-        msg += "on your browser because it doesn't meet the following requeriments:"
-        msg += errors
-
-        if(warnings)
-        {
-            msg += ". Also, it wouldn't work optimally because the following issues:"
-            msg += warnings
-        }
+		errors = errors || {}
+		errors[component] = msg
 	}
-	else if(warnings)
-        msg += "optimally on your browser because the following issues:"
-        msg += warnings
 
-	if(errors || warnings)
+	this.addWarning = function(component, msg)
 	{
-		msg += ". Please upgrade to the latest version of Chrome/Chromium or Firefox."
-		alert(msg);
+		warnings = warnings || {}
+		warnings[component] = msg
+	}
+
+	this.show = function()
+	{
+		var msg = "ShareIt! will not work "
+
+		if(errors)
+		{
+	        msg += "on your browser because it doesn't meet the following requeriments:\n\n"
+            for(var key in errors)
+            	msg += key+': '+errors[key]+'\n';
+
+	        if(warnings)
+	        {
+	            msg += "\nAlso, it wouldn't work optimally because the following issues:\n\n"
+	            for(var key in warnings)
+	            	msg += key+': '+warnings[key]+'\n';
+	        }
+		}
+		else if(warnings)
+	        msg += "optimally on your browser because the following issues:\n\n"
+            for(var key in warnings)
+            	msg += key+': '+warnings[key]+'\n';
+
+		if(errors || warnings)
+		{
+			msg += "\nPlease upgrade to the latest version of Chrome/Chromium or Firefox."
+			alert(msg);
+		}
 	}
 }
 
@@ -84,43 +105,43 @@ function showCompatibility(errors, warnings)
 window.addEventListener("DOMContentLoaded", function()
 //window.addEventListener("load", function()
 {
-	var errors = {}
-	var warnings = {}
+	var cm = new CompatibilityManager()
 
 	// DataChannel polyfill
     switch(DCPF_install("wss://datachannel-polyfill.nodejitsu.com"))
     {
 		case "old browser":
-			errors["DataChannel"] = "Your browser doesn't support PeerConnection"+
-									" so ShareIt! can't work."
+			cm.addError("DataChannel", "Your browser doesn't support PeerConnection"+
+									   " so ShareIt! can't work.")
 	        break
 
 		case "polyfill":
-	        warnings["DataChannel"] = "Your browser doesn't support DataChannels"+
-	        						  " natively, so file transfers performance "+
-	        						  "would be affected or not work at all.";
+	        cm.addWarning("DataChannel", "Your browser doesn't support DataChannels"+
+	        						  	 " natively, so file transfers performance "+
+	        						  	 "would be affected or not work at all.")
     }
 
 	// Filereader support (be able to host files from the filesystem)
 	if(typeof FileReader == "undefined")
-		warnings["FileReader"] = "Your browser doesn't support FileReader so it"+
-								 " can't work as a host."
+		cm.addWarning("FileReader", "Your browser doesn't support FileReader "+
+									"so it can't work as a host.")
 
     // Check for IndexedDB support and if it store File objects
 	testIDBBlobSupport(function(supported)
 	{
 	    if(!supported)
 	    {
-	    	warnings["IndexedDB"] = "Your browser doesn't support storing File"+
-	    							" or Blob objects. Data will not persists "+
-	    							"between each time you run the webapp."
+	    	cm.addWarning("IndexedDB", "Your browser doesn't support storing "+
+	    							   "File or Blob objects. Data will not "+
+	    							   "persists between each time you run the"+
+	    							   " webapp.")
 
 	       IdbJS_install();
 	    }
 
 
 		// Show alert if browser requeriments are not meet
-	    showCompatibility(errors, warnings)
+	    cm.show()
 
 		load()
 	})
