@@ -49,6 +49,10 @@ function load()
 
             ui.setSignaling(signaling)
         }
+        signaling.onerror = function(error)
+        {
+            console.error(error)
+        }
     })
 }
 
