@@ -53,6 +53,15 @@ function load()
 }
 
 
+function showCompatibility(errors, warnings)
+{
+	if(errors)
+        alert("ShareIt! will not work on your browser because the following "+
+        	  "errors '"+errors+"' and warnings '"+warnings+"'. "+
+        	  "Please update to the latest version of Chrome/Chromium or Firefox.");
+}
+
+
 window.addEventListener("DOMContentLoaded", function()
 //window.addEventListener("load", function()
 {
@@ -92,10 +101,7 @@ window.addEventListener("DOMContentLoaded", function()
 
 
 		// Show alert if browser requeriments are not meet
-		if(errors)
-	        alert("ShareIt! will not work on your browser because the following "+
-	        	  "errors '"+errors+"' and warnings '"+warnings+"'. "+
-	        	  "Please update to the latest version of Chrome/Chromium or Firefox.");
+	    showCompatibility(errors, warnigs)
 
 		load()
 	})
