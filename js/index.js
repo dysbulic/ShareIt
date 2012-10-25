@@ -73,6 +73,11 @@ window.addEventListener("DOMContentLoaded", function()
 	        						  "would be affected or not work at all.";
     }
 
+	// Filereader support (be able to host files from the filesystem)
+	if(typeof FileReader == "undefined")
+		warnings["IndexedDB"] = "Your browser doesn't support FileReader so it"+
+								" can't work as a host."
+
     // Check for IndexedDB support and if it store File objects
 	testIDBBlobSupport(function(supported)
 	{
