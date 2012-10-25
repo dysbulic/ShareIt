@@ -53,12 +53,31 @@ function load()
 }
 
 
+// Show and alert about the compatibility issues for the webapp on the browser
 function showCompatibility(errors, warnings)
 {
+	var msg = "ShareIt! will not work "
+
 	if(errors)
-        alert("ShareIt! will not work on your browser because the following "+
-        	  "errors '"+errors+"' and warnings '"+warnings+"'. "+
-        	  "Please update to the latest version of Chrome/Chromium or Firefox.");
+	{
+        msg += "on your browser because it doesn't meet the following requeriments:"
+        msg += errors
+
+        if(warnings)
+        {
+            msg += ". Also, it wouldn't work optimally because the following issues:"
+            msg += warnings
+        }
+	}
+	else if(warnings)
+        msg += "optimally on your browser because the following issues:"
+        msg += warnings
+
+	if(errors || warnings)
+	{
+		msg += ". Please upgrade to the latest version of Chrome/Chromium or Firefox."
+		alert(msg);
+	}
 }
 
 
@@ -84,8 +103,8 @@ window.addEventListener("DOMContentLoaded", function()
 
 	// Filereader support (be able to host files from the filesystem)
 	if(typeof FileReader == "undefined")
-		warnings["IndexedDB"] = "Your browser doesn't support FileReader so it"+
-								" can't work as a host."
+		warnings["FileReader"] = "Your browser doesn't support FileReader so it"+
+								 " can't work as a host."
 
     // Check for IndexedDB support and if it store File objects
 	testIDBBlobSupport(function(supported)
@@ -101,7 +120,7 @@ window.addEventListener("DOMContentLoaded", function()
 
 
 		// Show alert if browser requeriments are not meet
-	    showCompatibility(errors, warnigs)
+	    showCompatibility(errors, warnings)
 
 		load()
 	})
