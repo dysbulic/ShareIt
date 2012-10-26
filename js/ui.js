@@ -133,7 +133,7 @@ UI.prototype =
 	update_fileslist_downloading: function(files)
 	{
 	    var table = document.getElementById('Downloading')
-	    this._updatefiles(table, files, function(file)
+	    this._updatefiles(table, files, "There are no downloads", function(file)
         {
             var tr = document.createElement('TR');
 
@@ -204,7 +204,9 @@ UI.prototype =
 	    var self = this
 
 	    var table = document.getElementById('Sharedpoints')
-	    this._updatefiles(table, sharedpoints, function(file)
+	    this._updatefiles(table, sharedpoints, "There are no shared points. "+
+	                                           "Please add some files to be shared.",
+	    function(file)
 		{
 		    var tr = document.createElement('TR');
 
@@ -272,7 +274,9 @@ UI.prototype =
 	    this.update_fileslist_sharing = function(files)
 	    {
 	        var table = document.getElementById('Sharing')
-	        self._updatefiles(table, files, function(fileentry)
+	        self._updatefiles(table, files, "You are not sharing any file, "+
+	                          "please add a shared point on the preferences",
+	        function(fileentry)
 	        {
 	            return self._row_sharing(fileentry.file, function(file)
 		        {
@@ -419,7 +423,9 @@ UI.prototype =
 	                {
 	                    var fileslist = event.data[0]
 
-	                    self._updatefiles(table, fileslist, function(fileentry)
+	                    self._updatefiles(table, fileslist,
+	                                      "Remote peer is not sharing files.",
+	                    function(fileentry)
 	                    {
 	                        return self._row_sharing(fileentry, function()
 	                        {
@@ -576,7 +582,7 @@ UI.prototype =
 	    return tr
 	},
 
-    _updatefiles: function(table, fileslist, row_factory)
+    _updatefiles: function(table, fileslist, noFilesCaption, row_factory)
     {
         var tbody = table.getElementsByTagName("tbody")[0]
 
@@ -605,7 +611,7 @@ UI.prototype =
             var td = document.createElement('TD');
                 td.colSpan = table.getElementsByTagName("thead")[0].rows[0].cells.length
                 td.align = 'center'
-                td.appendChild(document.createTextNode("There are no shared points. Please add some files to be shared."));
+                td.appendChild(document.createTextNode(noFilesCaption));
             tr.appendChild(td)
 
             tbody.appendChild(tr)
