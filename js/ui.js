@@ -513,6 +513,10 @@ UI.prototype =
 	                })
 
 	                channel.fileslist_query();
+	            },
+	            function(uid, peer, channel)
+	            {
+	                console.error(uid, peer, channel)
 	            })
 	        }
 	    }
