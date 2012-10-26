@@ -590,7 +590,7 @@ UI.prototype =
         while(tbody.firstChild)
             tbody.removeChild(tbody.firstChild);
 
-        if(fileslist.lenght)
+        if(fileslist.length)
             for(var i=0, fileentry; fileentry=fileslist[i]; i++)
             {
                 var path = ""
