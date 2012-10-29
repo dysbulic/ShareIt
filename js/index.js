@@ -19,7 +19,7 @@ function load()
 
         ui.setHasher(hasher, db)
 
-        var signaling = new Transport_Signaling_Original('wss://shareit.nodejitsu.com')
+        var signaling = new Signaling_Original('wss://shareit.nodejitsu.com')
 
         var peersManager = new PeersManager(signaling, db)
         signaling.setPeersManager(peersManager)
