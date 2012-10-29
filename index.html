@@ -21,11 +21,11 @@
         <script type="text/javascript" src="https://raw.github.com/taijinlee/humanize/master/humanize.js"></script>
 
         <script src="https://raw.github.com/piranna/DataChannel-polyfill/master/datachannel.js"></script>
-        <script>DCPF_install("wss://datachannel-polyfill.nodejitsu.com")</script>
 
         <script type="text/javascript" src="js/webp2p/polyfills/FileWriter.js"></script>
         <script type="text/javascript" src="js/webp2p/polyfills/IndexedDB-javascript.js"></script>
 
+        <script type="text/javascript" src="js/CompatibilityManager.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript" src="js/ui.js"></script>
         <script type="text/javascript" src="js/webp2p/bitmap.js"></script>
@@ -110,7 +110,7 @@
                     <p style="display: inline-block; text-align: justify;width: 550px">
                         ShareIt! is a descentralized, server-less P2P
                         filesharing application (just like your ol' good friends
-                        <a href="http://www.emule-project.net">eMule</a> or
+                        <a href="http://www.emule-project.net">eMule</a> and
                         <a href="http://www.bittorrent.com">BitTorrent</a>)
                         running on your web browser without the need of any
                         third party plugin thanks to JavaScript and high-edge
@@ -142,8 +142,7 @@
                         <a href="http://www.w3.org/html/logo/">
                             <img src="http://www.w3.org/html/logo/badge/html5-badge-h-connectivity-css3-performance-semantics-storage.png"
                                  width="261" height="64" alt="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Performance &amp; Integration, Semantics, and Offline &amp; Storage"
-                                 title="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Performance &amp; Integration, Semantics, and Offline &amp; Storage"/>
-                        </a>
+                                 title="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Performance &amp; Integration, Semantics, and Offline &amp; Storage"/></a>
                         <a href="http://www.webrtc.org/">
                             <img src="https://sites.google.com/site/webrtc/_/rsrc/1318870658554/config/customLogo.gif?revision=8" height="50" alt="WebRTC"/>
                         </a>
@@ -159,8 +158,7 @@
                     Powered by
                     <div>
                         <a href="https://5apps.com">
-                            <img src="https://secure.gravatar.com/avatar/f7226edf3bda8e7aa95bff8cb1c29064?s=400&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" alt="5 Apps" height="50px"/>
-                        </a>
+                            <img src="https://secure.gravatar.com/avatar/f7226edf3bda8e7aa95bff8cb1c29064?s=400&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" alt="5 Apps" height="50px"/></a>
                         <a href="http://nodejitsu.com">
                             <img src="http://nodejitsu.com/img/logotype-poweredby.png" alt="Powered by Nodejitsu"/>
                         </a>
@@ -185,11 +183,7 @@
                         <th scope="col" abbr="DateAdded" class="nobg">Date added</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td colspan="10" align="center">There are no downloads</td>
-                    </tr>
-                </tbody>
+                <tbody/>
             </table>
             <table id="Sharing" class="ui-tabs-hide">
                 <thead>
@@ -200,11 +194,7 @@
                         <th scope="col" abbr="Status"   class="nobg">Action</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td colspan="4" align="center">You are not sharing any file, please add a shared point on the preferences</td>
-                    </tr>
-                </tbody>
+                <tbody/>
             </table>
         </div>
 
@@ -250,8 +240,7 @@
                 <a href="http://www.w3.org/html/logo/">
                     <img src="http://www.w3.org/html/logo/badge/html5-badge-h-connectivity-css3-performance-semantics-storage.png"
                          width="261" height="64" alt="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Performance &amp; Integration, Semantics, and Offline &amp; Storage"
-                         title="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Performance &amp; Integration, Semantics, and Offline &amp; Storage"/>
-                </a>
+                         title="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Performance &amp; Integration, Semantics, and Offline &amp; Storage"/></a>
                 <a href="http://www.webrtc.org/">
                     <img src="https://sites.google.com/site/webrtc/_/rsrc/1318870658554/config/customLogo.gif?revision=8" height="50" alt="WebRTC"/>
                 </a>
@@ -267,8 +256,7 @@
             Powered by
             <div>
                 <a href="https://5apps.com">
-                    <img src="https://secure.gravatar.com/avatar/f7226edf3bda8e7aa95bff8cb1c29064?s=400&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" alt="5 Apps" height="50px"/>
-                </a>
+                    <img src="https://secure.gravatar.com/avatar/f7226edf3bda8e7aa95bff8cb1c29064?s=400&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" alt="5 Apps" height="50px"/></a>
                 <a href="http://nodejitsu.com">
                     <img src="http://nodejitsu.com/img/logotype-poweredby.png" alt="Powered by Nodejitsu"/>
                 </a>
@@ -276,6 +264,11 @@
             <a href="https://github.com/piranna/ShareIt">
                 <img alt="Fork me on GitHub" src="/images/fork-me-on-github.png" id="fork_me"/>
             </a>
+        </div>
+
+        <div id="dialog-alert" style="display: none">
+            <img id="icon"/>
+            <div id="msg"/>
         </div>
     </body>
 </html>

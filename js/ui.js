@@ -132,8 +132,8 @@ UI.prototype =
 {
 	update_fileslist_downloading: function(files)
 	{
-	    var area = document.getElementById('Downloading').getElementsByTagName("tbody")[0]
-	    this._updatefiles(area, files, function(file)
+	    var table = document.getElementById('Downloading')
+	    this._updatefiles(table, files, "There are no downloads", function(file)
         {
             var tr = document.createElement('TR');
 
@@ -203,8 +203,10 @@ UI.prototype =
 	{
 	    var self = this
 
-	    var area = document.getElementById('Sharedpoints').getElementsByTagName("tbody")[0]
-	    this._updatefiles(area, sharedpoints, function(file)
+	    var table = document.getElementById('Sharedpoints')
+	    this._updatefiles(table, sharedpoints, "There are no shared points. "+
+	                                           "Please add some files to be shared.",
+	    function(file)
 		{
 		    var tr = document.createElement('TR');
 
@@ -271,8 +273,10 @@ UI.prototype =
 
 	    this.update_fileslist_sharing = function(files)
 	    {
-	        var area = document.getElementById('Sharing').getElementsByTagName("tbody")[0]
-	        self._updatefiles(area, files, function(fileentry)
+	        var table = document.getElementById('Sharing')
+	        self._updatefiles(table, files, "You are not sharing any file, "+
+	                          "please add a shared point on the preferences",
+	        function(fileentry)
 	        {
 	            return self._row_sharing(fileentry.file, function(file)
 		        {
@@ -419,7 +423,9 @@ UI.prototype =
 	                {
 	                    var fileslist = event.data[0]
 
-	                    self._updatefiles(tbody, fileslist, function(fileentry)
+	                    self._updatefiles(table, fileslist,
+	                                      "Remote peer is not sharing files.",
+	                    function(fileentry)
 	                    {
 	                        return self._row_sharing(fileentry, function()
 	                        {
@@ -513,6 +519,10 @@ UI.prototype =
 	                })
 
 	                channel.fileslist_query();
+	            },
+	            function(uid, peer, channel)
+	            {
+	                console.error(uid, peer, channel)
 	            })
 	        }
 	    }
@@ -572,13 +582,15 @@ UI.prototype =
 	    return tr
 	},
 
-    _updatefiles: function(area, fileslist, row_factory)
+    _updatefiles: function(table, fileslist, noFilesCaption, row_factory)
     {
-        // Remove old table and add new empty one
-        while(area.firstChild)
-            area.removeChild(area.firstChild);
+        var tbody = table.getElementsByTagName("tbody")[0]
 
-        if(fileslist.lenght)
+        // Remove old table and add new empty one
+        while(tbody.firstChild)
+            tbody.removeChild(tbody.firstChild);
+
+        if(fileslist.length)
             for(var i=0, fileentry; fileentry=fileslist[i]; i++)
             {
                 var path = ""
@@ -590,19 +602,19 @@ UI.prototype =
                     if(path)
                         tr.class = "child-of-" + path
 
-                area.appendChild(tr)
+                tbody.appendChild(tr)
             }
         else
         {
             var tr = document.createElement('TR')
 
             var td = document.createElement('TD');
-                td.colSpan = 3
+                td.colSpan = table.getElementsByTagName("thead")[0].rows[0].cells.length
                 td.align = 'center'
-                td.appendChild(document.createTextNode("There are no shared points. Please add some files to be shared."));
+                td.appendChild(document.createTextNode(noFilesCaption));
             tr.appendChild(td)
 
-            area.appendChild(tr)
+            tbody.appendChild(tr)
         }
     }
 }

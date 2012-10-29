@@ -1,5 +1,6 @@
 // Fallbacks for vendor-specific variables until the spec is finalized.
 var RTCPeerConnection = window.RTCPeerConnection || window.webkitPeerConnection00 || window.mozRTCPeerConnection;
+//var RTCPeerConnection = window.RTCPeerConnection || window.webkitRTCPeerConnection || window.webkitPeerConnection00 || window.mozRTCPeerConnection;
 
 
 function PeersManager(signaling, db, stun_server)
@@ -95,11 +96,11 @@ function PeersManager(signaling, db, stun_server)
 	                if(onsuccess)
 	                    onsuccess(channel)
                 }
-            }
-            peer.onerror = function()
-            {
-                if(onerror)
-                    onerror()
+                channel.onerror = function()
+                {
+                    if(onerror)
+                        onerror(uid, peer, channel)
+                }
             }
 
             // Send offer to new PeerConnection
