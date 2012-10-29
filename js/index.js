@@ -25,6 +25,8 @@ function load()
             var peersManager = new PeersManager(signaling, db)
             signaling.setPeersManager(peersManager)
 
+            ui.setPeersManager(peersManager)
+
             db.files_getAll(null, function(filelist)
             {
                 ui.update_fileslist_sharing(filelist)
@@ -39,7 +41,6 @@ function load()
 //                    }
             })
 
-            ui.setPeersManager(peersManager)
             ui.setSignaling(signaling)
         })
     })
