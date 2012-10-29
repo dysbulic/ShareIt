@@ -19,6 +19,7 @@ function load()
 
         ui.setHasher(hasher, db)
 
+//        Signaling_Original('ws://localhost:8001', function(signaling)
         Signaling_Original('wss://shareit.nodejitsu.com', function(signaling)
         {
             var peersManager = new PeersManager(signaling, db)
