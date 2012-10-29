@@ -19,40 +19,28 @@ function load()
 
         ui.setHasher(hasher, db)
 
-        // Connect a signaling channel to the handshake server and get an ID
-//        var signaling = new WebSocket('ws://localhost:8001')
-        var signaling = new WebSocket('wss://shareit.nodejitsu.com')
-	    signaling.onopen = function()
-	    {
-            Transport_init(signaling)
+        var signaling = new Transport_Signaling_Original('wss://shareit.nodejitsu.com')
 
-            var peersManager = new PeersManager(signaling, db)
+        var peersManager = new PeersManager(signaling, db)
+        signaling.setPeersManager(peersManager)
 
-            // Apply signaling "interface" events and functions to transport
-            Transport_Signaling_Original_init(signaling, peersManager)
+        ui.setPeersManager(peersManager)
 
-            ui.setPeersManager(peersManager)
-
-            db.files_getAll(null, function(filelist)
-            {
-                ui.update_fileslist_sharing(filelist)
-
-//                // Restart downloads
-//                for(var i=0, fileentry; fileentry=filelist[i]; i++)
-//                    if(fileentry.bitmap)
-//                    {
-//                        var channel = peersManager.getChannel(fileentry)
-//                        channel.emit('transfer.query', fileentry.hash,
-//                                                       getRandom(fileentry.bitmap))
-//                    }
-            })
-
-            ui.setSignaling(signaling)
-        }
-        signaling.onerror = function(error)
+        db.files_getAll(null, function(filelist)
         {
-            console.error(error)
-        }
+            ui.update_fileslist_sharing(filelist)
+
+//            // Restart downloads
+//            for(var i=0, fileentry; fileentry=filelist[i]; i++)
+//                if(fileentry.bitmap)
+//                {
+//                    var channel = peersManager.getChannel(fileentry)
+//                    channel.emit('transfer.query', fileentry.hash,
+//                                                   getRandom(fileentry.bitmap))
+//                }
+        })
+
+        ui.setSignaling(signaling)
     })
 }
 
