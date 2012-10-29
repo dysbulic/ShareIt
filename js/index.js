@@ -19,28 +19,28 @@ function load()
 
         ui.setHasher(hasher, db)
 
-        var signaling = new Signaling_Original('wss://shareit.nodejitsu.com')
-
-        var peersManager = new PeersManager(signaling, db)
-        signaling.setPeersManager(peersManager)
-
-        ui.setPeersManager(peersManager)
-
-        db.files_getAll(null, function(filelist)
+        Signaling_Original('wss://shareit.nodejitsu.com', function(signaling)
         {
-            ui.update_fileslist_sharing(filelist)
+            var peersManager = new PeersManager(signaling, db)
+            signaling.setPeersManager(peersManager)
 
-//            // Restart downloads
-//            for(var i=0, fileentry; fileentry=filelist[i]; i++)
-//                if(fileentry.bitmap)
-//                {
-//                    var channel = peersManager.getChannel(fileentry)
-//                    channel.emit('transfer.query', fileentry.hash,
-//                                                   getRandom(fileentry.bitmap))
-//                }
+            db.files_getAll(null, function(filelist)
+            {
+                ui.update_fileslist_sharing(filelist)
+
+//                // Restart downloads
+//                for(var i=0, fileentry; fileentry=filelist[i]; i++)
+//                    if(fileentry.bitmap)
+//                    {
+//                        var channel = peersManager.getChannel(fileentry)
+//                        channel.emit('transfer.query', fileentry.hash,
+//                                                       getRandom(fileentry.bitmap))
+//                    }
+            })
+
+            ui.setPeersManager(peersManager)
+            ui.setSignaling(signaling)
         })
-
-        ui.setSignaling(signaling)
     })
 }
 
