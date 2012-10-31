@@ -19,11 +19,45 @@ function load()
 
         ui.setHasher(hasher, db)
 
-//        Signaling_Original('ws://localhost:8001', function(signaling)
+//        Signaling_Original('ws://localhost:8001',
         Signaling_Original('wss://shareit.nodejitsu.com', function(signaling)
         {
             var peersManager = new PeersManager(signaling, db)
-            signaling.setPeersManager(peersManager)
+
+            signaling.onoffer = function(socketId, sdp)
+            {
+                // Search the peer between the list of currently connected peers
+                var pc = peersManager.getPeer(socketId)
+
+                // Peer is not connected, create a new channel
+                if(!pc)
+                    pc = peersManager.createPeer(socketId);
+
+                // Process offer
+                pc.setRemoteDescription(new RTCSessionDescription({sdp: sdp,
+                                                                   type: 'offer'}));
+
+                // Send answer
+                pc.createAnswer(function(answer)
+                {
+                    signaling.emit("answer", socketId, answer.sdp)
+
+                    pc.setLocalDescription(new RTCSessionDescription({sdp: answer.sdp,
+                                                                      type: 'answer'}))
+                });
+            }
+
+            signaling.onanswer = function(socketId, sdp)
+            {
+                // Search the peer on the list of currently connected peers
+                var pc = peersManager.getPeer(socketId)
+                if(pc)
+                    pc.setRemoteDescription(new RTCSessionDescription({sdp: sdp,
+                                                                       type: 'answer'}))
+                else
+                    console.error("[signaling.answer] PeerConnection '" + socketId +
+                                  "' not found");
+            }
 
             ui.setPeersManager(peersManager)
 
