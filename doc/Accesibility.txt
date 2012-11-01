@@ -1,0 +1,2 @@
+JQuery widgets are ARIA accesibility compliant.
+Table headers with scope and clear cells content for screen readers.

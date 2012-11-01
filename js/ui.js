@@ -159,16 +159,16 @@ UI.prototype =
                 td.appendChild(document.createTextNode(file.type));
             tr.appendChild(td)
 
-            // Downloaded
-            var td = document.createElement('TD');
-                td.className="filesize"
-                td.appendChild(document.createTextNode(humanize.filesize(0)));
-            tr.appendChild(td)
-
             // Size
             var td = document.createElement('TD');
                 td.className="filesize"
                 td.appendChild(document.createTextNode(humanize.filesize(file.size)));
+            tr.appendChild(td)
+
+            // Downloaded
+            var td = document.createElement('TD');
+                td.className="filesize"
+                td.appendChild(document.createTextNode(humanize.filesize(0)));
             tr.appendChild(td)
 
             // Percentage
@@ -387,7 +387,6 @@ UI.prototype =
 	                var th = document.createElement("TH");
 	                    th.scope='col'
 	                    th.abbr='Filename'
-	                    th.class='nobg'
 	                    th.width='100%'
 	                    th.appendChild(document.createTextNode("Filename"))
 	                tr.appendChild(th);
@@ -395,21 +394,18 @@ UI.prototype =
 	                var th = document.createElement("TH");
 	                    th.scope='col'
 	                    th.abbr='Type'
-	                    th.class='nobg'
 	                    th.appendChild(document.createTextNode("Type"))
 	                tr.appendChild(th);
 
 	                var th = document.createElement("TH");
 	                    th.scope='col'
 	                    th.abbr='Size'
-	                    th.class='nobg'
 	                    th.appendChild(document.createTextNode("Size"))
 	                tr.appendChild(th);
 
 	                var th = document.createElement("TH");
 	                    th.scope='col'
 	                    th.abbr='Action'
-	                    th.class='nobg'
 	                    th.appendChild(document.createTextNode("Action"))
 	                tr.appendChild(th);
 
