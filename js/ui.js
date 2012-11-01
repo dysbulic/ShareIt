@@ -38,7 +38,15 @@ function UI(db)
 
         /* This effects would fail on Firefox */
         show: "fold",
-        hide: "fold"
+        hide: "fold",
+
+        buttons:
+        {
+            Accept: function()
+            {
+                $(this).dialog("close");
+            }
+        }
     }
 
     $("#dialog-about").dialog(dialog_options);
