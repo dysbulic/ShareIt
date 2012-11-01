@@ -70,6 +70,9 @@ function CompatibilityManager()
 
 			alert.dialog({
 	            modal: true,
+	            resizable: false,
+	            width: 800,
+
 	            buttons:
 	            {
 	                Ok: function()
