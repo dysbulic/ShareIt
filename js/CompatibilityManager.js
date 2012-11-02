@@ -64,17 +64,21 @@ function CompatibilityManager()
 		{
 			msg += "<p>Please upgrade to the latest version of Chrome/Chromium or Firefox.</p>"
 
-			var alert = $("#dialog-alert")
+			var alert = $("#dialog-compatibility")
 				alert.find("#icon")[0].src = icon
 				alert.find("#msg").html(msg)
 
 			alert.dialog({
 	            modal: true,
+	            resizable: false,
+	            width: 800,
+
 	            buttons:
 	            {
 	                Ok: function()
 	                {
-	                    $(this).dialog("close");
+	                    $("#dialog-compatibility").remove()
+//	                    $(this).dialog("destroy");
 	                }
 	            }
 	        });

@@ -94,7 +94,7 @@ html, body { height: 100%; }
 #Sharedpoints {
     cursor: pointer;
     width: 100%;
-    height: 500px;
+    height: 450px;
     cellspacing: 0;
     summary: ""
 }
