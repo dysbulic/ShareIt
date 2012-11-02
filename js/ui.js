@@ -146,118 +146,6 @@ function UI(db)
 
 UI.prototype =
 {
-	update_fileslist_downloading: function(files)
-	{
-        var self = this
-
-        // Enable the tab if at least one file is being shared. This will only
-	    // happen the first time, others the tab will be already enabled and the
-	    // no files shared content will be shown
-        if(files.length)
-            $("#tabs").tabs('enable', 0)
-
-        var table = document.getElementById('Downloading')
-
-        // Compose no files shared content (fail-back)
-        var noFilesCaption = spanedCell(table)
-            noFilesCaption.appendChild(document.createTextNode("There are no downloads, "))
-
-        var anchor = document.createElement('A')
-            anchor.id = 'ConnectUser'
-            anchor.style.cursor = 'pointer'
-        noFilesCaption.appendChild(anchor)
-
-        $(anchor).click(self.preferencesDialogOpen)
-
-        var span = document.createElement('SPAN')
-            span.setAttribute("class", "user")
-            span.appendChild(document.createTextNode("Connect to a user"))
-        anchor.appendChild(span)
-
-        noFilesCaption.appendChild(document.createTextNode(" and get one!"))
-
-	    // Fill the table
-	    this._updatefiles(table, files, noFilesCaption, function(file)
-        {
-            var tr = document.createElement('TR');
-
-            var td = document.createElement('TD');
-            tr.appendChild(td)
-
-            // Name & icon
-            var span = document.createElement('SPAN');
-                span.className = self._filetype2className(file.type)
-                span.appendChild(document.createTextNode(file.name));
-            td.appendChild(span)
-
-            // Type
-            var td = document.createElement('TD');
-                td.appendChild(document.createTextNode(file.type));
-            tr.appendChild(td)
-
-            // Size
-            var td = document.createElement('TD');
-                td.className="filesize"
-                td.appendChild(document.createTextNode(humanize.filesize(file.size)));
-            tr.appendChild(td)
-
-            // Downloaded
-            var td = document.createElement('TD');
-                td.className="filesize"
-                td.appendChild(document.createTextNode(humanize.filesize(0)));
-            tr.appendChild(td)
-
-            // Percentage
-            var td = document.createElement('TD');
-
-            peersManager.addEventListener("transfer.update", function(event)
-            {
-                var f = event.data[0]
-                var value = event.data[1]
-
-                if(fileentry.hash == f.hash)
-                {
-                     var progress = document.createTextNode(Math.floor(value*100)+"%")
-
-                     while(td.firstChild)
-                         td.removeChild(div.firstChild);
-                     td.appendChild(progress);
-                }
-            })
-
-            tr.appendChild(td)
-
-            // Status
-            var td = document.createElement('TD');
-                td.appendChild(document.createTextNode("Paused"));
-            tr.appendChild(td)
-
-            // Time remaining
-            var td = document.createElement('TD');
-                td.appendChild(document.createTextNode("Unknown"));
-            tr.appendChild(td)
-
-            // Speed
-            var td = document.createElement('TD');
-                td.className="filesize"
-                td.appendChild(document.createTextNode(humanize.filesize(0)+"/s"));
-            tr.appendChild(td)
-
-            // Peers
-            var td = document.createElement('TD');
-                td.appendChild(document.createTextNode("0"));
-            tr.appendChild(td)
-
-            // Inclusion date
-            var td = document.createElement('TD');
-                td.class = "end"
-                td.appendChild(document.createTextNode("0-0-0000"));
-            tr.appendChild(td)
-
-            return tr
-        })
-	},
-
 	update_fileslist_sharedpoints: function(sharedpoints)
 	{
 	    var self = this
@@ -350,7 +238,119 @@ UI.prototype =
 	{
         var self = this
 
-	    this.update_fileslist_sharing = function(files)
+    	this.update_fileslist_downloading = function(files)
+    	{
+            var self = this
+
+            // Enable the tab if at least one file is being shared. This will only
+    	    // happen the first time, others the tab will be already enabled and the
+    	    // no files shared content will be shown
+            if(files.length)
+                $("#tabs").tabs('enable', 0)
+
+            var table = document.getElementById('Downloading')
+
+            // Compose no files shared content (fail-back)
+            var noFilesCaption = spanedCell(table)
+                noFilesCaption.appendChild(document.createTextNode("There are no downloads, "))
+
+            var anchor = document.createElement('A')
+                anchor.id = 'ConnectUser'
+                anchor.style.cursor = 'pointer'
+            noFilesCaption.appendChild(anchor)
+
+            $(anchor).click(self.preferencesDialogOpen)
+
+            var span = document.createElement('SPAN')
+                span.setAttribute("class", "user")
+                span.appendChild(document.createTextNode("Connect to a user"))
+            anchor.appendChild(span)
+
+            noFilesCaption.appendChild(document.createTextNode(" and get one!"))
+
+    	    // Fill the table
+    	    this._updatefiles(table, files, noFilesCaption, function(fileentry)
+            {
+                var tr = document.createElement('TR');
+
+                var td = document.createElement('TD');
+                tr.appendChild(td)
+
+                // Name & icon
+                var span = document.createElement('SPAN');
+                    span.className = self._filetype2className(fileentry.type)
+                    span.appendChild(document.createTextNode(fileentry.name));
+                td.appendChild(span)
+
+                // Type
+                var td = document.createElement('TD');
+                    td.appendChild(document.createTextNode(fileentry.type));
+                tr.appendChild(td)
+
+                // Size
+                var td = document.createElement('TD');
+                    td.className="filesize"
+                    td.appendChild(document.createTextNode(humanize.filesize(fileentry.size)));
+                tr.appendChild(td)
+
+                // Downloaded
+                var td = document.createElement('TD');
+                    td.className="filesize"
+                    td.appendChild(document.createTextNode(humanize.filesize(0)));
+                tr.appendChild(td)
+
+                // Progress
+                var td_progress = document.createElement('TD');
+
+                peersManager.addEventListener("transfer.update", function(event)
+                {
+                    var f = event.data[0]
+                    var value = event.data[1]
+
+                    if(fileentry.hash == f.hash)
+                    {
+                         var progress = document.createTextNode(Math.floor(value*100)+"%")
+
+                         while(td_progress.firstChild)
+                             td_progress.removeChild(td_progress.firstChild);
+                         td_progress.appendChild(progress);
+                    }
+                })
+
+                tr.appendChild(td_progress)
+
+                // Status
+                var td = document.createElement('TD');
+                    td.appendChild(document.createTextNode("Paused"));
+                tr.appendChild(td)
+
+                // Time remaining
+                var td = document.createElement('TD');
+                    td.appendChild(document.createTextNode("Unknown"));
+                tr.appendChild(td)
+
+                // Speed
+                var td = document.createElement('TD');
+                    td.className="filesize"
+                    td.appendChild(document.createTextNode(humanize.filesize(0)+"/s"));
+                tr.appendChild(td)
+
+                // Peers
+                var td = document.createElement('TD');
+                    td.appendChild(document.createTextNode("0"));
+                tr.appendChild(td)
+
+                // Inclusion date
+                var td = document.createElement('TD');
+                    td.class = "end"
+                    td.appendChild(document.createTextNode("0-0-0000"));
+                tr.appendChild(td)
+
+                return tr
+            })
+    	}
+
+    	this.update_fileslist_sharing = function(files)
 	    {
             // Enable the tab if at least one file is being shared. This will
             // only happen the first time, others the tab will be already
