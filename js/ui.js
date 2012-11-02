@@ -158,7 +158,21 @@ UI.prototype =
 
         // Compose no files shared content (fail-back)
         var noFilesCaption = spanedCell(table)
-	        noFilesCaption.appendChild(document.createTextNode("There are no downloads"))
+            noFilesCaption.appendChild(document.createTextNode("There are no downloads, "))
+
+        var anchor = document.createElement('A')
+            anchor.id = 'ConnectUser'
+            anchor.style.cursor = 'pointer'
+        noFilesCaption.appendChild(anchor)
+
+        $(anchor).click(self.preferencesDialogOpen)
+
+        var span = document.createElement('SPAN')
+            span.setAttribute("class", "user")
+            span.appendChild(document.createTextNode("Connect to a user"))
+        anchor.appendChild(span)
+
+        noFilesCaption.appendChild(document.createTextNode(" and get one!"))
 
 	    // Fill the table
 	    this._updatefiles(table, files, noFilesCaption, function(file)
@@ -235,7 +249,23 @@ UI.prototype =
 
         // Compose no files shared content (fail-back)
         var noFilesCaption = spanedCell(table)
-            noFilesCaption.appendChild(document.createTextNode("There are no shared points. Please add some files to be shared."))
+            noFilesCaption.appendChild(document.createTextNode("There are no shared points. "))
+
+        var anchor = document.createElement('A')
+            anchor.style.cursor = 'pointer'
+        noFilesCaption.appendChild(anchor)
+
+        $(anchor).click(function()
+        {
+            $('#files').click()
+        })
+
+        var span = document.createElement('SPAN')
+            span.setAttribute("class", "add-sharedpoint")
+            span.appendChild(document.createTextNode("Please add some files"))
+        anchor.appendChild(span)
+
+        noFilesCaption.appendChild(document.createTextNode(" to be shared."))
 
         // Fill the table
 	    this._updatefiles(table, sharedpoints, noFilesCaption, function(file)
@@ -480,6 +510,20 @@ UI.prototype =
 	                    // Compose no files shared content (fail-back)
 	                    var noFilesCaption = spanedCell(table)
 	                        noFilesCaption.appendChild(document.createTextNode("Remote peer is not sharing files."))
+
+//                        var anchor = document.createElement('A')
+//                            anchor.id = 'ConnectUser'
+//                            anchor.style.cursor = 'pointer'
+//                        noFilesCaption.appendChild(anchor)
+//
+//                        $(anchor).click(self.preferencesDialogOpen)
+//
+//                        var span = document.createElement('SPAN')
+//                            span.setAttribute("class", "user")
+//                            span.appendChild(document.createTextNode("Connect to a user"))
+//                        anchor.appendChild(span)
+
+                        noFilesCaption.appendChild(document.createTextNode(" Why don't ask him about doing it?"))
 
 	                    // Fill the table
 	                    self._updatefiles(table, fileslist, noFilesCaption,
