@@ -148,6 +148,8 @@ UI.prototype =
 {
 	update_fileslist_downloading: function(files)
 	{
+        var self = this
+
         // Enable the tab if at least one file is being shared. This will only
 	    // happen the first time, others the tab will be already enabled and the
 	    // no files shared content will be shown
@@ -184,7 +186,7 @@ UI.prototype =
 
             // Name & icon
             var span = document.createElement('SPAN');
-                span.className = this._filetype2className(file.type)
+                span.className = self._filetype2className(file.type)
                 span.appendChild(document.createTextNode(file.name));
             td.appendChild(span)
 
@@ -329,7 +331,7 @@ UI.prototype =
 	    })
 	},
 
-	setPeersManager: function(peersManager)
+	setPeersManager: function(peersManager, db)
 	{
         var self = this
 
@@ -539,7 +541,16 @@ UI.prototype =
 	                                var transfer = document.createElement("A");
 	                                    transfer.onclick = function()
 	                                    {
-	                                        peersManager._transferbegin(fileentry)
+                                            // Begin transfer of file
+                                            peersManager._transferbegin(fileentry)
+
+                                            // Update downloading files list
+	                                        db.files_getAll(null, function(filelist)
+	                                        {
+	                                            self.update_fileslist_downloading(filelist)
+	                                        })
+
+	                                        // Don't buble click event
 	                                        return false;
 	                                    }
 	                                    transfer.appendChild(document.createTextNode("Transfer"));
