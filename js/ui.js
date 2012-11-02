@@ -316,6 +316,8 @@ UI.prototype =
                 anchor.style.cursor = 'pointer'
             noFilesCaption.appendChild(anchor)
 
+            $(anchor).click(self.preferencesDialogOpen)
+
             var span = document.createElement('SPAN')
                 span.setAttribute("class", "preferences")
                 span.appendChild(document.createTextNode("preferences"))
