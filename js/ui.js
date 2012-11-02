@@ -371,7 +371,7 @@ UI.prototype =
 	            return self._row_sharing(fileentry.file, function(file)
 		        {
 		            var div = document.createElement("DIV");
-		                div.id = file.name
+		                div.id = file.hash
 
 		            div.progressbar = function(value)
 		            {
@@ -420,7 +420,7 @@ UI.prototype =
 		            {
 		                var f = event.data[0]
 
-		                if(file.name == f.name)
+		                if(file.hash == f.hash)
 		                    div.progressbar()
 		            })
 		            peersManager.addEventListener("transfer.update", function(event)
@@ -428,14 +428,14 @@ UI.prototype =
 		                var f = event.data[0]
 		                var value = event.data[1]
 
-		                if(file.name == f.name)
+		                if(file.hash == f.hash)
 		                    div.progressbar(value)
 		            })
 		            peersManager.addEventListener("transfer.end", function(event)
 		            {
 		                var f = event.data[0]
 
-		                if(file.name == f.name)
+		                if(file.hash == f.hash)
 		                    div.open(f.blob)
 		            })
 
@@ -534,7 +534,7 @@ UI.prototype =
 	                        return self._row_sharing(fileentry, function()
 	                        {
 	                            var div = document.createElement("DIV");
-	                                div.id = fileentry.name
+	                                div.id = fileentry.hash
 
 	                            div.transfer = function()
 	                            {
@@ -607,7 +607,7 @@ UI.prototype =
 	                            {
 	                                var f = event.data[0]
 
-	                                if(fileentry.name == f.name)
+	                                if(fileentry.hash == f.hash)
 	                                    div.progressbar()
 	                            })
 	                            peersManager.addEventListener("transfer.update", function(event)
@@ -615,14 +615,14 @@ UI.prototype =
 	                                var f = event.data[0]
 	                                var value = event.data[1]
 
-	                                if(fileentry.name == f.name)
+	                                if(fileentry.hash == f.hash)
 	                                    div.progressbar(value)
 	                            })
 	                            peersManager.addEventListener("transfer.end", function(event)
 	                            {
 	                                var f = event.data[0]
 
-	                                if(fileentry.name == f.name)
+	                                if(fileentry.hash == f.hash)
 	                                    div.open(f.blob)
 	                            })
 
