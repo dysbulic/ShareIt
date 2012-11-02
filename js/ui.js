@@ -3,6 +3,18 @@ function No_FileReader()
 	$('#Sharedpoints').html('Your browser is not modern enough to serve as a host. :(<br /><br />(Try Chrome or Firefox!)');
 }
 
+
+function spanedCell(table)
+// Creates a cell that span over all the columns of a table
+{
+    var td = document.createElement('TD');
+        td.colSpan = table.getElementsByTagName("thead")[0].rows[0].cells.length
+        td.align = 'center'
+
+    return td
+}
+
+
 function UI(db)
 {
     $("#tabs").tabs(
@@ -38,7 +50,15 @@ function UI(db)
 
         /* This effects would fail on Firefox */
         show: "fold",
-        hide: "fold"
+        hide: "fold",
+
+        buttons:
+        {
+            Accept: function()
+            {
+                $(this).dialog("close");
+            }
+        }
     }
 
     $("#dialog-about").dialog(dialog_options);
@@ -59,10 +79,6 @@ function UI(db)
 
     function toolsMenu_open()
     {
-        // [Hack] Enable tabs when menu is clicked. It's necesary to find how to
-        // do it only when there're downloads or sharing files
-        $("#tabs").tabs("option", "disabled", [])
-
         var submenu = $("#tools-menu-submenu")
 
         if(submenu.is(":hidden"))
@@ -105,7 +121,7 @@ function UI(db)
 
     var self = this
 
-    function preferencesDialogOpen()
+    this.preferencesDialogOpen = function()
     {
         // Get shared points and init them
         db.sharepoints_getAll(null, function(sharedpoints)
@@ -116,8 +132,8 @@ function UI(db)
         $("#dialog-config").dialog("open")
     }
 
-    $("#Preferences").click(preferencesDialogOpen)
-    $("#Preferences2").click(preferencesDialogOpen)
+    $("#Preferences").click(self.preferencesDialogOpen)
+    $("#Preferences2").click(self.preferencesDialogOpen)
 
     function aboutDialogOpen()
     {
@@ -132,8 +148,14 @@ UI.prototype =
 {
 	update_fileslist_downloading: function(files)
 	{
-	    var table = document.getElementById('Downloading')
-	    this._updatefiles(table, files, "There are no downloads", function(file)
+        var table = document.getElementById('Downloading')
+
+        // Compose no files shared content (fail-back)
+        var noFilesCaption = spanedCell(table)
+	        noFilesCaption.appendChild(document.createTextNode("There are no downloads"))
+
+	    // Fill the table
+	    this._updatefiles(table, files, noFilesCaption, function(file)
         {
             var tr = document.createElement('TR');
 
@@ -151,16 +173,16 @@ UI.prototype =
                 td.appendChild(document.createTextNode(file.type));
             tr.appendChild(td)
 
-            // Downloaded
-            var td = document.createElement('TD');
-                td.className="filesize"
-                td.appendChild(document.createTextNode(humanize.filesize(0)));
-            tr.appendChild(td)
-
             // Size
             var td = document.createElement('TD');
                 td.className="filesize"
                 td.appendChild(document.createTextNode(humanize.filesize(file.size)));
+            tr.appendChild(td)
+
+            // Downloaded
+            var td = document.createElement('TD');
+                td.className="filesize"
+                td.appendChild(document.createTextNode(humanize.filesize(0)));
             tr.appendChild(td)
 
             // Percentage
@@ -203,10 +225,14 @@ UI.prototype =
 	{
 	    var self = this
 
-	    var table = document.getElementById('Sharedpoints')
-	    this._updatefiles(table, sharedpoints, "There are no shared points. "+
-	                                           "Please add some files to be shared.",
-	    function(file)
+        var table = document.getElementById('Sharedpoints')
+
+        // Compose no files shared content (fail-back)
+        var noFilesCaption = spanedCell(table)
+            noFilesCaption.appendChild(document.createTextNode("There are no shared points. Please add some files to be shared."))
+
+        // Fill the table
+	    this._updatefiles(table, sharedpoints, noFilesCaption, function(file)
 		{
 		    var tr = document.createElement('TR');
 
@@ -273,10 +299,34 @@ UI.prototype =
 
 	    this.update_fileslist_sharing = function(files)
 	    {
-	        var table = document.getElementById('Sharing')
-	        self._updatefiles(table, files, "You are not sharing any file, "+
-	                          "please add a shared point on the preferences",
-	        function(fileentry)
+            // Enable the tab if at least one file being shared
+//            if(files.length)
+                $("#tabs").tabs('enable', 1)
+
+            var table = document.getElementById('Sharing')
+
+            // Compose no files shared content (fail-back)
+            var noFilesCaption = spanedCell(table)
+                noFilesCaption.appendChild(document.createTextNode(
+                                           "You are not sharing any file, "+
+                                           "please add a shared point on the "))
+
+            var anchor = document.createElement('A')
+                anchor.id = 'Preferences'
+                anchor.style.cursor = 'pointer'
+            noFilesCaption.appendChild(anchor)
+
+            $(anchor).click(self.preferencesDialogOpen)
+
+            var span = document.createElement('SPAN')
+                span.setAttribute("class", "preferences")
+                span.appendChild(document.createTextNode("preferences"))
+            anchor.appendChild(span)
+
+            noFilesCaption.appendChild(document.createTextNode("."))
+
+            // Fill the table
+	        self._updatefiles(table, files, noFilesCaption, function(fileentry)
 	        {
 	            return self._row_sharing(fileentry.file, function(file)
 		        {
@@ -379,7 +429,6 @@ UI.prototype =
 	                var th = document.createElement("TH");
 	                    th.scope='col'
 	                    th.abbr='Filename'
-	                    th.class='nobg'
 	                    th.width='100%'
 	                    th.appendChild(document.createTextNode("Filename"))
 	                tr.appendChild(th);
@@ -387,21 +436,18 @@ UI.prototype =
 	                var th = document.createElement("TH");
 	                    th.scope='col'
 	                    th.abbr='Type'
-	                    th.class='nobg'
 	                    th.appendChild(document.createTextNode("Type"))
 	                tr.appendChild(th);
 
 	                var th = document.createElement("TH");
 	                    th.scope='col'
 	                    th.abbr='Size'
-	                    th.class='nobg'
 	                    th.appendChild(document.createTextNode("Size"))
 	                tr.appendChild(th);
 
 	                var th = document.createElement("TH");
 	                    th.scope='col'
 	                    th.abbr='Action'
-	                    th.class='nobg'
 	                    th.appendChild(document.createTextNode("Action"))
 	                tr.appendChild(th);
 
@@ -423,8 +469,12 @@ UI.prototype =
 	                {
 	                    var fileslist = event.data[0]
 
-	                    self._updatefiles(table, fileslist,
-	                                      "Remote peer is not sharing files.",
+	                    // Compose no files shared content (fail-back)
+	                    var noFilesCaption = spanedCell(table)
+	                        noFilesCaption.appendChild(document.createTextNode("Remote peer is not sharing files."))
+
+	                    // Fill the table
+	                    self._updatefiles(table, fileslist, noFilesCaption,
 	                    function(fileentry)
 	                    {
 	                        return self._row_sharing(fileentry, function()
@@ -607,12 +657,7 @@ UI.prototype =
         else
         {
             var tr = document.createElement('TR')
-
-            var td = document.createElement('TD');
-                td.colSpan = table.getElementsByTagName("thead")[0].rows[0].cells.length
-                td.align = 'center'
-                td.appendChild(document.createTextNode(noFilesCaption));
-            tr.appendChild(td)
+                tr.appendChild(noFilesCaption)
 
             tbody.appendChild(tr)
         }
