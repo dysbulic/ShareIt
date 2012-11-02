@@ -60,7 +60,7 @@ function load()
                                   "' not found");
             }
 
-            ui.setPeersManager(peersManager)
+            ui.setPeersManager(peersManager, db)
 
             db.files_getAll(null, function(filelist)
             {

@@ -146,81 +146,6 @@ function UI(db)
 
 UI.prototype =
 {
-	update_fileslist_downloading: function(files)
-	{
-        var table = document.getElementById('Downloading')
-
-        // Compose no files shared content (fail-back)
-        var noFilesCaption = spanedCell(table)
-	        noFilesCaption.appendChild(document.createTextNode("There are no downloads"))
-
-	    // Fill the table
-	    this._updatefiles(table, files, noFilesCaption, function(file)
-        {
-            var tr = document.createElement('TR');
-
-            var td = document.createElement('TD');
-            tr.appendChild(td)
-
-            // Name & icon
-            var span = document.createElement('SPAN');
-                span.className = this._filetype2className(file.type)
-                span.appendChild(document.createTextNode(file.name));
-            td.appendChild(span)
-
-            // Type
-            var td = document.createElement('TD');
-                td.appendChild(document.createTextNode(file.type));
-            tr.appendChild(td)
-
-            // Size
-            var td = document.createElement('TD');
-                td.className="filesize"
-                td.appendChild(document.createTextNode(humanize.filesize(file.size)));
-            tr.appendChild(td)
-
-            // Downloaded
-            var td = document.createElement('TD');
-                td.className="filesize"
-                td.appendChild(document.createTextNode(humanize.filesize(0)));
-            tr.appendChild(td)
-
-            // Percentage
-            var td = document.createElement('TD');
-                td.appendChild(document.createTextNode("0%"));
-            tr.appendChild(td)
-
-            // Status
-            var td = document.createElement('TD');
-                td.appendChild(document.createTextNode("Paused"));
-            tr.appendChild(td)
-
-            // Time remaining
-            var td = document.createElement('TD');
-                td.appendChild(document.createTextNode("Unknown"));
-            tr.appendChild(td)
-
-            // Speed
-            var td = document.createElement('TD');
-                td.className="filesize"
-                td.appendChild(document.createTextNode(humanize.filesize(0)+"/s"));
-            tr.appendChild(td)
-
-            // Peers
-            var td = document.createElement('TD');
-                td.appendChild(document.createTextNode("0"));
-            tr.appendChild(td)
-
-            // Inclusion date
-            var td = document.createElement('TD');
-                td.class = "end"
-                td.appendChild(document.createTextNode("0-0-0000"));
-            tr.appendChild(td)
-
-            return tr
-        })
-	},
-
 	update_fileslist_sharedpoints: function(sharedpoints)
 	{
 	    var self = this
@@ -229,7 +154,23 @@ UI.prototype =
 
         // Compose no files shared content (fail-back)
         var noFilesCaption = spanedCell(table)
-            noFilesCaption.appendChild(document.createTextNode("There are no shared points. Please add some files to be shared."))
+            noFilesCaption.appendChild(document.createTextNode("There are no shared points. "))
+
+        var anchor = document.createElement('A')
+            anchor.style.cursor = 'pointer'
+        noFilesCaption.appendChild(anchor)
+
+        $(anchor).click(function()
+        {
+            $('#files').click()
+        })
+
+        var span = document.createElement('SPAN')
+            span.setAttribute("class", "add-sharedpoint")
+            span.appendChild(document.createTextNode("Please add some files"))
+        anchor.appendChild(span)
+
+        noFilesCaption.appendChild(document.createTextNode(" to be shared."))
 
         // Fill the table
 	    this._updatefiles(table, sharedpoints, noFilesCaption, function(file)
@@ -293,14 +234,152 @@ UI.prototype =
 	    })
 	},
 
-	setPeersManager: function(peersManager)
+	setPeersManager: function(peersManager, db)
 	{
         var self = this
 
-	    this.update_fileslist_sharing = function(files)
+    	this.update_fileslist_downloading = function(files)
+    	{
+            var self = this
+
+            // Enable the tab if at least one file is being shared. This will only
+    	    // happen the first time, others the tab will be already enabled and the
+    	    // no files shared content will be shown
+            if(files.length)
+                $("#tabs").tabs('enable', 0)
+
+            var table = document.getElementById('Downloading')
+
+            // Compose no files shared content (fail-back)
+            var noFilesCaption = spanedCell(table)
+                noFilesCaption.appendChild(document.createTextNode("There are no downloads, "))
+
+            var anchor = document.createElement('A')
+                anchor.id = 'ConnectUser'
+                anchor.style.cursor = 'pointer'
+            noFilesCaption.appendChild(anchor)
+
+            $(anchor).click(self.preferencesDialogOpen)
+
+            var span = document.createElement('SPAN')
+                span.setAttribute("class", "user")
+                span.appendChild(document.createTextNode("Connect to a user"))
+            anchor.appendChild(span)
+
+            noFilesCaption.appendChild(document.createTextNode(" and get one!"))
+
+    	    // Fill the table
+    	    this._updatefiles(table, files, noFilesCaption, function(fileentry)
+            {
+                var tr = document.createElement('TR');
+
+                var td = document.createElement('TD');
+                tr.appendChild(td)
+
+                // Name & icon
+                var span = document.createElement('SPAN');
+                    span.className = self._filetype2className(fileentry.type)
+                    span.appendChild(document.createTextNode(fileentry.name));
+                td.appendChild(span)
+
+                // Type
+                var td = document.createElement('TD');
+                    td.appendChild(document.createTextNode(fileentry.type));
+                tr.appendChild(td)
+
+                // Size
+                var td = document.createElement('TD');
+                    td.className="filesize"
+                    td.appendChild(document.createTextNode(humanize.filesize(fileentry.size)));
+                tr.appendChild(td)
+
+                // Downloaded
+                var td = document.createElement('TD');
+                    td.className="filesize"
+                    td.appendChild(document.createTextNode(humanize.filesize(0)));
+                tr.appendChild(td)
+
+                // Progress
+                var td_progress = document.createElement('TD');
+                    td_progress.appendChild(document.createTextNode("0%"));
+
+                peersManager.addEventListener("transfer.update", function(event)
+                {
+                    var f = event.data[0]
+                    var value = event.data[1]
+
+                    if(fileentry.hash == f.hash)
+                    {
+                         var progress = document.createTextNode(Math.floor(value*100)+"%")
+
+                         while(td_progress.firstChild)
+                             td_progress.removeChild(td_progress.firstChild);
+                         td_progress.appendChild(progress);
+                    }
+                })
+                peersManager.addEventListener("transfer.end", function(event)
+                {
+                    var f = event.data[0]
+
+                    if(fileentry.hash == f.hash)
+                        db.files_getAll(null, function(filelist)
+                        {
+                            var downloading = []
+                            var sharing = []
+
+                            for(var i=0, fileentry; fileentry=filelist[i]; i++)
+                            {
+                                if(fileentry.bitmap)
+                                    downloading.push(fileentry)
+                                else
+                                    sharing.push(fileentry)
+                            }
+
+                            // Update Downloading and Sharing files lists
+                            self.update_fileslist_downloading(downloading)
+                            self.update_fileslist_sharing(sharing)
+                        })
+                })
+
+                tr.appendChild(td_progress)
+
+                // Status
+                var td = document.createElement('TD');
+                    td.appendChild(document.createTextNode("Paused"));
+                tr.appendChild(td)
+
+                // Time remaining
+                var td = document.createElement('TD');
+                    td.appendChild(document.createTextNode("Unknown"));
+                tr.appendChild(td)
+
+                // Speed
+                var td = document.createElement('TD');
+                    td.className="filesize"
+                    td.appendChild(document.createTextNode(humanize.filesize(0)+"/s"));
+                tr.appendChild(td)
+
+                // Peers
+                var td = document.createElement('TD');
+                    td.appendChild(document.createTextNode("0"));
+                tr.appendChild(td)
+
+                // Inclusion date
+                var td = document.createElement('TD');
+                    td.class = "end"
+                    td.appendChild(document.createTextNode("0-0-0000"));
+                tr.appendChild(td)
+
+                return tr
+            })
+    	}
+
+    	this.update_fileslist_sharing = function(files)
 	    {
-            // Enable the tab if at least one file being shared
-//            if(files.length)
+            // Enable the tab if at least one file is being shared. This will
+            // only happen the first time, others the tab will be already
+            // enabled and the no files shared content will be shown
+            if(files.length)
                 $("#tabs").tabs('enable', 1)
 
             var table = document.getElementById('Sharing')
@@ -328,10 +407,10 @@ UI.prototype =
             // Fill the table
 	        self._updatefiles(table, files, noFilesCaption, function(fileentry)
 	        {
-	            return self._row_sharing(fileentry.file, function(file)
+	            return self._row_sharing(fileentry, function(fileentry)
 		        {
 		            var div = document.createElement("DIV");
-		                div.id = file.name
+		                div.id = fileentry.hash
 
 		            div.progressbar = function(value)
 		            {
@@ -361,26 +440,28 @@ UI.prototype =
 		            }
 
 		            // Show if file have been downloaded previously or if we can transfer it
-		            if(file.bitmap)
+		            if(fileentry.bitmap)
 		            {
-		                var chunks = file.size/chunksize;
+		                var chunks = fileentry.size/chunksize;
 		                if(chunks % 1 != 0)
 		                    chunks = Math.floor(chunks) + 1;
 
-		                var value = chunks - file.bitmap.length
+		                var value = chunks - fileentry.bitmap.length
 
 		                div.progressbar(value/chunks)
 		            }
-		            else if(file.blob)
-		                div.open(file.blob)
+                    else if(fileentry.blob)
+                        div.open(fileentry.blob)
+                    else if(fileentry.file)
+                        div.open(fileentry.file)
 		            else
-		                div.open(file)
+		                div.open(fileentry)
 
 		            peersManager.addEventListener("transfer.begin", function(event)
 		            {
 		                var f = event.data[0]
 
-		                if(file.name == f.name)
+		                if(fileentry.hash == f.hash)
 		                    div.progressbar()
 		            })
 		            peersManager.addEventListener("transfer.update", function(event)
@@ -388,14 +469,14 @@ UI.prototype =
 		                var f = event.data[0]
 		                var value = event.data[1]
 
-		                if(file.name == f.name)
+		                if(fileentry.hash == f.hash)
 		                    div.progressbar(value)
 		            })
 		            peersManager.addEventListener("transfer.end", function(event)
 		            {
 		                var f = event.data[0]
 
-		                if(file.name == f.name)
+		                if(fileentry.hash == f.hash)
 		                    div.open(f.blob)
 		            })
 
@@ -473,6 +554,20 @@ UI.prototype =
 	                    var noFilesCaption = spanedCell(table)
 	                        noFilesCaption.appendChild(document.createTextNode("Remote peer is not sharing files."))
 
+//                        var anchor = document.createElement('A')
+//                            anchor.id = 'ConnectUser'
+//                            anchor.style.cursor = 'pointer'
+//                        noFilesCaption.appendChild(anchor)
+//
+//                        $(anchor).click(self.preferencesDialogOpen)
+//
+//                        var span = document.createElement('SPAN')
+//                            span.setAttribute("class", "user")
+//                            span.appendChild(document.createTextNode("Connect to a user"))
+//                        anchor.appendChild(span)
+
+                        noFilesCaption.appendChild(document.createTextNode(" Why don't ask him about doing it?"))
+
 	                    // Fill the table
 	                    self._updatefiles(table, fileslist, noFilesCaption,
 	                    function(fileentry)
@@ -480,14 +575,23 @@ UI.prototype =
 	                        return self._row_sharing(fileentry, function()
 	                        {
 	                            var div = document.createElement("DIV");
-	                                div.id = fileentry.name
+	                                div.id = fileentry.hash
 
 	                            div.transfer = function()
 	                            {
 	                                var transfer = document.createElement("A");
 	                                    transfer.onclick = function()
 	                                    {
-	                                        peersManager._transferbegin(fileentry)
+                                            // Begin transfer of file
+                                            peersManager._transferbegin(fileentry)
+
+                                            // Update downloading files list
+	                                        db.files_getAll(null, function(filelist)
+	                                        {
+	                                            self.update_fileslist_downloading(filelist)
+	                                        })
+
+	                                        // Don't buble click event
 	                                        return false;
 	                                    }
 	                                    transfer.appendChild(document.createTextNode("Transfer"));
@@ -544,7 +648,7 @@ UI.prototype =
 	                            {
 	                                var f = event.data[0]
 
-	                                if(fileentry.name == f.name)
+	                                if(fileentry.hash == f.hash)
 	                                    div.progressbar()
 	                            })
 	                            peersManager.addEventListener("transfer.update", function(event)
@@ -552,14 +656,14 @@ UI.prototype =
 	                                var f = event.data[0]
 	                                var value = event.data[1]
 
-	                                if(fileentry.name == f.name)
+	                                if(fileentry.hash == f.hash)
 	                                    div.progressbar(value)
 	                            })
 	                            peersManager.addEventListener("transfer.end", function(event)
 	                            {
 	                                var f = event.data[0]
 
-	                                if(fileentry.name == f.name)
+	                                if(fileentry.hash == f.hash)
 	                                    div.open(f.blob)
 	                            })
 
@@ -599,34 +703,36 @@ UI.prototype =
 	    return "file"
 	},
 
-	_row_sharing: function(file, button_factory)
+	_row_sharing: function(fileentry, button_factory)
 	{
 	    var tr = document.createElement('TR');
 
 	    var td = document.createElement('TD');
 	    tr.appendChild(td)
 
+	    var type = fileentry.type || fileentry.file.type
+
 	    // Name & icon
 	    var span = document.createElement('SPAN');
-	        span.className = this._filetype2className(file.type)
-	        span.appendChild(document.createTextNode(file.name));
+	        span.className = this._filetype2className(type)
+	        span.appendChild(document.createTextNode(fileentry.name || fileentry.file.name));
 	    td.appendChild(span)
 
 	    // Type
 	    var td = document.createElement('TD');
-	        td.appendChild(document.createTextNode(file.type));
+	        td.appendChild(document.createTextNode(type));
 	    tr.appendChild(td)
 
 	    // Size
 	    var td = document.createElement('TD');
 	        td.className="filesize"
-	        td.appendChild(document.createTextNode(humanize.filesize(file.size)));
+	        td.appendChild(document.createTextNode(humanize.filesize(fileentry.size || fileentry.file.size)));
 	    tr.appendChild(td)
 
 	    // Action
 	    var td = document.createElement('TD');
 	        td.class = "end"
-	        td.appendChild(button_factory(file));
+	        td.appendChild(button_factory(fileentry));
 	    tr.appendChild(td)
 
 	    return tr
