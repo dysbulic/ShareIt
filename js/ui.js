@@ -301,6 +301,7 @@ UI.prototype =
 
                 // Progress
                 var td_progress = document.createElement('TD');
+                    td_progress.appendChild(document.createTextNode("0%"));
 
                 peersManager.addEventListener("transfer.update", function(event)
                 {
@@ -315,6 +316,29 @@ UI.prototype =
                              td_progress.removeChild(td_progress.firstChild);
                          td_progress.appendChild(progress);
                     }
+                })
+                peersManager.addEventListener("transfer.end", function(event)
+                {
+                    var f = event.data[0]
+
+                    if(fileentry.hash == f.hash)
+                        db.files_getAll(null, function(filelist)
+                        {
+                            var downloading = []
+                            var sharing = []
+
+                            for(var i=0, fileentry; fileentry=filelist[i]; i++)
+                            {
+                                if(fileentry.bitmap)
+                                    downloading.push(fileentry)
+                                else
+                                    sharing.push(fileentry)
+                            }
+
+                            // Update Downloading and Sharing files lists
+                            self.update_fileslist_downloading(downloading)
+                            self.update_fileslist_sharing(sharing)
+                        })
                 })
 
                 tr.appendChild(td_progress)
@@ -383,7 +407,7 @@ UI.prototype =
             // Fill the table
 	        self._updatefiles(table, files, noFilesCaption, function(fileentry)
 	        {
-	            return self._row_sharing(fileentry.file, function(file)
+	            return self._row_sharing(fileentry, function(file)
 		        {
 		            var div = document.createElement("DIV");
 		                div.id = file.hash
