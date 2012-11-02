@@ -407,10 +407,10 @@ UI.prototype =
             // Fill the table
 	        self._updatefiles(table, files, noFilesCaption, function(fileentry)
 	        {
-	            return self._row_sharing(fileentry, function(file)
+	            return self._row_sharing(fileentry, function(fileentry)
 		        {
 		            var div = document.createElement("DIV");
-		                div.id = file.hash
+		                div.id = fileentry.hash
 
 		            div.progressbar = function(value)
 		            {
@@ -440,26 +440,28 @@ UI.prototype =
 		            }
 
 		            // Show if file have been downloaded previously or if we can transfer it
-		            if(file.bitmap)
+		            if(fileentry.bitmap)
 		            {
-		                var chunks = file.size/chunksize;
+		                var chunks = fileentry.size/chunksize;
 		                if(chunks % 1 != 0)
 		                    chunks = Math.floor(chunks) + 1;
 
-		                var value = chunks - file.bitmap.length
+		                var value = chunks - fileentry.bitmap.length
 
 		                div.progressbar(value/chunks)
 		            }
-		            else if(file.blob)
-		                div.open(file.blob)
+                    else if(fileentry.blob)
+                        div.open(fileentry.blob)
+                    else if(fileentry.file)
+                        div.open(fileentry.file)
 		            else
-		                div.open(file)
+		                div.open(fileentry)
 
 		            peersManager.addEventListener("transfer.begin", function(event)
 		            {
 		                var f = event.data[0]
 
-		                if(file.hash == f.hash)
+		                if(fileentry.hash == f.hash)
 		                    div.progressbar()
 		            })
 		            peersManager.addEventListener("transfer.update", function(event)
@@ -467,14 +469,14 @@ UI.prototype =
 		                var f = event.data[0]
 		                var value = event.data[1]
 
-		                if(file.hash == f.hash)
+		                if(fileentry.hash == f.hash)
 		                    div.progressbar(value)
 		            })
 		            peersManager.addEventListener("transfer.end", function(event)
 		            {
 		                var f = event.data[0]
 
-		                if(file.hash == f.hash)
+		                if(fileentry.hash == f.hash)
 		                    div.open(f.blob)
 		            })
 
@@ -701,34 +703,36 @@ UI.prototype =
 	    return "file"
 	},
 
-	_row_sharing: function(file, button_factory)
+	_row_sharing: function(fileentry, button_factory)
 	{
 	    var tr = document.createElement('TR');
 
 	    var td = document.createElement('TD');
 	    tr.appendChild(td)
 
+	    var type = fileentry.type || fileentry.file.type
+
 	    // Name & icon
 	    var span = document.createElement('SPAN');
-	        span.className = this._filetype2className(file.type)
-	        span.appendChild(document.createTextNode(file.name));
+	        span.className = this._filetype2className(type)
+	        span.appendChild(document.createTextNode(fileentry.name || fileentry.file.name));
 	    td.appendChild(span)
 
 	    // Type
 	    var td = document.createElement('TD');
-	        td.appendChild(document.createTextNode(file.type));
+	        td.appendChild(document.createTextNode(type));
 	    tr.appendChild(td)
 
 	    // Size
 	    var td = document.createElement('TD');
 	        td.className="filesize"
-	        td.appendChild(document.createTextNode(humanize.filesize(file.size)));
+	        td.appendChild(document.createTextNode(humanize.filesize(fileentry.size || fileentry.file.size)));
 	    tr.appendChild(td)
 
 	    // Action
 	    var td = document.createElement('TD');
 	        td.class = "end"
-	        td.appendChild(button_factory(file));
+	        td.appendChild(button_factory(fileentry));
 	    tr.appendChild(td)
 
 	    return tr
