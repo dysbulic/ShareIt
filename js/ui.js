@@ -209,7 +209,22 @@ UI.prototype =
 
             // Percentage
             var td = document.createElement('TD');
-                td.appendChild(document.createTextNode("0%"));
+
+            peersManager.addEventListener("transfer.update", function(event)
+            {
+                var f = event.data[0]
+                var value = event.data[1]
+
+                if(fileentry.hash == f.hash)
+                {
+                     var progress = document.createTextNode(Math.floor(value*100)+"%")
+
+                     while(td.firstChild)
+                         td.removeChild(div.firstChild);
+                     td.appendChild(progress);
+                }
+            })
+
             tr.appendChild(td)
 
             // Status
