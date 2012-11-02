@@ -67,10 +67,6 @@ function UI(db)
 
     function toolsMenu_open()
     {
-        // [Hack] Enable tabs when menu is clicked. It's necesary to find how to
-        // do it only when there're downloads or sharing files
-        $("#tabs").tabs("option", "disabled", [])
-
         var submenu = $("#tools-menu-submenu")
 
         if(submenu.is(":hidden"))
@@ -281,7 +277,10 @@ UI.prototype =
 
 	    this.update_fileslist_sharing = function(files)
 	    {
-	        var table = document.getElementById('Sharing')
+            if(files.length)
+                $("#tabs").tabs('enable', 1)
+
+            var table = document.getElementById('Sharing')
 	        self._updatefiles(table, files, "You are not sharing any file, "+
 	                          "please add a shared point on the preferences",
 	        function(fileentry)
