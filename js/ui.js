@@ -148,6 +148,12 @@ UI.prototype =
 {
 	update_fileslist_downloading: function(files)
 	{
+        // Enable the tab if at least one file is being shared. This will only
+	    // happen the first time, others the tab will be already enabled and the
+	    // no files shared content will be shown
+        if(files.length)
+            $("#tabs").tabs('enable', 0)
+
         var table = document.getElementById('Downloading')
 
         // Compose no files shared content (fail-back)
@@ -299,8 +305,10 @@ UI.prototype =
 
 	    this.update_fileslist_sharing = function(files)
 	    {
-            // Enable the tab if at least one file being shared
-//            if(files.length)
+            // Enable the tab if at least one file is being shared. This will
+            // only happen the first time, others the tab will be already
+            // enabled and the no files shared content will be shown
+            if(files.length)
                 $("#tabs").tabs('enable', 1)
 
             var table = document.getElementById('Sharing')
