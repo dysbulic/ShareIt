@@ -509,14 +509,13 @@ UI.prototype =
 	                    "<a href='#tabs-"+uid+"'>UID: "+uid+"</a>"+
 	                    "<span class='ui-icon ui-icon-closethick'>Remove Tab</span>"+
 	                "</li>").appendTo("#tabs .ui-tabs-nav");
+
+                    var table = document.createElement("TABLE");
+                        table.id = "tabs-"+uid
+                    $(table).appendTo("#tabs");
+
 	                $("#tabs").tabs("refresh");
-	                $("#tabs").tabs("option", "active", '#' + ui.panel.id);
-
-	                var tab = document.getElementById("tabs-"+uid)
-
-	                var table = document.createElement("TABLE");
-	                    table.id = 'Peer'
-	                tab.appendChild(table);
+	                $("#tabs").tabs("option", "active", -1);
 
 	                var thead = document.createElement("THEAD");
 	                table.appendChild(thead);
