@@ -249,7 +249,10 @@ UI.prototype =
     	    // happen the first time, others the tab will be already enabled and the
     	    // no files shared content will be shown
             if(files.length)
+            {
                 $("#tabs").tabs('enable', 0)
+                $("#tabs").tabs("option", "collapsible", false);
+            }
 
             var table = document.getElementById('Downloading')
 
@@ -383,7 +386,10 @@ UI.prototype =
             // only happen the first time, others the tab will be already
             // enabled and the no files shared content will be shown
             if(files.length)
+            {
                 $("#tabs").tabs('enable', 1)
+                $("#tabs").tabs("option", "collapsible", false);
+	        }
 
             var table = document.getElementById('Sharing')
 
