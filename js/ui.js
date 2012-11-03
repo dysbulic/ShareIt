@@ -37,7 +37,16 @@ function UI(db)
     $("#tabs span.ui-icon-closethick").live("click", function()
     {
         var index = $("#ui-corner-top", $("#tabs")).index($(this).parent());
-        $("#tabs").tabs("remove", index);
+
+        // Remove the tab
+        var tab = $("#tabs").find(".ui-tabs-nav li:eq("+index+")").remove();
+        // Find the id of the associated panel
+        var panelId = tab.attr("aria-controls");
+        // Remove the panel
+        $("#"+panelId).remove();
+
+        // Refresh the tabs widget
+        $("tabs").tabs("refresh");
     });
 
     var dialog_options =
