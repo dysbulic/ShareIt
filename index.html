@@ -7,12 +7,12 @@
         <meta name="keywords" content="node, nodejs, javascript, p2p, filesharing, webp2p, web peer to peer, p2pweb, open source" />
 		<meta name="description" content="ShareIt!, Peer to Peer filesharing system written in pure Javascript" />
 
-        <link rel="SHORTCUT ICON" href="doc/logo/favicon.png" />
+        <link rel="SHORTCUT ICON" href="doc/logo/favicon.png"/>
 
         <link type="text/css" rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css"/>
-        <link type="text/css" rel="stylesheet" href="https://raw.github.com/ludo/jquery-treetable/master/src/stylesheets/jquery.treeTable.css" />
+        <link type="text/css" rel="stylesheet" href="https://raw.github.com/ludo/jquery-treetable/master/src/stylesheets/jquery.treeTable.css"/>
 
-        <link type="text/css" rel="stylesheet" href="css/style.css" media="screen" />
+        <link type="text/css" rel="stylesheet" href="css/style.css" media="screen"/>
 
         <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.js"></script>
         <script type="text/javascript" src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
@@ -39,7 +39,13 @@
         <script type="text/javascript" src="js/webp2p/transport/peer.js"></script>
     </head>
     <body>
+
+        <!-- Tabs -->
+
         <div id="tabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
+
+            <!-- Tabs headers -->
+
             <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
                 <li id="tools-menu">
                     <img src="doc/logo/favicon.svg" alt="Main menu" height="37px"/>
@@ -71,6 +77,8 @@
                     <a href="#Sharing">Sharing</a>
                 </li>
             </ul>
+
+            <!-- Start here -->
 
             <div id="StartHere">
                 <img src="images/orange-arrow.png" id="tools-menu2"/>
@@ -119,7 +127,7 @@
                         <br/>
                         <br/>
                         To run it, you just need a WebRTC PeerConnection capable
-                        browser like
+                        browser like latest
                         <a href="http://dev.chromium.org/getting-involved/dev-channel">Chrome v23</a>,
                         although is recommended Chrome v24 or
                         <a href="http://www.mozilla.org/en-US/firefox/aurora/">Firefox v18</a>
@@ -172,7 +180,9 @@
                 </div>
             </div>
 
-            <table id="Downloading" class="ui-tabs-hide">
+            <!-- Tabs contents -->
+
+            <table id="Downloading">
                 <thead>
                     <tr>
                         <th scope="col" width="100%">Filename</th>
@@ -189,7 +199,7 @@
                 </thead>
                 <tbody/>
             </table>
-            <table id="Sharing" class="ui-tabs-hide">
+            <table id="Sharing">
                 <thead>
                     <tr>
                         <th scope="col" width="100%">Filename</th>

@@ -94,7 +94,7 @@ html, body { height: 100%; }
 #Sharedpoints {
     cursor: pointer;
     width: 100%;
-    height: 450px;
+    height: 425px;
     cellspacing: 0;
     summary: ""
 }
@@ -125,7 +125,7 @@ span.add-sharedpoint {
 
 #tools-menu-submenu
 {
-    width: 192px;   /* If this is commented, tools menu is showed horizontal */
+    width: 240px;   /* If this is commented, tools menu is showed horizontal */
     display: none;
     position: absolute;
     top: 45px

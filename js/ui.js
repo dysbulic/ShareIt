@@ -19,25 +19,30 @@ function UI(db)
 {
     $("#tabs").tabs(
     {
-        tabTemplate: "<li><a href='#{href}'>#{label}</a><span class='ui-icon ui-icon-closethick'>Remove Tab</span></li>",
-        add: function(event, ui)
-        {
-            $("#tabs").tabs('select', '#' + ui.panel.id);
-        },
-        show: function(event, ui)
+        activate: function(event, ui)
         {
             $("#StartHere").remove()
         },
-        disabled: [0, 1],
-        selected: -1
+
+        active: false,
+        collapsible: true,
+        disabled: true
     })
 
     // close icon: removing the tab on click
-    // note: closable tabs gonna be an option in the future - see http://dev.jqueryui.com/ticket/3924
     $("#tabs span.ui-icon-closethick").live("click", function()
     {
         var index = $("#ui-corner-top", $("#tabs")).index($(this).parent());
-        $("#tabs").tabs("remove", index);
+
+        // Remove the tab
+        var tab = $("#tabs").find(".ui-tabs-nav li:eq("+index+")").remove();
+        // Find the id of the associated panel
+        var panelId = tab.attr("aria-controls");
+        // Remove the panel
+        $("#"+panelId).remove();
+
+        // Refresh the tabs widget
+        $("tabs").tabs("refresh");
     });
 
     var dialog_options =
@@ -246,7 +251,10 @@ UI.prototype =
     	    // happen the first time, others the tab will be already enabled and the
     	    // no files shared content will be shown
             if(files.length)
+            {
                 $("#tabs").tabs('enable', 0)
+                $("#tabs").tabs("option", "collapsible", false);
+            }
 
             var table = document.getElementById('Downloading')
 
@@ -380,7 +388,10 @@ UI.prototype =
             // only happen the first time, others the tab will be already
             // enabled and the no files shared content will be shown
             if(files.length)
+            {
                 $("#tabs").tabs('enable', 1)
+                $("#tabs").tabs("option", "collapsible", false);
+	        }
 
             var table = document.getElementById('Sharing')
 
@@ -493,13 +504,18 @@ UI.prototype =
 	            // Create connection with the other peer
 	            peersManager.connectTo(uid, function(channel)
 	            {
-	                $("#tabs").tabs("add", "#tabs-"+uid, "UID: "+uid);
+	                // Add a new tab for the remote peer files list
+	                $("<li>"+
+	                    "<a href='#tabs-"+uid+"'>UID: "+uid+"</a>"+
+	                    "<span class='ui-icon ui-icon-closethick'>Remove Tab</span>"+
+	                "</li>").appendTo("#tabs .ui-tabs-nav");
 
-	                var tab = document.getElementById("tabs-"+uid)
+                    var table = document.createElement("TABLE");
+                        table.id = "tabs-"+uid
+                    $(table).appendTo("#tabs");
 
-	                var table = document.createElement("TABLE");
-	                    table.id = 'Peer'
-	                tab.appendChild(table);
+	                $("#tabs").tabs("refresh");
+	                $("#tabs").tabs("option", "active", -1);
 
 	                var thead = document.createElement("THEAD");
 	                table.appendChild(thead);
