@@ -19,8 +19,6 @@ function UI(db)
 {
     $("#tabs").tabs(
     {
-        tabTemplate: "<li><a href='#{href}'>#{label}</a><span class='ui-icon ui-icon-closethick'>Remove Tab</span></li>",
-
         add: function(event, ui)
         {
             $("#tabs").tabs("option", "active", '#' + ui.panel.id);
@@ -36,7 +34,6 @@ function UI(db)
     })
 
     // close icon: removing the tab on click
-    // note: closable tabs gonna be an option in the future - see http://dev.jqueryui.com/ticket/3924
     $("#tabs span.ui-icon-closethick").live("click", function()
     {
         var index = $("#ui-corner-top", $("#tabs")).index($(this).parent());
@@ -502,7 +499,12 @@ UI.prototype =
 	            // Create connection with the other peer
 	            peersManager.connectTo(uid, function(channel)
 	            {
-	                $("#tabs").tabs("add", "#tabs-"+uid, "UID: "+uid);
+	                // Add a new tab for the remote peer files list
+	                $("<li>"+
+	                    "<a href='#tabs-"+uid+"'>UID: "+uid+"</a>"+
+	                    "<span class='ui-icon ui-icon-closethick'>Remove Tab</span>"+
+	                "</li>").appendTo("#tabs .ui-tabs-nav");
+	                $("#tabs").tabs("refresh");
 
 	                var tab = document.getElementById("tabs-"+uid)
 
