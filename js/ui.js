@@ -23,7 +23,7 @@ function UI(db)
         {
             $("#tabs").tabs("option", "active", '#' + ui.panel.id);
         },
-        show: function(event, ui)
+        activate: function(event, ui)
         {
             $("#StartHere").remove()
         },
