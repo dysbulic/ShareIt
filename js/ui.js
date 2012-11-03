@@ -20,16 +20,19 @@ function UI(db)
     $("#tabs").tabs(
     {
         tabTemplate: "<li><a href='#{href}'>#{label}</a><span class='ui-icon ui-icon-closethick'>Remove Tab</span></li>",
+
         add: function(event, ui)
         {
-            $("#tabs").tabs('select', '#' + ui.panel.id);
+            $("#tabs").tabs("option", "active", '#' + ui.panel.id);
         },
         show: function(event, ui)
         {
             $("#StartHere").remove()
         },
-        disabled: [0, 1],
-        selected: -1
+
+        active: false,
+        collapsible: true,
+        disabled: true
     })
 
     // close icon: removing the tab on click
