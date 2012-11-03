@@ -19,10 +19,6 @@ function UI(db)
 {
     $("#tabs").tabs(
     {
-        add: function(event, ui)
-        {
-            $("#tabs").tabs("option", "active", '#' + ui.panel.id);
-        },
         activate: function(event, ui)
         {
             $("#StartHere").remove()
@@ -514,6 +510,7 @@ UI.prototype =
 	                    "<span class='ui-icon ui-icon-closethick'>Remove Tab</span>"+
 	                "</li>").appendTo("#tabs .ui-tabs-nav");
 	                $("#tabs").tabs("refresh");
+	                $("#tabs").tabs("option", "active", '#' + ui.panel.id);
 
 	                var tab = document.getElementById("tabs-"+uid)
 
