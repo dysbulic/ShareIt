@@ -19,10 +19,14 @@ function load()
 
         ui.setHasher(hasher, db)
 
+        var UUIDv4 = function b(a){return a?(a^Math.random()*16>>a/4).toString(16):([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,b)}
+
 //        Signaling_Original('ws://localhost:8001',
-//        Signaling_Original('wss://shareit.nodejitsu.com', function(signaling)
-//        Signaling_SIP('ws://tryit.jssip.net:10080', function(signaling)
-        Signaling_SIP('ws://localhost:5080', function(signaling)
+//        Signaling_Original('wss://shareit.nodejitsu.com',
+//        Signaling_SIP({'outbound_proxy_set': 'ws://tryit.jssip.net:10080',
+        Signaling_SIP({'outbound_proxy_set': 'ws://127.0.0.1:5080',
+                       'uri': UUIDv4()+'@127.0.0.1:5080'},
+        function(signaling)
         {
             var peersManager = new PeersManager(signaling, db)
 
