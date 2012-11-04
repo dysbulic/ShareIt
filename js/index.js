@@ -37,7 +37,23 @@ function load()
 //        Signaling_SIP({'outbound_proxy_set': 'ws://tryit.jssip.net:10080',
 //        Signaling_SIP({'outbound_proxy_set': 'ws://192.168.1.33:10080',
 //                       'uri':                UUIDv4()+'@192.168.1.33'},
-        Signaling_XMPP({'httpbase': 'duckgo.com'}, function(signaling)
+        Signaling_XMPP({'httpbase': 'duckgo.com',
+
+                        // Connection mandatory parameters
+                        'domain': 'duckgo.com',
+                        'username': UUIDv4(),
+                        'resource': '',
+                        'password': '',
+
+                        // Connection optional parameters
+                        'register': true,
+//                        'host': true,
+//                        'port': true,
+//                        'secure': true,
+//                        'authhost': true,
+//                        'authtype': true
+                        },
+        function(signaling)
         {
             signaling.onoffer = function(socketId, sdp)
             {
