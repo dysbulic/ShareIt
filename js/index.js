@@ -6,6 +6,7 @@ function load()
         // Init user interface
         var ui = new UI(db)
 
+        // Init hasher
         var hasher = new Hasher(db)
             hasher.onhashed = function(fileentry)
             {
@@ -19,6 +20,18 @@ function load()
 
         ui.setHasher(hasher, db)
 
+        // Init PeersManager
+        var peersManager = new PeersManager(db)
+
+        ui.setPeersManager(peersManager, db)
+
+        // Show files being shared on Sharing tab
+        db.files_getAll(null, function(filelist)
+        {
+            ui.update_fileslist_sharing(filelist)
+        })
+
+        // Create signaling connection
         var UUIDv4 = function b(a){return a?(a^Math.random()*16>>a/4).toString(16):([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,b)}
 
 //        Signaling_Original('ws://localhost:8001',
@@ -28,7 +41,7 @@ function load()
                        'uri': UUIDv4()+'@127.0.0.1:5080'},
         function(signaling)
         {
-            var peersManager = new PeersManager(signaling, db)
+            peersManager.setSignaling(signaling)
 
             signaling.onoffer = function(socketId, sdp)
             {
@@ -65,13 +78,9 @@ function load()
                                   "' not found");
             }
 
-            ui.setPeersManager(peersManager, db)
-
-            db.files_getAll(null, function(filelist)
-            {
-                ui.update_fileslist_sharing(filelist)
-
-//                // Restart downloads
+//            // Restart downloads
+//            db.files_getAll(null, function(filelist)
+//            {
 //                for(var i=0, fileentry; fileentry=filelist[i]; i++)
 //                    if(fileentry.bitmap)
 //                    {
@@ -79,7 +88,7 @@ function load()
 //                        channel.emit('transfer.query', fileentry.hash,
 //                                                       getRandom(fileentry.bitmap))
 //                    }
-            })
+//            })
 
             ui.setSignaling(signaling)
         })
