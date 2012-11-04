@@ -35,9 +35,9 @@ function load()
         var UUIDv4 = function b(a){return a?(a^Math.random()*16>>a/4).toString(16):([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,b)}
 
 //        Signaling_SIP({'outbound_proxy_set': 'ws://tryit.jssip.net:10080',
-        Signaling_SIP({'outbound_proxy_set': 'ws://192.168.1.33:10080',
-                       'uri':                UUIDv4()+'@192.168.1.33'},
-        function(signaling)
+//        Signaling_SIP({'outbound_proxy_set': 'ws://192.168.1.33:10080',
+//                       'uri':                UUIDv4()+'@192.168.1.33'},
+        Signaling_XMPP({'httpbase': 'duckgo.com'}, function(signaling)
         {
             signaling.onoffer = function(socketId, sdp)
             {
