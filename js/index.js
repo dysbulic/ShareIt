@@ -41,8 +41,6 @@ function load()
                        'uri': UUIDv4()+'@127.0.0.1:5080'},
         function(signaling)
         {
-            peersManager.setSignaling(signaling)
-
             signaling.onoffer = function(socketId, sdp)
             {
                 // Search the peer between the list of currently connected peers
@@ -89,6 +87,8 @@ function load()
 //                                                       getRandom(fileentry.bitmap))
 //                    }
 //            })
+
+            peersManager.setSignaling(signaling)
 
             ui.setSignaling(signaling)
         })
