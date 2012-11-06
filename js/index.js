@@ -38,59 +38,63 @@ function load()
 //        Signaling_SIP({'outbound_proxy_set': 'ws://192.168.1.33:10080',
 //                       'uri':                UUIDv4()+'@192.168.1.33'},
 //        Signaling_XMPP({'httpbase': 'http://bosh.metajack.im:5280/xmpp-httpbind',
-        Signaling_XMPP({'httpbase': 'https://bind.jappix.com/',
+        var signaling = new SignalingManager({'httpbase': 'https://bind.jappix.com/',
 
-                        // Connection mandatory parameters
-                        'domain'  : 'dukgo.com',
-                        'username': UUIDv4(),
-                        'resource': '',
-                        'password': '',
+                                            // Connection mandatory parameters
+                                            'domain'  : 'dukgo.com',
+                                            'username': UUIDv4(),
+                                            'resource': '',
+                                            'password': '',
+                    
+                                            // Connection optional parameters
+                                            'register': true,
+                    //                        'host'    : '',
+                    //                        'port'    : 80,
+                    //                        'secure'  : true,
+                    //                        'authhost': true,
+                    //                        'authtype': true
+                                            })
 
-                        // Connection optional parameters
-                        'register': true,
-//                        'host'    : '',
-//                        'port'    : 80,
-//                        'secure'  : true,
-//                        'authhost': true,
-//                        'authtype': true
-                        },
-        function(signaling)
+        peersManager.setSignaling(signaling)
+        ui.setSignaling(signaling)
+
+        signaling.onoffer = function(socketId, sdp)
         {
-            signaling.onoffer = function(socketId, sdp)
+            // Search the peer between the list of currently connected peers
+            var pc = peersManager.getPeer(socketId)
+
+            // Peer is not connected, create a new channel
+            if(!pc)
+                pc = peersManager.createPeer(socketId);
+
+            // Process offer
+            pc.setRemoteDescription(new RTCSessionDescription({sdp: sdp,
+                                                               type: 'offer'}));
+
+            // Send answer
+            pc.createAnswer(function(answer)
             {
-                // Search the peer between the list of currently connected peers
-                var pc = peersManager.getPeer(socketId)
+                signaling.emit("answer", socketId, answer.sdp)
 
-                // Peer is not connected, create a new channel
-                if(!pc)
-                    pc = peersManager.createPeer(socketId);
+                pc.setLocalDescription(new RTCSessionDescription({sdp: answer.sdp,
+                                                                  type: 'answer'}))
+            });
+        }
 
-                // Process offer
+        signaling.onanswer = function(socketId, sdp)
+        {
+            // Search the peer on the list of currently connected peers
+            var pc = peersManager.getPeer(socketId)
+            if(pc)
                 pc.setRemoteDescription(new RTCSessionDescription({sdp: sdp,
-                                                                   type: 'offer'}));
+                                                                   type: 'answer'}))
+            else
+                console.error("[signaling.answer] PeerConnection '" + socketId +
+                              "' not found");
+        }
 
-                // Send answer
-                pc.createAnswer(function(answer)
-                {
-                    signaling.emit("answer", socketId, answer.sdp)
-
-                    pc.setLocalDescription(new RTCSessionDescription({sdp: answer.sdp,
-                                                                      type: 'answer'}))
-                });
-            }
-
-            signaling.onanswer = function(socketId, sdp)
-            {
-                // Search the peer on the list of currently connected peers
-                var pc = peersManager.getPeer(socketId)
-                if(pc)
-                    pc.setRemoteDescription(new RTCSessionDescription({sdp: sdp,
-                                                                       type: 'answer'}))
-                else
-                    console.error("[signaling.answer] PeerConnection '" + socketId +
-                                  "' not found");
-            }
-
+//        signaling.onopen = function()
+//        {
 //            // Restart downloads
 //            db.files_getAll(null, function(filelist)
 //            {
@@ -102,11 +106,7 @@ function load()
 //                                                       getRandom(fileentry.bitmap))
 //                    }
 //            })
-
-            peersManager.setSignaling(signaling)
-
-            ui.setSignaling(signaling)
-        })
+//        }
     })
 }
 

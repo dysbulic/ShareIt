@@ -232,11 +232,10 @@ UI.prototype =
 	setSignaling: function(signaling)
 	{
 	    // Set UID
-	//    signaling.removeEventListener('sessionId')
-	    signaling.addEventListener('sessionId', function(event)
+	    signaling.onSessionId = function(event)
 	    {
 	        document.getElementById("UID").value = event.data[0]
-	    })
+	    }
 	},
 
 	setPeersManager: function(peersManager, db)
