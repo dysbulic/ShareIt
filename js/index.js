@@ -37,19 +37,20 @@ function load()
 //        Signaling_SIP({'outbound_proxy_set': 'ws://tryit.jssip.net:10080',
 //        Signaling_SIP({'outbound_proxy_set': 'ws://192.168.1.33:10080',
 //                       'uri':                UUIDv4()+'@192.168.1.33'},
-        Signaling_XMPP({'httpbase': 'https://dukgo.com',
+//        Signaling_XMPP({'httpbase': 'http://bosh.metajack.im:5280/xmpp-httpbind',
+        Signaling_XMPP({'httpbase': 'https://bind.jappix.com/',
 
                         // Connection mandatory parameters
-                        'domain': '',
+                        'domain'  : 'dukgo.com',
                         'username': UUIDv4(),
                         'resource': '',
                         'password': '',
 
                         // Connection optional parameters
                         'register': true,
-//                        'host': '',
-//                        'port': 80,
-//                        'secure': true,
+//                        'host'    : '',
+//                        'port'    : 80,
+//                        'secure'  : true,
 //                        'authhost': true,
 //                        'authtype': true
                         },
