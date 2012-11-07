@@ -53,7 +53,8 @@ function load()
                                        }],
                             ['SIP', {outbound_proxy_set: 'ws://192.168.1.33:10080',
                                      uri               : UUIDv4()+'@192.168.1.33'}],
-                            ['SimpleSignaling', {ws_uri: 'wss://shareit.nodejitsu.com'}]]
+                            ['SimpleSignaling', {ws_uri: 'wss://shareit.nodejitsu.com',
+                                                 uri   : UUIDv4()}]]
 
         var signaling = new SignalingManager(configuration)
 
