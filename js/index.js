@@ -72,13 +72,13 @@ function load()
                 pc = peersManager.createPeer(uid);
 
             // Process offer
-            pc.setRemoteDescription(new RTCSessionDescription({sdp: sdp,
+            pc.setRemoteDescription(new RTCSessionDescription({sdp:  sdp,
                                                                type: 'offer'}));
 
             // Send answer
             pc.createAnswer(function(answer)
             {
-                signaling.send(uid, ["answer", answer.sdp])
+                signaling.sendAnswer(uid, answer.sdp)
 
                 pc.setLocalDescription(new RTCSessionDescription({sdp:  answer.sdp,
                                                                   type: 'answer'}))
