@@ -232,9 +232,9 @@ UI.prototype =
 	setSignaling: function(signaling)
 	{
 	    // Set UID
-	    signaling.onSessionId = function(event)
+	    signaling.onUID = function(uid)
 	    {
-	        document.getElementById("UID").value = event.data[0]
+	        document.getElementById("UID").value = uid
 	    }
 	},
 
