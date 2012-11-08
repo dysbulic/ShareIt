@@ -53,22 +53,23 @@ function load()
                                        }],
                             ['SIP', {outbound_proxy_set: 'ws://192.168.1.33:10080',
                                      uri               : UUIDv4()+'@192.168.1.33'}],
-                            ['SimpleSignaling', {ws_uri: 'wss://simplesignaling.nodejitsu.com',
-                                                 uri   : UUIDv4()}]]
+                            ['SimpleSignaling', {ws_uri: 'ws://localhost:8001',
+//                            ['SimpleSignaling', {ws_uri: 'wss://simplesignaling.nodejitsu.com',
+                                                 uid   : UUIDv4()}]]
 
         var signaling = new SignalingManager(configuration)
 
         peersManager.setSignaling(signaling)
         ui.setSignaling(signaling)
 
-        signaling.onoffer = function(socketId, sdp)
+        signaling.onoffer = function(uid, sdp)
         {
             // Search the peer between the list of currently connected peers
-            var pc = peersManager.getPeer(socketId)
+            var pc = peersManager.getPeer(uid)
 
             // Peer is not connected, create a new channel
             if(!pc)
-                pc = peersManager.createPeer(socketId);
+                pc = peersManager.createPeer(uid);
 
             // Process offer
             pc.setRemoteDescription(new RTCSessionDescription({sdp: sdp,
@@ -77,22 +78,22 @@ function load()
             // Send answer
             pc.createAnswer(function(answer)
             {
-                signaling.emit("answer", socketId, answer.sdp)
+                signaling.send(uid, ["answer", answer.sdp])
 
-                pc.setLocalDescription(new RTCSessionDescription({sdp: answer.sdp,
+                pc.setLocalDescription(new RTCSessionDescription({sdp:  answer.sdp,
                                                                   type: 'answer'}))
             });
         }
 
-        signaling.onanswer = function(socketId, sdp)
+        signaling.onanswer = function(uid, sdp)
         {
             // Search the peer on the list of currently connected peers
-            var pc = peersManager.getPeer(socketId)
+            var pc = peersManager.getPeer(uid)
             if(pc)
-                pc.setRemoteDescription(new RTCSessionDescription({sdp: sdp,
+                pc.setRemoteDescription(new RTCSessionDescription({sdp:  sdp,
                                                                    type: 'answer'}))
             else
-                console.error("[signaling.answer] PeerConnection '" + socketId +
+                console.error("[signaling.answer] PeerConnection '" + uid +
                               "' not found");
         }
 
