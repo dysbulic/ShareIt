@@ -16,13 +16,15 @@ send me an email to let me know :-)
 
 ## About
 
-File transfers in ShareIt! happen from a host client to a peer client, transfered
-directly thanks to WebRTC PeerConnection DataChannels (or on old browsers through
-a [DataChannel polyfill](https://github.com/piranna/DataChannel-polyfill)). This
-makes it perfect for anonymity.
+File transfers in ShareIt! happen between peers transfered directly thanks to
+WebRTC PeerConnection [DataChannels]
+(http://dev.w3.org/2011/webrtc/editor/webrtc.html#rtcdatachannel) or on old
+browsers through a [DataChannel polyfill]
+(https://github.com/piranna/DataChannel-polyfill). This makes it perfect for
+anonymity.
 
 Let's make a purely browser based, ad-free, Free and Open Source private and
-anonymous filesharing system!
+anonymous distributed filesharing system!
 
 ## Mailing List
 
@@ -30,19 +32,24 @@ If you'd like to discuss P2P web applications further, send an email to
 
 > webp2p@librelist.com
 
-and you'll be part of the discussion mailing list!
-[(Archives here.)](http://librelist.com/browser/webp2p/)
+and you'll be part of the discussion mailing list! ([Archives here]
+(http://librelist.com/browser/webp2p/)).
 
 ## How to test it
 
-Currently, the web app files can be served by a static web server or a web hosting.
-For example, if you have Python installed they can be served directly from the
-folder using
+The webapp is designed to be fully client side, so files can be served by any
+static web server or web hosting. If you have Python installed they can be
+served directly from the project folder using
 
 > python -m SimpleHTTPServer 8000
 
-so the web server will be available on http://localhost:8000. You can also use
-[DropBox](https://www.dropbox.com/help/201/en) if desired.
+so the webapp will be available on [localhost:8000](http://localhost:8000). You
+can also host it on [DropBox](https://www.dropbox.com/help/201/en) if desired.
+It is currently publicly hosted on
+
+* [5Apps]  (https://5apps.com/demos/piranna/shareit)
+* [DropBox](https://dl-web.dropbox.com/spa/je1wmwnmw0lbae2/ShareIt!/index.html)
+* [GitHub] (http://piranna.github.com/ShareIt)
 
 The peer connections are managed by an external signaling channel. Currently is
 using [SimpleSignaling](https://github.com/piranna/SimpleSignaling) and a test
