@@ -6,18 +6,21 @@
 # It will be of none interest for you since it's only purposed for interal use
 
 
-# Push code to repository master branch
-git checkout origin master
+echo
+echo "* Push code to GitHub master branch *"
+git checkout master
 git pull
-git push     origin master
+git push origin master
 
-# Deploy in GitHub
-git checkout origin gh-pages
+echo
+echo "* Deploy in GitHub *"
+git checkout gh-pages
 git rebase
-git push     origin gh-pages
-git checkout origin master
+git push origin gh-pages
+git checkout master
 
-# Deploy to 5Apps
-git push 5Apps master
+echo
+echo "* Deploy to 5Apps *"
+git push 5apps master
 
 # Deploy to DropBox
