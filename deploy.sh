@@ -15,9 +15,9 @@ git push origin master
 echo
 echo "* Deploy in GitHub *"
 git checkout gh-pages
-git rebase
+git rebase master
 git push origin gh-pages
-git checkout master
+git checkout master  # Going back to master branch
 
 echo
 echo "* Deploy to 5Apps *"
