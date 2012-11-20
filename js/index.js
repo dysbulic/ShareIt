@@ -31,29 +31,7 @@ function load()
             ui.update_fileslist_sharing(filelist)
         })
 
-        // Create signaling connection
-////                                    {httpbase: 'http://bosh.metajack.im:5280/xmpp-httpbind',
-//        var configuration = [['XMPP', {httpbase: 'https://bind.jappix.com/',
-//
-//                                       // Connection mandatory parameters
-//                                       domain  : 'dukgo.com',
-//                                       resource: '',
-//                                       password: '',
-//
-//                                       // Connection optional parameters
-//                                       register: true,
-//                            //         host    : '',
-//                            //         port    : 80,
-//                            //         secure  : true,
-//                            //         authhost: true,
-//                            //         authtype: true
-//                                       }],
-//                             ['SIP', {outbound_proxy_set: 'ws://192.168.1.33:10080'}],
-
-        var configuration = [['SimpleSignaling', {ws_uri: 'wss://simplesignaling.nodejitsu.com'}],
-                             ['SimpleSignaling', {ws_uri: 'wss://simplesignaling-piranna.dotcloud.com'}]]
-
-        var signaling = new SignalingManager(configuration)
+        var signaling = new SignalingManager('signaling.json')
 
         peersManager.setSignaling(signaling)
         ui.setSignaling(signaling)

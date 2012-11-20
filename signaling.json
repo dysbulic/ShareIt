@@ -1,0 +1,14 @@
+[
+    [
+        'SimpleSignaling',
+        {
+            ws_uri: 'wss://simplesignaling.nodejitsu.com'
+        }
+    ],
+    [
+        'SimpleSignaling',
+        {
+            ws_uri: 'wss://simplesignaling-piranna.dotcloud.com'
+        }
+    ]
+]
