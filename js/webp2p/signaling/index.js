@@ -1,59 +1,104 @@
-function SignalingManager(configuration)
+function SignalingManager(json_uri)
 {
-    var index = Math.floor(Math.random()*configuration.length)
-    var index = 2   // Fixed value until I get SIP and/or XMPP to work
-
-    var type = configuration[index][0]
-    var conf = configuration[index][1]
-
-    switch(type)
-    {
-        case 'SimpleSignaling':
-            var signaling = new Signaling_SimpleSignaling(conf)
-            break;
-
-        case 'SIP':
-            var signaling = new Signaling_SIP(conf)
-            break;
-
-        case 'XMPP':
-            var signaling = new Signaling_XMPP(conf)
-    }
-
     var self = this
 
-    signaling.onopen = function(uid)
-    {
-        signaling.onmessage = function(uid, data)
-        {
-            switch(data[0])
-            {
-                case 'offer':
-                    if(self.onoffer)
-                        self.onoffer(uid, data[1])
-                    break
+    var signaling = null
 
-                case 'answer':
-                    if(self.onanswer)
-                        self.onanswer(uid, data[1])
-            }
+    var UUIDv4 = function b(a){return a?(a^Math.random()*16>>a/4).toString(16):([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,b)}
+
+    function getRandomSignaling(configuration)
+    {
+        if(!configuration.length)
+        {
+            if(self.onerror)
+                self.onerror()
+            return
         }
 
-        if(self.onUID)
-           self.onUID(uid)
+        var index = Math.floor(Math.random()*configuration.length)
+        var index = 0   // Forced until redirection works
+
+        var type = configuration[index][0]
+        var conf = configuration[index][1]
+
+        switch(type)
+        {
+            case 'SimpleSignaling':
+                conf.uid = conf.uid || UUIDv4()
+                signaling = new Signaling_SimpleSignaling(conf)
+                break;
+
+            case 'SIP':
+                conf.uri = conf.uri || UUIDv4()+'@'+conf.outbound_proxy_set
+                signaling = new Signaling_SIP(conf)
+                break;
+
+            case 'XMPP':
+                conf.username = conf.username || UUIDv4()
+                signaling = new Signaling_XMPP(conf)
+        }
+
+        signaling.onopen = function(uid)
+        {
+            signaling.onmessage = function(uid, data)
+            {
+                switch(data[0])
+                {
+                    case 'offer':
+                        if(self.onoffer)
+                            self.onoffer(uid, data[1])
+                        break
+
+                    case 'answer':
+                        if(self.onanswer)
+                            self.onanswer(uid, data[1])
+                }
+            }
+
+            if(self.onUID)
+               self.onUID(uid)
+        }
+        signaling.onerror = function(error)
+        {
+            console.error(error)
+
+            // Try to get an alternative signaling channel
+            configuration.splice(index, 1)
+            getRandomSignaling(configuration)
+        }
     }
-    signaling.onerror = function(error)
-    {
-        console.error(error)
-    }
+
+    var http_request = new XMLHttpRequest();
+        http_request.open("GET", json_uri);
+        http_request.onload = function ()
+        {
+            if(this.status == 200)
+                getRandomSignaling(JSON.parse(http_request.response))
+
+            else if(self.onerror)
+                self.onerror()
+        };
+        http_request.onerror = function()
+        {
+            if(self.onerror)
+                self.onerror()
+        }
+        http_request.send();
+
 
     this.sendOffer = function(uid, sdp)
     {
-        signaling.send(uid, ["offer", sdp]);
+        if(signaling)
+            signaling.send(uid, ["offer", sdp]);
+        else
+            console.warning("signaling is not available");
     }
 
     this.sendAnswer = function(uid, sdp)
     {
-        signaling.send(uid, ["answer", sdp]);
+        if(signaling)
+            signaling.send(uid, ["answer", sdp]);
+        else
+            console.warning("signaling is not available");
     }
 }

@@ -1,0 +1,40 @@
+[
+    [
+        'XMPP',
+        {
+//          httpbase: 'http://bosh.metajack.im:5280/xmpp-httpbind',
+            httpbase: 'https://bind.jappix.com/',
+
+            // Connection mandatory parameters
+            domain  : 'dukgo.com',
+            resource: '',
+            password: '',
+
+            // Connection optional parameters
+            register: true,
+//          host    : '',
+//          port    : 80,
+//          secure  : true,
+//          authhost: true,
+//          authtype: true
+        }
+    ],
+    [
+        'SIP',
+        {
+            outbound_proxy_set: 'ws://192.168.1.33:10080'
+        }
+    ],
+    [
+        'SimpleSignaling',
+        {
+            ws_uri: 'wss://simplesignaling.nodejitsu.com'
+        }
+    ],
+    [
+        'SimpleSignaling',
+        {
+            ws_uri: 'wss://simplesignaling-piranna.dotcloud.com'
+        }
+    ]
+]
