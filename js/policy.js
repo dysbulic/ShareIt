@@ -10,25 +10,39 @@ function policy(onaccept)
 
     // Policy was not accepted previously
     // or we are showing it (callback was not defined)
-    $("#dialog-policy").dialog(
-    {
-        modal: true,
-        resizable: false,
-        width: 800,
-
-        buttons:
+    var http_request = new XMLHttpRequest();
+        http_request.open("GET", "policy.html");
+        http_request.onload = function()
         {
-            Cancel: function()
-            {
-                $(this).dialog("close");
-            },
-            Accept: function()
-            {
-                $(this).dialog("close");
+            if(this.status == 200)
+                $("#dialog-policy").dialog(
+                {
+                    modal: true,
+                    resizable: false,
+                    width: 800,
 
-                if(onaccept)
-                    onaccept();
-            }
+                    buttons:
+                    {
+                        Cancel: function()
+                        {
+                            $(this).dialog("close");
+                        },
+                        Accept: function()
+                        {
+                            $(this).dialog("close");
+
+                            if(onaccept)
+                                onaccept();
+                        }
+                    }
+                });
+
+            else
+                console.error("There was an error loading the Usage Policy")
+        };
+        http_request.onerror = function()
+        {
+            console.error("There was an error loading the Usage Policy")
         }
-    });
+        http_request.send();
 }
