@@ -77,7 +77,7 @@ function CompatibilityManager()
 	            {
 	                Ok: function()
 	                {
-	                    $("#dialog-compatibility").remove()
+	                    $(this).remove()
 //	                    $(this).dialog("destroy");
 	                }
 	            }

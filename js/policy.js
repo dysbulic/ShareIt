@@ -15,7 +15,11 @@ function policy(onaccept)
         http_request.onload = function()
         {
             if(this.status == 200)
-                $("#dialog-policy").dialog(
+            {
+                var policy = $("#dialog-policy")
+                    policy.html(http_request.response)
+
+                policy.dialog(
                 {
                     modal: true,
                     resizable: false,
@@ -30,7 +34,7 @@ function policy(onaccept)
                             // Policy not acepted, remove it
                             localStorage.removeItem('policy_acepted')
 
-                            console.warning("Policy was not accepted")
+                            console.warn("Policy was not accepted")
                         },
                         Accept: function()
                         {
@@ -39,13 +43,14 @@ function policy(onaccept)
                             // Policy acepted, set date and exec 'onaccept'
                             localStorage.policy_acepted = (new Date()).getTime()
 
-                            console.warning("Policy was accepted")
+                            console.warn("Policy was accepted")
 
                             if(onaccept)
                                 onaccept();
                         }
                     }
                 });
+            }
 
             else
                 console.error("There was an error loading the Usage Policy")
