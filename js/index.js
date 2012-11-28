@@ -7,7 +7,7 @@ function load()
         var ui = new UI(db)
 
         // Init hasher
-        var hasher = new Hasher(db)
+        var hasher = new Hasher(db, policy)
             hasher.onhashed = function(fileentry)
             {
                 db.files_put(fileentry)
