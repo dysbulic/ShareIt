@@ -90,7 +90,7 @@ function load()
     //                                                       getRandom(fileentry.bitmap))
     //                    }
     //            })
-//            }
+//            })
 //        }
     })
 }

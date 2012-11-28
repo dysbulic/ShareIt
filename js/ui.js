@@ -610,8 +610,7 @@ UI.prototype =
 
 	                                            // Don't buble click event
 	                                            return false;
-	                                        }
-)
+	                                        })
 	                                    }
 	                                    transfer.appendChild(document.createTextNode("Transfer"));
 
