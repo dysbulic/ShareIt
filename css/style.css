@@ -199,6 +199,7 @@ span.about {
 
 #dialog-about h1,p,br,span {
     margin-bottom: 12px;
+    margin-top: 12px;
 }
 
 #dialog-about div {

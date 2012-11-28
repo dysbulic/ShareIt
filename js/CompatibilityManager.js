@@ -25,39 +25,33 @@ function CompatibilityManager()
 		{
 			icon = "images/smiley-sad.svg"
 
-			msg += "on your browser because it doesn't meet the following requeriments:\n\n"
+			msg += "on your browser because it doesn't meet the following requeriments:</p>"
 
-	        msg += '<ul>'
+	        msg += '<ul style="list-style: none;">'
 			for(var key in errors)
             	msg += '<li><b>'+key+'</b>: '+errors[key]+'</li>';
 	        msg += '</ul>'
 
-	        msg += '</p>'
-
 	        if(warnings)
 	        {
-	            msg += "<p>Also, it wouldn't work optimally because the following issues:\n\n"
+	            msg += "<p>Also, it wouldn't work optimally because the following issues:</p>"
 
-    	        msg += '<ul>'
+    	        msg += '<ul style="list-style: none;">'
 	            for(var key in warnings)
 	            	msg += '<li><b>'+key+'</b>: '+warnings[key]+'</li>';
 		        msg += '</ul>'
-
-		        msg += '</p>'
 	        }
 		}
 		else if(warnings)
 		{
 			icon = "images/smiley-quiet.svg"
 
-	        msg += "optimally on your browser because the following issues:"
+	        msg += "optimally on your browser because the following issues:</p>"
 
-	        msg += '<ul>'
+	        msg += '<ul style="list-style: none;">'
         	for(var key in warnings)
             	msg += '<li><b>'+key+'</b>: '+warnings[key]+'</li>';
 	        msg += '</ul>'
-
-	        msg += '</p>'
 		}
 
 		function showDialog(icon, msg)
