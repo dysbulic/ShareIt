@@ -597,17 +597,21 @@ UI.prototype =
 	                                var transfer = document.createElement("A");
 	                                    transfer.onclick = function()
 	                                    {
-                                            // Begin transfer of file
-                                            peersManager._transferbegin(fileentry)
-
-                                            // Update downloading files list
-	                                        db.files_getAll(null, function(filelist)
+	                                        policy(function()
 	                                        {
-	                                            self.update_fileslist_downloading(filelist)
-	                                        })
+	                                            // Begin transfer of file
+	                                            peersManager._transferbegin(fileentry)
 
-	                                        // Don't buble click event
-	                                        return false;
+	                                            // Update downloading files list
+	                                            db.files_getAll(null, function(filelist)
+	                                            {
+	                                                self.update_fileslist_downloading(filelist)
+	                                            })
+
+	                                            // Don't buble click event
+	                                            return false;
+	                                        }
+)
 	                                    }
 	                                    transfer.appendChild(document.createTextNode("Transfer"));
 
