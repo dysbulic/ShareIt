@@ -77,19 +77,20 @@ function load()
 
 //        signaling.onopen = function()
 //        {
-//            policy(function()
+//            // Restart downloads
+//            db.files_getAll(null, function(filelist)
 //            {
-    //            // Restart downloads
-    //            db.files_getAll(null, function(filelist)
-    //            {
-    //                for(var i=0, fileentry; fileentry=filelist[i]; i++)
-    //                    if(fileentry.bitmap)
-    //                    {
-    //                        var channel = peersManager.getChannel(fileentry)
-    //                        channel.emit('transfer.query', fileentry.hash,
-    //                                                       getRandom(fileentry.bitmap))
-    //                    }
-    //            })
+    //            if(filelist.length)
+        //            policy(function()
+        //            {
+        //                for(var i=0, fileentry; fileentry=filelist[i]; i++)
+        //                    if(fileentry.bitmap)
+        //                    {
+        //                        var channel = peersManager.getChannel(fileentry)
+        //                        channel.emit('transfer.query', fileentry.hash,
+        //                                                       getRandom(fileentry.bitmap))
+        //                    }
+        //            })
 //            })
 //        }
     })
