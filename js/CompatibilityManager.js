@@ -18,7 +18,7 @@ function CompatibilityManager()
 
 	this.show = function()
 	{
-		var msg = "<p>ShareIt! will not work "
+	    var msg = "<p>ShareIt! will not work "
 		var icon
 
 		if(errors)
@@ -60,28 +60,59 @@ function CompatibilityManager()
 	        msg += '</p>'
 		}
 
+		function showDialog(icon, msg)
+		{
+            var alert = $("#dialog-compatibility")
+                alert.find("#icon")[0].src = icon
+                alert.find("#msg").html(msg)
+
+            alert.dialog(
+            {
+                modal: true,
+                resizable: false,
+                width: 800,
+
+                buttons:
+                {
+                    Ok: function()
+                    {
+                        $(this).remove()
+    //                  $(this).dialog("destroy");
+                    }
+                }
+            });
+		}
+
+		// Browser is not fully compatible, show why if compatibility changed
 		if(errors || warnings)
 		{
-			msg += "<p>Please upgrade to the latest version of Chrome/Chromium or Firefox.</p>"
+		    // Prepare an object with the warnings and the errors to be inserted
+            var newCompatibility = {}
+            if(errors) newCompatibility.errors = errors
+            if(warnings) newCompatibility.warnings = warnings
+            newCompatibility = JSON.stringify(newCompatibility)
 
-			var alert = $("#dialog-compatibility")
-				alert.find("#icon")[0].src = icon
-				alert.find("#msg").html(msg)
+	        console.debug(localStorage.compatibility)
+	        console.debug(newCompatibility)
 
-			alert.dialog({
-	            modal: true,
-	            resizable: false,
-	            width: 800,
+	        // Check if compatibility status has changed and notify to user
+	        if(localStorage.compatibility != newCompatibility)
+		    {
+	            msg += "<p>Please upgrade to the latest version of Chrome/Chromium or Firefox.</p>"
 
-	            buttons:
-	            {
-	                Ok: function()
-	                {
-	                    $(this).remove()
-//	                    $(this).dialog("destroy");
-	                }
-	            }
-	        });
+                showDialog(icon, msg)
+
+                localStorage.compatibility = newCompatibility
+		    }
+		}
+
+		// Browser have been upgraded and now it's fully compatible
+		else if(localStorage.compatibility)
+		{
+		    showDialog("images/smiley-happy.svg",
+		               "Congratulations! Your browser is now fully compatible.")
+
+            localStorage.removeItem('compatibility')
 		}
 	}
 }
