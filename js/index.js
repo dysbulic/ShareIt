@@ -7,7 +7,7 @@ function load()
         var ui = new UI(db)
 
         // Init hasher
-        var hasher = new Hasher(db)
+        var hasher = new Hasher(db, policy)
             hasher.onhashed = function(fileentry)
             {
                 db.files_put(fileentry)
@@ -80,13 +80,17 @@ function load()
 //            // Restart downloads
 //            db.files_getAll(null, function(filelist)
 //            {
-//                for(var i=0, fileentry; fileentry=filelist[i]; i++)
-//                    if(fileentry.bitmap)
-//                    {
-//                        var channel = peersManager.getChannel(fileentry)
-//                        channel.emit('transfer.query', fileentry.hash,
-//                                                       getRandom(fileentry.bitmap))
-//                    }
+    //            if(filelist.length)
+        //            policy(function()
+        //            {
+        //                for(var i=0, fileentry; fileentry=filelist[i]; i++)
+        //                    if(fileentry.bitmap)
+        //                    {
+        //                        var channel = peersManager.getChannel(fileentry)
+        //                        channel.emit('transfer.query', fileentry.hash,
+        //                                                       getRandom(fileentry.bitmap))
+        //                    }
+        //            })
 //            })
 //        }
     })

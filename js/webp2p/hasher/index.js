@@ -1,7 +1,7 @@
 // Object that update the SharedPoints and hash its files
 
 
-function Hasher(db)
+function Hasher(db, policy)
 {
     var queue = []
 
@@ -45,7 +45,13 @@ function Hasher(db)
     {
         db.sharepoints_getAll(null, function(sharedpoints)
         {
-            self.hash(sharedpoints)
+            if(sharedpoints.length & policy)
+                policy(function()
+                {
+                    self.hash(sharedpoints)
+                })
+            else
+                self.hash(sharedpoints)
         })
     }
 

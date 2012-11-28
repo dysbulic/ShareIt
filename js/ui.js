@@ -219,13 +219,16 @@ UI.prototype =
 
         document.getElementById('files').addEventListener('change', function(event)
         {
-            hasher.hash(event.target.files)
+            policy(function()
+            {
+                hasher.hash(event.target.files)
 
-	        // Get shared points and init them with the new ones
-	        db.sharepoints_getAll(null, function(sharedpoints)
-	        {
-	            self.update_fileslist_sharedpoints(sharedpoints)
-	        })
+                // Get shared points and init them with the new ones
+                db.sharepoints_getAll(null, function(sharedpoints)
+                {
+                    self.update_fileslist_sharedpoints(sharedpoints)
+                })
+            })
         }, false);
     },
 
@@ -597,17 +600,20 @@ UI.prototype =
 	                                var transfer = document.createElement("A");
 	                                    transfer.onclick = function()
 	                                    {
-                                            // Begin transfer of file
-                                            peersManager._transferbegin(fileentry)
-
-                                            // Update downloading files list
-	                                        db.files_getAll(null, function(filelist)
+	                                        policy(function()
 	                                        {
-	                                            self.update_fileslist_downloading(filelist)
-	                                        })
+	                                            // Begin transfer of file
+	                                            peersManager._transferbegin(fileentry)
 
-	                                        // Don't buble click event
-	                                        return false;
+	                                            // Update downloading files list
+	                                            db.files_getAll(null, function(filelist)
+	                                            {
+	                                                self.update_fileslist_downloading(filelist)
+	                                            })
+
+	                                            // Don't buble click event
+	                                            return false;
+	                                        })
 	                                    }
 	                                    transfer.appendChild(document.createTextNode("Transfer"));
 
