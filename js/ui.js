@@ -219,13 +219,16 @@ UI.prototype =
 
         document.getElementById('files').addEventListener('change', function(event)
         {
-            hasher.hash(event.target.files)
+            policy(function()
+            {
+                hasher.hash(event.target.files)
 
-	        // Get shared points and init them with the new ones
-	        db.sharepoints_getAll(null, function(sharedpoints)
-	        {
-	            self.update_fileslist_sharedpoints(sharedpoints)
-	        })
+                // Get shared points and init them with the new ones
+                db.sharepoints_getAll(null, function(sharedpoints)
+                {
+                    self.update_fileslist_sharedpoints(sharedpoints)
+                })
+            })
         }, false);
     },
 
