@@ -2,7 +2,7 @@
 function policy(onaccept)
 {
     // Exec 'onaccept' callback automatically if policy was accepted previously
-    if(onaccept && false)
+    if(onaccept && localStorage.policy_acepted)
     {
         onaccept();
         return
@@ -26,10 +26,20 @@ function policy(onaccept)
                         Cancel: function()
                         {
                             $(this).dialog("close");
+
+                            // Policy not acepted, remove it
+                            localStorage.removeItem('policy_acepted')
+
+                            console.warning("Policy was not accepted")
                         },
                         Accept: function()
                         {
                             $(this).dialog("close");
+
+                            // Policy acepted, set date and exec 'onaccept'
+                            localStorage.policy_acepted = (new Date()).getTime()
+
+                            console.warning("Policy was accepted")
 
                             if(onaccept)
                                 onaccept();
