@@ -86,9 +86,6 @@ function CompatibilityManager()
             if(warnings) newCompatibility.warnings = warnings
             newCompatibility = JSON.stringify(newCompatibility)
 
-	        console.debug(localStorage.compatibility)
-	        console.debug(newCompatibility)
-
 	        // Check if compatibility status has changed and notify to user
 	        if(localStorage.compatibility != newCompatibility)
 		    {
