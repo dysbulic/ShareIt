@@ -127,6 +127,10 @@ span.add-sharedpoint {
     top: 45px
 }
 
+#tools-menu ul {
+  padding: 0;
+}
+
 #tools-menu span {
   background-position: center left;
   background-repeat: no-repeat;
