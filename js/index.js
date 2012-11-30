@@ -31,7 +31,7 @@ function load()
             ui.update_fileslist_sharing(filelist)
         })
 
-        var signaling = new SignalingManager('Signaling_PubNub.json')
+        var signaling = new SignalingManager('Signaling.json')
             signaling.onerror = function()
             {
                 console.error("Unable to connect to a signaling channel")
