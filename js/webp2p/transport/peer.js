@@ -53,12 +53,13 @@ function Transport_Peer_init(transport, db, peersManager)
             save.target = "_blank"      // This can give problems...
             save.download = fileentry.name   // This force to download with a filename instead of navigate
 
-        var evt = document.createEvent('MouseEvents');
-            evt.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
+        save.click()
 
-        save.dispatchEvent(evt);
-
-        window.URL.revokeObjectURL(save.href)
+        // Hack to remove the ObjectURL after it have been saved and not before
+        setTimeout(function()
+        {
+            window.URL.revokeObjectURL(save.href)
+        }, 1000)
     }
 
     transport.addEventListener('transfer.send', function(event)
