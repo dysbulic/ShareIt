@@ -459,9 +459,7 @@ UI.prototype =
 		                if(chunks % 1 != 0)
 		                    chunks = Math.floor(chunks) + 1;
 
-		                var value = chunks - Bitmap_indexes(fileentry.bitmap, true).length
-
-		                div.progressbar(value/chunks)
+		                div.progressbar(fileentry.bitmap.indexes(true).length/chunks)
 		            }
                     else if(fileentry.blob)
                         div.open(fileentry.blob)
@@ -656,9 +654,7 @@ UI.prototype =
 	                                if(chunks % 1 != 0)
 	                                    chunks = Math.floor(chunks) + 1;
 
-	                                var value = chunks - Bitmap_indexes(fileentry.bitmap, true).length
-
-	                                div.progressbar(value/chunks)
+	                                div.progressbar(fileentry.bitmap.indexes(true).length/chunks)
 	                            }
 	                            else if(fileentry.blob)
 	                                div.open(fileentry.blob)
