@@ -459,7 +459,7 @@ UI.prototype =
 		                if(chunks % 1 != 0)
 		                    chunks = Math.floor(chunks) + 1;
 
-		                var value = chunks - fileentry.bitmap.length
+		                var value = chunks - Bitmap_setted(fileentry.bitmap).length
 
 		                div.progressbar(value/chunks)
 		            }
@@ -656,7 +656,7 @@ UI.prototype =
 	                                if(chunks % 1 != 0)
 	                                    chunks = Math.floor(chunks) + 1;
 
-	                                var value = chunks - fileentry.bitmap.length
+	                                var value = chunks - Bitmap_setted(fileentry.bitmap).length
 
 	                                div.progressbar(value/chunks)
 	                            }
