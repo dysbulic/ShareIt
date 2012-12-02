@@ -88,7 +88,7 @@ function load()
         //                    {
         //                        var channel = peersManager.getChannel(fileentry)
         //                        channel.emit('transfer.query', fileentry.hash,
-        //                                     fileentry.bitmap.getRandom())
+        //                                     fileentry.bitmap.getRandom(false))
         //                    }
         //            })
 //            })
