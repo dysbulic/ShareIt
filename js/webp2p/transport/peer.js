@@ -77,7 +77,7 @@ function Transport_Peer_init(transport, db, peersManager)
 
         db.files_get(hash, function(fileentry)
         {
-            remove(fileentry.bitmap, chunk)
+            fileentry.bitmap.set(chunk, true)
 
             // Create new FileWriter
             var fw = new FileWriter(fileentry.blob)
@@ -97,7 +97,7 @@ function Transport_Peer_init(transport, db, peersManager)
                 fileentry.blob = blob
 
             // Check for pending chunks and require them or save the file
-            var pending_chunks = fileentry.bitmap.length
+            var pending_chunks = fileentry.bitmap.indexes(false).length
             if(pending_chunks)
             {
                 var chunks = fileentry.size/chunksize;
@@ -108,12 +108,11 @@ function Transport_Peer_init(transport, db, peersManager)
                 peersManager.dispatchEvent({type: "transfer.update",
                                             data: [fileentry, 1 - pending_chunks/chunks]})
 
-                // Demand more data from one of the pending chunks
+                // Demand more data from one of the pending chunks after update
+                // the fileentry status on the database
                 db.files_put(fileentry, function()
                 {
-                    peersManager.getChannel(fileentry).emit('transfer.query',
-                                                            fileentry.hash,
-                                                            getRandom(fileentry.bitmap));
+                    peersManager.transfer_query(fileentry)
                 })
             }
             else

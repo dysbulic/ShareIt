@@ -10,7 +10,7 @@ function Transport_init(transport)
         transport.send(JSON.stringify(args), function(error)
         {
             if(error)
-                console.warning(error);
+                console.warn(error);
         });
     }
 
@@ -18,6 +18,7 @@ function Transport_init(transport)
     transport.onmessage = function(message)
     {
         message = JSON.parse(message.data)
+
         var event = {'type': message[0], 'data': message.slice(1)}
 
         transport.dispatchEvent(event)
