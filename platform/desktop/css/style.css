@@ -1,0 +1,142 @@
+html, body { height: 100%; }
+
+#tabs{
+    height: 99%;
+}
+
+#tabs .ui-tabs-panel
+{
+    padding: 0;
+}
+
+#Sharedpoints {
+    cursor: pointer;
+    width: 100%;
+    height: 425px;
+    cellspacing: 0;
+    summary: ""
+}
+
+#Downloading {
+    cursor: pointer;
+    cellspacing: 0;
+    summary: ""
+}
+
+#Sharing {
+    cursor: pointer;
+    cellspacing: 0;
+    summary: ""
+}
+
+span.add-sharedpoint {
+  background-image: url(../../../images/add-folder.png);
+  background-position: center left;
+  background-repeat: no-repeat;
+  padding: .2em 0 .2em 1.5em;
+  cursor: pointer
+}
+
+
+/* Tools menu
+ * ------------------------------------------------------------------------- */
+
+#tools-menu-submenu
+{
+    width: 240px;   /* If this is commented, tools menu is showed horizontal */
+    display: none;
+    position: absolute;
+    top: 45px
+}
+
+#tools-menu ul {
+  padding: 0;
+}
+
+#tools-menu span {
+  background-position: center left;
+  background-repeat: no-repeat;
+  padding: .2em 0 .2em 1.5em;
+}
+
+#tools-menu a {
+  cursor: "pointer"
+}
+
+span.preferences {
+  background-image: url(../../../images/preferences.png);
+}
+
+span.user {
+  background-image: url(../../../images/user.png);
+}
+
+span.about {
+  background-image: url(../../../images/about.png);
+}
+
+
+#StartHere #tools-menu2 {
+    float: left;
+    vertical-align: middle
+}
+
+#StartHere #logo {
+    float: right;
+    height: 120px
+}
+
+#StartHere span {
+  background-position: center left;
+  background-repeat: no-repeat;
+  padding: .2em 0 .2em 1.5em;
+}
+
+#StartHere ul {
+    list-style: disc;
+    line-height: 150%
+}
+
+#Preferences2 {
+    cursor: pointer
+}
+
+#ConnectUser2 {
+    cursor: pointer
+}
+
+#About2 {
+    cursor: pointer
+}
+
+#tools-menu2 {
+    cursor: pointer
+}
+
+#tools-menu3 {
+    cursor: pointer
+}
+
+
+#dialog-about #logo {
+    float: right;
+    height: 120px
+}
+
+#dialog-about h1,p,br,span {
+    margin-bottom: 12px;
+    margin-top: 12px;
+}
+
+#dialog-about div {
+    margin-top: 12px;
+}
+
+#fork_me {
+    border: none;
+    position: fixed; 
+    bottom: 0; 
+    right: 0; 
+    border-radius: 0px 8px 8px 0px;
+    box-shadow: 3px 3px 3px #666;
+}
