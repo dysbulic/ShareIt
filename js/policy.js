@@ -11,7 +11,7 @@ function policy(onaccept)
     // Policy was not accepted previously
     // or we are showing it (callback was not defined)
     var http_request = new XMLHttpRequest();
-        http_request.open("GET", "policy.html");
+        http_request.open("GET", "../../policy.html");
         http_request.onload = function()
         {
             if(this.status == 200)
