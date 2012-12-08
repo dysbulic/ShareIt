@@ -2,6 +2,8 @@
   <head>
     <script>
       var platform = 'desktop'
+      if(window.screen.width < 960)
+          platform = 'mobile'
       window.location.replace('platform/'+platform+'/index.html')
     </script>
   </head>
