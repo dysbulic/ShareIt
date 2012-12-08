@@ -235,10 +235,14 @@ UI.prototype =
 	setSignaling: function(signaling)
 	{
 	    // Set UID
-	    signaling.onUID = function(uid)
+	    signaling.onopen = function(uid)
 	    {
 	        document.getElementById("UID").value = uid
 	    }
+        signaling.onerror = function()
+        {
+            console.error("Unable to connect to a signaling channel")
+        }
 	},
 
 	setPeersManager: function(peersManager, db)
