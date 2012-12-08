@@ -4,8 +4,115 @@
     <title>ShareIt!</title>
 
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="SHORTCUT ICON" href="../../images/favicon.png"/>
+
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css"/>
+
+    <style>
+      .ui-dialog-contain
+      {
+        width: 90.5%;
+        max-width: 500px;
+        margin: 15% auto 35px auto;
+        padding: 0;
+        position: relative;
+        top: -10px;
+      }
+    </style>
+
+    <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
   </head>
   <body>
-    This platform is currently under construction
+    <div id="home" data-role="page">
+      <img id="logo" src="../../images/logo.svg" alt="ShareIt!"/>
+
+      <ul data-role="listview" data-inset="true">
+        <li>
+          <a href="#Downloading">Downloading</a>
+        </li>
+        <li>
+          <a href="#Sharing">Sharing</a>
+        </li>
+      </ul>
+
+      <ul data-role="listview" data-inset="true">
+        <li>
+          <a href="#preferences">
+            <span class="preferences">Preferences</span>
+          </a>
+        </li>
+        <li>
+          <a href="#connectUser">
+            <span class="user">Connect to user</span>
+          </a>
+        </li>
+        <li>
+          <a href="#about">
+            <span class="about">About</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div id="about" data-role="page" data-add-back-btn="true">
+      <div data-role="header">
+        <h1>About ShareIt!</h1>
+      </div>
+
+      <ul data-role="listview">
+        <li>
+	      <a href="https://github.com/piranna/ShareIt">
+	        <img id="logo" src="../../images/logo.svg" alt="ShareIt!"/>
+	      </a>
+	      <h1>P2P filesharing in pure JavaScript &amp; HTML5</h1>
+        </li>
+        <li>
+          2012 <a href="https://www.gnu.org/licenses/agpl-3.0.html">Affero GPL</a> by <a href="mailto:piranna@gmail.com">Jesús Leganés Combarro "Piranna"</a>
+        </li>
+        <li>
+          Based on original <a href="https://github.com/Miserlou/DirtyShare">DirtyShare</a> code by Rich Jones
+        </li>
+        <li>
+	      <span>
+	        <label for="UID">UID:</label>
+	        <input id="UID" readonly size="40"/>
+	      </span>
+        </li>
+        <li data-role="list-divider" role="heading">Based on</li>
+        <li>
+          <a href="https://www.w3.org/html/logo/">
+            <img src="../../images/html5-badge-h-connectivity-css3-performance-semantics-storage.png"
+                 width="261" height="64" alt="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Performance &amp; Integration, Semantics, and Offline &amp; Storage"
+                 title="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Performance &amp; Integration, Semantics, and Offline &amp; Storage"/>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.webrtc.org/">
+            <img src="https://sites.google.com/site/webrtc/_/rsrc/1318870658554/config/customLogo.gif?revision=8" height="50" alt="WebRTC"/>
+          </a>
+        </li>
+        <li data-role="list-divider" role="heading">Using</li>
+        <li>
+          <a href="https://jqueryui.com/">
+            <img src="../../images/JQuery_UI_logo_color_onwhite-300x72.png" alt="jQuery UI" height="50px"/>
+          </a>
+        </li>
+        <li data-role="list-divider" role="heading">Powered by</li>
+        <li>
+          <a href="https://5apps.com">
+            <img src="../../images/5Apps-Logo-Positive-Glossy.png" alt="5 Apps" height="50px"/>
+          </a>
+        </li>
+        <li>
+          <a href="https://nodejitsu.com">
+            <img src="https://nodejitsu.com/img/logotype-poweredby.png" alt="Powered by Nodejitsu"/>
+          </a>
+        </li>
+      </ul>
+    </div>
+
   </body>
 </html>
