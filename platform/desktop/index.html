@@ -215,24 +215,30 @@
         <!-- Dialogs -->
 
         <div id="dialog-config" title="Config" style="display: none">
-            <form>
-                <fieldset>
-                    <table id="Sharedpoints">
-                        <thead>
-                            <tr>
-                                <th scope="col" width="100%">Path</th>
-                                <th scope="col">Shared</th>
-                                <th scope="col">Remove</th>
-                            </tr>
-                        </thead>
-                        <tbody/>
-                    </table>
-                    <a onclick="$('#files').click()">
-                        <span class="add-sharedpoint">Add shared point</span>
-                    </a>
-                    <input type="file" id="files" name="files[]" multiple style="height: 20px; opacity: 0; filter:alpha(opacity: 0);  position: relative; top: -40px; left: -20px;" />
-                </fieldset>
-            </form>
+		    <ul>
+		        <li><a href="#Sharedpoints-tab">Sharedpoints</a></li>
+		        <li><a href="#Backup">Backup</a></li>
+		    </ul>
+
+            <div id="Sharedpoints-tab">
+	            <table id="Sharedpoints">
+	                <thead>
+	                    <tr>
+	                        <th scope="col" width="100%">Path</th>
+	                        <th scope="col">Shared</th>
+	                        <th scope="col">Remove</th>
+	                    </tr>
+	                </thead>
+	                <tbody/>
+	            </table>
+	            <a onclick="$('#files').click()">
+	                <span class="add-sharedpoint">Add shared point</span>
+	            </a>
+	            <input type="file" id="files" name="files[]" multiple style="height: 20px; opacity: 0; filter:alpha(opacity: 0);  position: relative; top: -40px; left: -20px;" />
+            </div>
+
+            <div id="Backup">
+            </div>
         </div>
 
         <div id="dialog-about" title="About ShareIt!" style="display: none">
