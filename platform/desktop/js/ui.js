@@ -252,6 +252,8 @@ UI.prototype =
             console.error("Unable to connect to a signaling channel")
 
             // Allow backup of cache if there are items
+            $("#dialog-config").tabs("option", "active", 1)
+            $("#dialog-config").dialog("open");
         }
 	},
 
