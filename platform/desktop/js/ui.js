@@ -234,11 +234,24 @@ UI.prototype =
 
 	setSignaling: function(signaling)
 	{
-	    // Set UID
-	    signaling.onUID = function(uid)
+        var self = this
+
+	    // Set UID on user interface
+	    signaling.onopen = function(uid)
 	    {
 	        document.getElementById("UID").value = uid
+
+	        // Allow to the user to search peers
+	        self.signalingReady = true
+
+            console.info("Connected to a signaling channel")
 	    }
+        signaling.onerror = function()
+        {
+            console.error("Unable to connect to a signaling channel")
+
+            // Allow backup of cache if there are items
+        }
 	},
 
 	setPeersManager: function(peersManager, db)
@@ -498,6 +511,12 @@ UI.prototype =
 
 	    function ConnectUser()
 	    {
+	        if(!self.signalingReady)
+	        {
+	            alert("There's no signaling channel available, wait some more seconds")
+                return 
+	        }
+
 	        var uid = prompt("UID to connect")
 	        if(uid != null && uid != '')
 	        {

@@ -32,10 +32,6 @@ function load()
         })
 
         var signaling = new SignalingManager('../../json/signaling.json')
-            signaling.onerror = function()
-            {
-                console.error("Unable to connect to a signaling channel")
-            }
 
         peersManager.setSignaling(signaling)
         ui.setSignaling(signaling)
