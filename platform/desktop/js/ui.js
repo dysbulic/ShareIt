@@ -68,7 +68,7 @@ function UI(db)
 
     $("#dialog-about").dialog(dialog_options);
     $("#dialog-config").dialog(dialog_options);
-    $("#dialog-config").tabs()
+    $("#dialog-config").tabs({active: 0})
 
     $("#Downloading").treeTable();
     $("#Sharing").treeTable();
