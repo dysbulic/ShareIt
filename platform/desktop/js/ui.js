@@ -237,6 +237,9 @@ UI.prototype =
                     self.update_fileslist_sharedpoints(sharedpoints, db)
                 })
             })
+
+            // Reset the input
+            this.value = ""
         }, false);
     },
 
