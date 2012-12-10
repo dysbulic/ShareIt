@@ -215,16 +215,18 @@
         <!-- Dialogs -->
 
         <div id="dialog-config" title="Config" style="display: none">
-            <table id="Sharedpoints">
-                <thead>
-                    <tr>
-                        <th scope="col" width="100%">Path</th>
-                        <th scope="col">Shared</th>
-                        <th scope="col">Remove</th>
-                    </tr>
-                </thead>
-                <tbody/>
-            </table>
+            <div style="max-height:425px;overflow-y:auto">
+	            <table id="Sharedpoints">
+	                <thead>
+	                    <tr>
+	                        <th scope="col" width="100%">Path</th>
+	                        <th scope="col">Shared</th>
+	                        <th scope="col">Remove</th>
+	                    </tr>
+	                </thead>
+	                <tbody/>
+	            </table>
+            </div>
             <a onclick="$('#files').click()">
                 <span class="add-sharedpoint">Add shared point</span>
             </a>
