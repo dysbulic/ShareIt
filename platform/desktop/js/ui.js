@@ -131,7 +131,7 @@ function UI(db)
         // Get shared points and init them
         db.sharepoints_getAll(null, function(sharedpoints)
         {
-            self.update_fileslist_sharedpoints(sharedpoints)
+            self.update_fileslist_sharedpoints(sharedpoints, db)
         })
 
         $("#dialog-config").dialog("open")
@@ -151,7 +151,7 @@ function UI(db)
 
 UI.prototype =
 {
-	update_fileslist_sharedpoints: function(sharedpoints)
+	update_fileslist_sharedpoints: function(sharedpoints, db)
 	{
 	    var self = this
 
@@ -178,7 +178,7 @@ UI.prototype =
         noFilesCaption.appendChild(document.createTextNode(" to be shared."))
 
         // Fill the table
-	    this._updatefiles(table, sharedpoints, noFilesCaption, function(file)
+	    this._updatefiles(table, sharedpoints, noFilesCaption, function(fileentry)
 		{
 		    var tr = document.createElement('TR');
 
@@ -187,8 +187,8 @@ UI.prototype =
 
 		    // Name & icon
 		    var span = document.createElement('SPAN');
-		        span.className = self._filetype2className(file.type)
-		        span.appendChild(document.createTextNode(file.name));
+		        span.className = self._filetype2className(fileentry.type)
+		        span.appendChild(document.createTextNode(fileentry.name));
 		    td.appendChild(span)
 
 		    // Shared size
@@ -202,9 +202,17 @@ UI.prototype =
 		    tr.appendChild(td)
 
 		    var a = document.createElement("A");
-		//        a.onclick = function()
-		//        {
-		//        }
+		        a.onclick = function()
+		        {
+		            db.sharepoints_delete(fileentry.name, function()
+		            {
+		                // Update the sharedpoints without the removed one
+		                db.sharepoints_getAll(null, function(sharedpoints)
+		                {
+		                    self.update_fileslist_sharedpoints(sharedpoints, db)
+		                })
+		            })
+		        }
 		        a.appendChild(document.createTextNode("Delete"));
 		    td.appendChild(a);
 
@@ -226,7 +234,7 @@ UI.prototype =
                 // Get shared points and init them with the new ones
                 db.sharepoints_getAll(null, function(sharedpoints)
                 {
-                    self.update_fileslist_sharedpoints(sharedpoints)
+                    self.update_fileslist_sharedpoints(sharedpoints, db)
                 })
             })
         }, false);
