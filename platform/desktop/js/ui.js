@@ -449,17 +449,17 @@ UI.prototype =
 		            var div = document.createElement("DIV");
 		                div.id = fileentry.hash
 
-		            div.progressbar = function(value)
-		            {
-		                if(value == undefined)
-		                   value = 0;
-
-		                var progress = document.createTextNode(Math.floor(value*100)+"%")
-
-		                while(div.firstChild)
-		                    div.removeChild(div.firstChild);
-		                div.appendChild(progress);
-		            }
+//		            div.progressbar = function(value)
+//		            {
+//		                if(value == undefined)
+//		                   value = 0;
+//
+//		                var progress = document.createTextNode(Math.floor(value*100)+"%")
+//
+//		                while(div.firstChild)
+//		                    div.removeChild(div.firstChild);
+//		                div.appendChild(progress);
+//		            }
 
 		            div.open = function(blob)
 		            {
@@ -476,44 +476,40 @@ UI.prototype =
 		                div.appendChild(open);
 		            }
 
-		            // Show if file have been downloaded previously or if we can transfer it
-		            if(fileentry.bitmap)
-		            {
-		                var chunks = fileentry.size/chunksize;
-		                if(chunks % 1 != 0)
-		                    chunks = Math.floor(chunks) + 1;
+//		            // Show if file have been downloaded previously or if we can transfer it
+//		            if(fileentry.bitmap)
+//		            {
+//		                var chunks = fileentry.size/chunksize;
+//		                if(chunks % 1 != 0)
+//		                    chunks = Math.floor(chunks) + 1;
+//
+//		                div.progressbar(fileentry.bitmap.indexes(true).length/chunks)
+//		            }
 
-		                div.progressbar(fileentry.bitmap.indexes(true).length/chunks)
-		            }
-                    else if(fileentry.blob)
-                        div.open(fileentry.blob)
-                    else if(fileentry.file)
-                        div.open(fileentry.file)
-		            else
-		                div.open(fileentry)
+	                div.open(fileentry.blob || fileentry.file || fileentry)
 
-		            peersManager.addEventListener("transfer.begin", function(event)
-		            {
-		                var f = event.data[0]
-
-		                if(fileentry.hash == f.hash)
-		                    div.progressbar()
-		            })
-		            peersManager.addEventListener("transfer.update", function(event)
-		            {
-		                var f = event.data[0]
-		                var value = event.data[1]
-
-		                if(fileentry.hash == f.hash)
-		                    div.progressbar(value)
-		            })
-		            peersManager.addEventListener("transfer.end", function(event)
-		            {
-		                var f = event.data[0]
-
-		                if(fileentry.hash == f.hash)
-		                    div.open(f.blob)
-		            })
+//		            peersManager.addEventListener("transfer.begin", function(event)
+//		            {
+//		                var f = event.data[0]
+//
+//		                if(fileentry.hash == f.hash)
+//		                    div.progressbar()
+//		            })
+//		            peersManager.addEventListener("transfer.update", function(event)
+//		            {
+//		                var f = event.data[0]
+//		                var value = event.data[1]
+//
+//		                if(fileentry.hash == f.hash)
+//		                    div.progressbar(value)
+//		            })
+//		            peersManager.addEventListener("transfer.end", function(event)
+//		            {
+//		                var f = event.data[0]
+//
+//		                if(fileentry.hash == f.hash)
+//		                    div.open(f.blob)
+//		            })
 
 		            return div
 		        })
