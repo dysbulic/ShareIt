@@ -194,7 +194,7 @@ UI.prototype =
 		    // Shared size
 		    var td = document.createElement('TD');
 		        td.className="filesize"
-		        td.appendChild(document.createTextNode(humanize.filesize(0)));
+		        td.appendChild(document.createTextNode(humanize.filesize(fileentry.size)));
 		    tr.appendChild(td)
 
 		    var td = document.createElement('TD');
