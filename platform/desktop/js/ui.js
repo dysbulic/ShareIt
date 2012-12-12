@@ -891,7 +891,7 @@ UI.prototype =
                     // Name & icon
                     var span = document.createElement('SPAN');
                         span.className = 'folder'
-                        span.appendChild(document.createTextNode(path));
+                        span.appendChild(document.createTextNode(path.split('/').slice(-2,-1)));
                     td.appendChild(span)
 
                     var parent = folder.split('__').slice(0,-1).join('__')
