@@ -187,7 +187,7 @@ UI.prototype =
 
 		    // Name & icon
 		    var span = document.createElement('SPAN');
-		        span.className = self._filetype2className(fileentry.type)
+		        span.className = fileentry.type
 		        span.appendChild(document.createTextNode(fileentry.name));
 		    td.appendChild(span)
 
@@ -732,19 +732,19 @@ UI.prototype =
 	},
 
 
-	_filetype2className: function(filetype)
-	{
-	    filetype = filetype.split('/')
-	
-	    switch(filetype[0])
-	    {
-	        case 'image':   return "image"
-	        case 'video':   return "video"
-	    }
-	
-	    // Unknown file type, return generic file
-	    return "file"
-	},
+    _filetype2className: function(filetype)
+    {
+        filetype = filetype.split('/')
+    
+        switch(filetype[0])
+        {
+            case 'image':   return "image"
+            case 'video':   return "video"
+        }
+    
+        // Unknown file type, return generic file
+        return "file"
+    },
 
 	_row_sharing: function(fileentry, button_factory)
 	{
