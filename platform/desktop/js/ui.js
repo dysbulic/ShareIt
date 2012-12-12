@@ -70,7 +70,7 @@ function UI(db)
     $("#dialog-config").dialog(dialog_options);
 
     $("#Downloading").treeTable();
-    $("#Sharing").treeTable();
+//    $("#Sharing").treeTable();
     $("#Sharedpoints").treeTable();
 
     // Main menu
@@ -441,8 +441,26 @@ UI.prototype =
 
             noFilesCaption.appendChild(document.createTextNode("."))
 
+            files.sort(function(a, b)
+            {
+                function strcmp(str1, str2)
+                {
+                    return ((str1 == str2) ? 0 : ((str1 > str2) ? 1 : -1));
+                }
+
+                var result = strcmp(a.sharedpoint, b.sharedpoint);
+                if(result) return result;
+
+                var result = strcmp(a.path, b.path);
+                if(result) return result;
+
+                var result = strcmp(a.file.name, b.file.name);
+                if(result) return result;
+            })
+
             // Fill the table
-	        self._updatefiles(table, files, noFilesCaption, function(fileentry)
+	        self._updatefiles_sharing(table, files, noFilesCaption,
+	        function(fileentry)
 	        {
 	            return self._row_sharing(fileentry, function(fileentry)
 		        {
@@ -581,7 +599,7 @@ UI.prototype =
 	                tbody.appendChild(tr);
 
 	                var td = document.createElement("TD");
-	                    td.colspan='4'
+	                    td.colSpan = 4
 	                    td.align='center'
 	                    td.appendChild(document.createTextNode("Waiting for the peer data"))
 	                tr.appendChild(td);
@@ -792,17 +810,108 @@ UI.prototype =
         if(fileslist.length)
             for(var i=0, fileentry; fileentry=fileslist[i]; i++)
             {
+                // Calc path
                 var path = ""
+                if(fileentry.sharedpoint)
+                    path += fileentry.sharedpoint + '/';
                 if(fileentry.path)
-                    path = fileentry.path + '/';
+                    path += fileentry.path + '/';
 
+                var name = ""
+                if(fileentry.file)
+                    name = fileentry.file.name
+                else
+                    name = fileentry.name
+
+                var child = path.split('/').slice(0,-1).join('/').replace(' ','')
+
+                // Add file row
                 var tr = row_factory(fileentry)
-                    tr.id = path + fileentry.name
-                    if(path)
-                        tr.class = "child-of-" + path
+//                    tr.id = path + name
+                if(child)
+                    tr.setAttribute('class', "child-of-" + child)
 
                 tbody.appendChild(tr)
             }
+        else
+        {
+            var tr = document.createElement('TR')
+                tr.appendChild(noFilesCaption)
+
+            tbody.appendChild(tr)
+        }
+
+        $(table).treeTable({initialState: "expanded"});
+    },
+
+    _updatefiles_sharing: function(table, fileslist, noFilesCaption, row_factory)
+    {
+        var tbody = table.getElementsByTagName("tbody")[0]
+
+        // Remove old table and add new empty one
+        while(tbody.firstChild)
+            tbody.removeChild(tbody.firstChild);
+
+        if(fileslist.length)
+        {
+            var prevSharedpoint
+            var prevFolder
+
+            for(var i=0, fileentry; fileentry=fileslist[i]; i++)
+            {
+                // Calc path
+                var path = ""
+                if(fileentry.sharedpoint)
+                    path += fileentry.sharedpoint + '/';
+                if(fileentry.path)
+                    path += fileentry.path + '/';
+
+                var name = ""
+                if(fileentry.file)
+                    name = fileentry.file.name
+                else
+                    name = fileentry.name
+
+                // Add sharedpoint row
+
+                var folder = path.split('/').slice(0,-1).join('/').replace(' ','').replace('/','__')
+
+                // Add folder row
+                if(prevFolder != folder)
+                {
+                    prevFolder = folder
+
+                    var tr = document.createElement('TR');
+                        tr.id = folder
+
+                    var td = document.createElement('TD');
+                        td.colSpan = 2
+                    tr.appendChild(td)
+
+                    // Name & icon
+                    var span = document.createElement('SPAN');
+                        span.className = 'folder'
+                        span.appendChild(document.createTextNode(path));
+                    td.appendChild(span)
+
+                    var parent = folder.split('__').slice(0,-1).join('__')
+                    if(parent)
+                        tr.setAttribute('class', "child-of-" + parent)
+
+                    tbody.appendChild(tr)
+                }
+
+                // Add file row
+                var tr = row_factory(fileentry)
+//                    tr.id = path + name
+                if(folder)
+                    tr.setAttribute('class', "child-of-" + folder)
+
+                tbody.appendChild(tr)
+            }
+
+            $(table).treeTable({initialState: "expanded"});
+        }
         else
         {
             var tr = document.createElement('TR')
