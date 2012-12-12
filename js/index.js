@@ -20,7 +20,7 @@ function load()
 	            db.sharepoints_get(fileentry.sharedpoint, function(sharedpoint)
 	            {
 	                // Increase sharedpoint shared size
-	                sharedpoint.sharedsize += fileentry.file.size
+	                sharedpoint.size += fileentry.file.size
 	                db.sharepoints_put(sharedpoint)
 
 	                // Update sharedpoints list
