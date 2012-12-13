@@ -30,8 +30,8 @@ git checkout master
 
 echo
 echo "* Deploy in GitHub *"
-git push origin gh-pages
+git push --force origin gh-pages
 
 echo
 echo "* Deploy to 5Apps *"
-git push 5apps gh-pages:master
+git push --force 5apps gh-pages:master
