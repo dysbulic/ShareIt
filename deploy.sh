@@ -11,7 +11,7 @@ echo "* Looking for remote changes on master branch *"
 git checkout master
 git pull --ff-only
 
-status = $?
+status=$?
 if [ $status -ne 0 ];then
     echo "* There was a problem pull from master *"
     echo "* Pprobably a non fast-forward merge   *"
