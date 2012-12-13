@@ -879,10 +879,6 @@ UI.prototype =
                         span.appendChild(document.createTextNode(sharedpoint));
                     td.appendChild(span)
 
-//                    var parent = sharedpoint.split('__').slice(0,-1).join('__')
-//                    if(parent)
-//                        tr.setAttribute('class', "child-of-" + parent)
-
                     tbody.appendChild(tr)
                 }
 
