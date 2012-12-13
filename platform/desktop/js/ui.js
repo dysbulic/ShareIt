@@ -860,7 +860,7 @@ UI.prototype =
             for(var i=0, fileentry; fileentry=fileslist[i]; i++)
             {
                 // Add sharedpoint row
-                var sharedpoint = fileentry.sharedpoint.replace(' ','')
+                var sharedpoint = fileentry.sharedpoint.name.replace(' ','')
                 if(prevSharedpoint != sharedpoint)
                 {
                     prevSharedpoint = sharedpoint
@@ -875,7 +875,7 @@ UI.prototype =
 
                     // Name & icon
                     var span = document.createElement('SPAN');
-                        span.className = 'dropbox'
+                        span.className = fileentry.sharedpoint.type
                         span.appendChild(document.createTextNode(sharedpoint));
                     td.appendChild(span)
 

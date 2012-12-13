@@ -17,7 +17,8 @@ function load()
 	                ui.update_fileslist_sharing(files)
 	            })
 
-	            db.sharepoints_get(fileentry.sharedpoint, function(sharedpoint)
+	            db.sharepoints_get(fileentry.sharedpoint.name,
+	            function(sharedpoint)
 	            {
 	                // Increase sharedpoint shared size
 	                sharedpoint.size += fileentry.file.size
