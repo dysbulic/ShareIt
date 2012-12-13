@@ -16,6 +16,19 @@ function load()
 	            {
 	                ui.update_fileslist_sharing(files)
 	            })
+
+	            db.sharepoints_get(fileentry.sharedpoint, function(sharedpoint)
+	            {
+	                // Increase sharedpoint shared size
+	                sharedpoint.sharedsize += fileentry.file.size
+	                db.sharepoints_put(sharedpoint)
+
+	                // Update sharedpoints list
+	                db.sharepoints_getAll(null, function(sharepoints)
+                    {
+                        ui.update_fileslist_sharedpoints(sharepoints, db)
+                    })
+	            })
             }
 
         ui.setHasher(hasher, db)

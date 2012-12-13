@@ -7,27 +7,39 @@ var window = {}
 importScripts('https://raw.github.com/Caligatio/jsSHA/master/src/sha512.js');
 
 
-function hashFile(file, onsuccess)
+function hashData(data, onsuccess)
 {
-	var shaObj = new window.jsSHA("This is a Test", "TEXT");
+	var shaObj = new window.jsSHA(data, "TEXT");
 	var hash = shaObj.getHash("SHA-512", "B64");
 
     onsuccess(hash)
 }
 
 
+function hashFileentry(fileentry)
+{
+  var reader = new FileReader();
+      reader.onload = function()
+      {
+        // this.result is the readed file as an ArrayBuffer.
+        hashData(this.result, function(hash)
+        {
+            fileentry.hash = hash
+            self.postMessage(fileentry);
+        })
+      }
+
+//  reader.readAsArrayBuffer(file);
+  reader.readAsBinaryString(fileentry.file);
+}
+
+
 self.onmessage = function(e)
 {
-  var file = e.data
+  var sharedpoint = e.data
 
-  var reader = new FileReader();
-  reader.onload = function(e)
-  {
-    hashFile(this.result, function(hash) // this.result is the read file as an ArrayBuffer.
-    {
-        self.postMessage({'hash': hash, 'file': file});
-    })
-  }
+  var fileentry = {'sharedpoint': sharedpoint.name, 'path': '',
+                   'file': sharedpoint}
 
-  reader.readAsArrayBuffer(file);
+  hashFileentry(fileentry)
 }
