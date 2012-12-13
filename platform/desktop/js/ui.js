@@ -781,7 +781,7 @@ UI.prototype =
 
 	    // Type
 	    var td = document.createElement('TD');
-	        td.appendChild(document.createTextNode(type));
+	        td.appendChild(document.createTextNode(type || "(unknown type)"));
 	    tr.appendChild(td)
 
 	    // Size
@@ -859,27 +859,40 @@ UI.prototype =
 
             for(var i=0, fileentry; fileentry=fileslist[i]; i++)
             {
-                // Calc path
-                var path = ""
-                if(fileentry.sharedpoint)
-                    path += fileentry.sharedpoint + '/';
-                if(fileentry.path)
-                    path += fileentry.path + '/';
-
-                var name = ""
-                if(fileentry.file)
-                    name = fileentry.file.name
-                else
-                    name = fileentry.name
-
                 // Add sharedpoint row
+                var sharedpoint = fileentry.sharedpoint.replace(' ','')
+                if(prevSharedpoint != sharedpoint)
+                {
+                    prevSharedpoint = sharedpoint
+                    prevFolder = ""
 
-                var folder = path.split('/').slice(0,-1).join('/').replace(' ','').replace('/','__')
+                    var tr = document.createElement('TR');
+                        tr.id = sharedpoint
+
+                    var td = document.createElement('TD');
+                        td.colSpan = 2
+                    tr.appendChild(td)
+
+                    // Name & icon
+                    var span = document.createElement('SPAN');
+                        span.className = 'dropbox'
+                        span.appendChild(document.createTextNode(sharedpoint));
+                    td.appendChild(span)
+
+//                    var parent = sharedpoint.split('__').slice(0,-1).join('__')
+//                    if(parent)
+//                        tr.setAttribute('class', "child-of-" + parent)
+
+                    tbody.appendChild(tr)
+                }
 
                 // Add folder row
+                var folder = fileentry.path.replace(' ','').replace('/','__')
                 if(prevFolder != folder)
                 {
                     prevFolder = folder
+
+                    folder = sharedpoint+'__'+folder
 
                     var tr = document.createElement('TR');
                         tr.id = folder
@@ -888,24 +901,27 @@ UI.prototype =
                         td.colSpan = 2
                     tr.appendChild(td)
 
+                    folder = folder.split('__')
+
                     // Name & icon
                     var span = document.createElement('SPAN');
                         span.className = 'folder'
-                        span.appendChild(document.createTextNode(path.split('/').slice(-2,-1)));
+                        span.appendChild(document.createTextNode(folder.slice(-1)));
                     td.appendChild(span)
 
-                    var parent = folder.split('__').slice(0,-1).join('__')
-                    if(parent)
-                        tr.setAttribute('class', "child-of-" + parent)
+                    folder = folder.slice(0,-1)
+                    if(folder)
+                        tr.setAttribute('class', "child-of-" + folder.join('__'))
 
                     tbody.appendChild(tr)
                 }
 
                 // Add file row
+                if(prevFolder)
+                    sharedpoint += '__' + prevFolder
+
                 var tr = row_factory(fileentry)
-//                    tr.id = path + name
-                if(folder)
-                    tr.setAttribute('class', "child-of-" + folder)
+                    tr.setAttribute('class', "child-of-" + sharedpoint)
 
                 tbody.appendChild(tr)
             }
