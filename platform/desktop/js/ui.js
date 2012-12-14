@@ -771,7 +771,7 @@ UI.prototype =
 	    var td = document.createElement('TD');
 	    tr.appendChild(td)
 
-	    var type = fileentry.type || fileentry.file.type
+	    var type = (fileentry.type != undefined)? fileentry.type: fileentry.file.type
 
 	    // Name & icon
 	    var span = document.createElement('SPAN');
