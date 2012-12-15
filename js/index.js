@@ -10,8 +10,6 @@ function load()
         var hasher = new Hasher(db, policy)
             hasher.onhashed = function(fileentry)
             {
-                db.files_put(fileentry)
-
 	            db.files_getAll(null, function(files)
 	            {
 	                ui.update_fileslist_sharing(files)
@@ -22,14 +20,37 @@ function load()
 	            {
 	                // Increase sharedpoint shared size
 	                sharedpoint.size += fileentry.file.size
-	                db.sharepoints_put(sharedpoint)
-
-	                // Update sharedpoints list
-	                db.sharepoints_getAll(null, function(sharepoints)
-                    {
-                        ui.update_fileslist_sharedpoints(sharepoints, db)
-                    })
+	                db.sharepoints_put(sharedpoint, function()
+	                {
+	                    // Update sharedpoints list
+	                    db.sharepoints_getAll(null, function(sharepoints)
+	                    {
+	                        ui.update_fileslist_sharedpoints(sharepoints, db)
+	                    })
+	                })
 	            })
+            }
+            hasher.ondeleted = function(fileentry)
+            {
+                db.files_getAll(null, function(files)
+                {
+                    ui.update_fileslist_sharing(files)
+                })
+
+                db.sharepoints_get(fileentry.sharedpoint.name,
+                function(sharedpoint)
+                {
+                    // Decrease sharedpoint shared size
+                    sharedpoint.size -= fileentry.file.size
+                    db.sharepoints_put(sharedpoint, function()
+                    {
+                        // Update sharedpoints list
+                        db.sharepoints_getAll(null, function(sharepoints)
+                        {
+                            ui.update_fileslist_sharedpoints(sharepoints, db)
+                        })
+                    })
+                })
             }
 
         ui.setHasher(hasher, db)
