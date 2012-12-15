@@ -46,6 +46,10 @@ table span.folder {
   background-image: url(../images/folder.png);
 }
 
+table span.dropbox {
+  background-image: url(../images/dropbox.png);
+}
+
 table span.image {
   background-image: url(../images/image.png);
 }

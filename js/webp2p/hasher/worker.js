@@ -24,22 +24,45 @@ function hashFileentry(fileentry)
         // this.result is the readed file as an ArrayBuffer.
         hashData(this.result, function(hash)
         {
-            fileentry.hash = hash
-            self.postMessage(fileentry);
+          fileentry.hash = hash
+          self.postMessage(['hashed',fileentry]);
         })
       }
 
-//  reader.readAsArrayBuffer(file);
   reader.readAsBinaryString(fileentry.file);
+}
+
+function checkRemoved(fileentry)
+{
+  var reader = new FileReader();
+      reader.onerror = function()
+      {
+          self.postMessage(['delete',fileentry]);
+      }
+      reader.onload = function()
+      {
+          // [Hack] When (re)moving the file from its original place, Chrome
+          // show it with size = 0 and lastModifiedDate = null instead of
+          // raising a NotFoundError error
+          if(fileentry.file.lastModifiedDate == null)
+              self.postMessage(['delete',fileentry]);
+      }
+
+  reader.readAsBinaryString(fileentry.file.slice(0,1));
 }
 
 
 self.onmessage = function(e)
 {
-  var sharedpoint = e.data
+  var fileentry = e.data[1]
 
-  var fileentry = {'sharedpoint': sharedpoint.name, 'path': '',
-                   'file': sharedpoint}
+  switch(e.data[0])
+  {
+      case 'hash':
+          hashFileentry(fileentry)
+          break
 
-  hashFileentry(fileentry)
+      case 'refresh':
+          checkRemoved(fileentry)
+  }
 }
