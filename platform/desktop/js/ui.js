@@ -733,8 +733,10 @@ UI.prototype =
                     channel.addEventListener("fileslist._updated",
                     function(event)
                     {
-                        self._updatefiles(table, channel._fileslist,
-                                          noFilesCaption(), row_peer)
+                        var fileslist = event.data[0]
+
+                        self._updatefiles(table, fileslist, noFilesCaption(),
+                                          row_peer)
                     })
 
                     // Request the peer's files list
@@ -859,62 +861,71 @@ UI.prototype =
 
         if(fileslist.length)
         {
-            var prevSharedpoint
-            var prevFolder
+            var prevSharedpoint = null
+            var prevFolder = ""
 
             for(var i=0, fileentry; fileentry=fileslist[i]; i++)
             {
                 // Add sharedpoint row
-                var sharedpoint = fileentry.sharedpoint.name.replace(' ','')
+                var sharedpoint = fileentry.sharedpoint
+                if(sharedpoint)
+                    sharedpoint = sharedpoint.name.replace(' ','')
+
                 if(prevSharedpoint != sharedpoint)
                 {
                     prevSharedpoint = sharedpoint
                     prevFolder = ""
 
-                    var tr = document.createElement('TR');
-                        tr.id = sharedpoint
+                    if(sharedpoint)
+                    {
+                        var tr = document.createElement('TR');
+                            tr.id = sharedpoint
 
-                    var td = document.createElement('TD');
-                        td.colSpan = 2
-                    tr.appendChild(td)
+                        var td = document.createElement('TD');
+                            td.colSpan = 2
+                        tr.appendChild(td)
 
-                    // Name & icon
-                    var span = document.createElement('SPAN');
-                        span.className = fileentry.sharedpoint.type
-                        span.appendChild(document.createTextNode(sharedpoint));
-                    td.appendChild(span)
+                        // Name & icon
+                        var span = document.createElement('SPAN');
+                            span.className = fileentry.sharedpoint.type
+                            span.appendChild(document.createTextNode(fileentry.sharedpoint.name));
+                        td.appendChild(span)
 
-                    tbody.appendChild(tr)
+                        tbody.appendChild(tr)
+                    }
                 }
 
                 // Add folder row
-                var folder = fileentry.path.replace(' ','').replace('/','__')
-                if(prevFolder != folder)
+                if(prevSharedpoint)
                 {
-                    prevFolder = folder
+                    var folder = fileentry.path.replace(' ','').replace('/','__')
+                    if(prevFolder != folder)
+                    {
+                        prevFolder = folder
 
-                    folder = sharedpoint+'__'+folder
+                        folder = prevSharedpoint+'__'+folder
 
-                    var tr = document.createElement('TR');
-                        tr.id = folder
+                        var tr = document.createElement('TR');
+                            tr.id = folder
 
-                    var td = document.createElement('TD');
-                        td.colSpan = 2
-                    tr.appendChild(td)
+                        var td = document.createElement('TD');
+                            td.colSpan = 2
+                        tr.appendChild(td)
 
-                    folder = folder.split('__')
+                        folder = folder.split('__')
 
-                    // Name & icon
-                    var span = document.createElement('SPAN');
-                        span.className = 'folder'
-                        span.appendChild(document.createTextNode(folder.slice(-1)));
-                    td.appendChild(span)
+                        // Name & icon
+                        var span = document.createElement('SPAN');
+                            span.className = 'folder'
+                            span.appendChild(document.createTextNode(folder.slice(-1)));
+                        td.appendChild(span)
 
-                    folder = folder.slice(0,-1)
-                    if(folder)
-                        tr.setAttribute('class', "child-of-" + folder.join('__'))
+                        folder = folder.slice(0,-1)
+                        if(folder)
+                            tr.setAttribute('class', "child-of-" + folder.join('__'))
 
-                    tbody.appendChild(tr)
+                        tbody.appendChild(tr)
+                    }
                 }
 
                 // Add file row
@@ -922,6 +933,8 @@ UI.prototype =
                     sharedpoint += '__' + prevFolder
 
                 var tr = row_factory(fileentry)
+
+                if(sharedpoint != undefined)
                     tr.setAttribute('class', "child-of-" + sharedpoint)
 
                 tbody.appendChild(tr)
