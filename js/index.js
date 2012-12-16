@@ -6,10 +6,11 @@ function load()
         // Init user interface
         var ui = new UI(db)
 
+        // Init PeersManager
+        var peersManager = new PeersManager(db)
+
         function update_sharing_files(fileentry)
         {
-            // Notify the other peers about the new hashed file
-
             // Update sharing files tab
             db.files_getAll(null, function(files)
             {
@@ -35,9 +36,18 @@ function load()
 
         // Init hasher
         var hasher = new Hasher(db, policy)
-            hasher.onhashed  = update_sharing_files
+            hasher.onhashed  = function(fileentry)
+            {
+                // Notify the other peers about the new hashed file
+                peersManager._send_file_added(fileentry)
+
+                update_sharing_files(fileentry)
+            }
             hasher.ondeleted = function(fileentry)
             {
+                // Notify the other peers about the deleted file
+                peersManager._send_file_deleted(fileentry)
+
                 // File have been removed, so we set file size as negative
                 fileentry.file.size *= -1
 
@@ -45,9 +55,6 @@ function load()
             }
 
         ui.setHasher(hasher, db)
-
-        // Init PeersManager
-        var peersManager = new PeersManager(db)
 
         ui.setPeersManager(peersManager, db)
 
