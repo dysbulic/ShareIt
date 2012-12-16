@@ -6,51 +6,42 @@ function load()
         // Init user interface
         var ui = new UI(db)
 
-        // Init hasher
-        var hasher = new Hasher(db, policy)
-            hasher.onhashed = function(fileentry)
-            {
-	            db.files_getAll(null, function(files)
-	            {
-	                ui.update_fileslist_sharing(files)
-	            })
+        function update_sharing_files(fileentry)
+        {
+            // Notify the other peers about the new hashed file
 
-	            db.sharepoints_get(fileentry.sharedpoint.name,
-	            function(sharedpoint)
-	            {
-	                // Increase sharedpoint shared size
-	                sharedpoint.size += fileentry.file.size
-	                db.sharepoints_put(sharedpoint, function()
-	                {
-	                    // Update sharedpoints list
-	                    db.sharepoints_getAll(null, function(sharepoints)
-	                    {
-	                        ui.update_fileslist_sharedpoints(sharepoints, db)
-	                    })
-	                })
-	            })
-            }
-            hasher.ondeleted = function(fileentry)
+            // Update sharing files tab
+            db.files_getAll(null, function(files)
             {
-                db.files_getAll(null, function(files)
-                {
-                    ui.update_fileslist_sharing(files)
-                })
+                ui.update_fileslist_sharing(files)
+            })
 
-                db.sharepoints_get(fileentry.sharedpoint.name,
-                function(sharedpoint)
+            // Update fileentry sharedpoint size
+            db.sharepoints_get(fileentry.sharedpoint.name,
+            function(sharedpoint)
+            {
+                // Increase sharedpoint shared size
+                sharedpoint.size += fileentry.file.size
+                db.sharepoints_put(sharedpoint, function()
                 {
-                    // Decrease sharedpoint shared size
-                    sharedpoint.size -= fileentry.file.size
-                    db.sharepoints_put(sharedpoint, function()
+                    // Update sharedpoints list
+                    db.sharepoints_getAll(null, function(sharepoints)
                     {
-                        // Update sharedpoints list
-                        db.sharepoints_getAll(null, function(sharepoints)
-                        {
-                            ui.update_fileslist_sharedpoints(sharepoints, db)
-                        })
+                        ui.update_fileslist_sharedpoints(sharepoints, db)
                     })
                 })
+            })
+        }
+
+        // Init hasher
+        var hasher = new Hasher(db, policy)
+            hasher.onhashed  = update_sharing_files
+            hasher.ondeleted = function(fileentry)
+            {
+                // File have been removed, so we set file size as negative
+                fileentry.file.size *= -1
+
+                update_sharing_files(fileentry)
             }
 
         ui.setHasher(hasher, db)
