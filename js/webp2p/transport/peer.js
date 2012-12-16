@@ -3,44 +3,121 @@ var chunksize = 65536
 
 function Transport_Peer_init(transport, db, peersManager)
 {
+    function check_ifOwned(fileentry, fileslist)
+    {
+        // We add here ad-hoc the channel of the peer where we got
+        // the file since we currently don't have support for hashes
+        // nor tracker systems
+        fileentry.channel = transport
+
+        // Check if we have the file already, and if so set it our copy
+        // bitmap and blob reference
+        for(var j=0, file_hosted; file_hosted = fileslist[j]; j++)
+            if(fileentry.hash == file_hosted.hash)
+            {
+                fileentry.bitmap = file_hosted.bitmap
+                fileentry.blob   = file_hosted.file || file_hosted.blob
+
+                break;
+            }
+    }
+
+    function sort_fileslist(fileslist)
+    {
+        fileslist.sort(function(a, b)
+        {
+            function strcmp(str1, str2)
+            {
+                return ((str1 == str2) ? 0 : ((str1 > str2) ? 1 : -1));
+            }
+
+            var result = strcmp(a.path, b.path);
+            if(result) return result;
+
+            var result = strcmp(a.file ? a.file.name : a.name,
+                                b.file ? b.file.name : b.name);
+            if(result) return result;
+        })
+    }
+
+
     // fileslist
+
+    var _fileslist = []
 
     transport.addEventListener('fileslist.send', function(event)
     {
-        var files = event.data[0]
+        var fileentries = event.data[0]
 
         // Check if we have already any of the files
         // It's stupid to try to download it... and also give errors
-        db.files_getAll(null, function(filelist)
+        db.files_getAll(null, function(fileslist)
         {
-            for(var i=0, file; file = files[i]; i++)
-            {
-                // We add here ad-hoc the channel of the peer where we got
-                // the file since we currently don't have support for hashes
-                // nor tracker systems
-                file.channel = transport
+            for(var i=0, fileentry; fileentry = fileentries[i]; i++)
+                check_ifOwned(fileentry, fileslist)
 
-                // Check if we have the file already, and if so set it our copy
-                // bitmap and blob reference
-                for(var j=0, file_hosted; file_hosted = filelist[j]; j++)
-                    if(file.hash == file_hosted.hash)
-                    {
-                        file.bitmap = file_hosted.bitmap
-                        file.blob   = file_hosted.file || file_hosted.blob
+            sort_fileslist(fileentries)
 
-                        break;
-                    }
-            }
+            // Update the peer's fileslist with the checked data
+            _fileslist = fileentries
 
             // Notify about fileslist update
-            transport.dispatchEvent({type: "fileslist.send.filtered",
-                                     data: [files]})
+            transport.dispatchEvent({type: "fileslist._updated",
+                                     data: [_fileslist]})
         })
     })
     transport.fileslist_query = function()
     {
         transport.emit('fileslist.query');
     }
+
+
+    // fileslist updates
+
+    transport.addEventListener('fileslist.added', function(event)
+    {
+        var fileentry = event.data[0]
+
+        // Check if we have the file previously listed
+        for(var i=0, listed; listed = _fileslist[i]; i++)
+            if(fileentry.path == listed.path
+            && fileentry.name == listed.name)
+                return
+
+        // Check if we have already the files
+        db.files_getAll(null, function(fileslist)
+        {
+            check_ifOwned(fileentry, fileslist)
+
+            // Add the fileentry to the fileslist
+            _fileslist.push(fileentry)
+
+            sort_fileslist(_fileslist)
+
+            // Notify about fileslist update
+            transport.dispatchEvent({type: "fileslist._updated",
+                                     data: [_fileslist]})
+        })
+    })
+    transport.addEventListener('fileslist.deleted', function(event)
+    {
+        var fileentry = event.data[0]
+
+        // Search for the fileentry on the fileslist
+        for(var i=0, listed; listed = _fileslist[i]; i++)
+            if(fileentry.path == listed.path
+            && fileentry.name == listed.name)
+            {
+                // Remove the fileentry for the fileslist
+                _fileslist.splice(i, 1)
+
+                // Notify about fileslist update
+                transport.dispatchEvent({type: "fileslist._updated",
+                                         data: [_fileslist]})
+
+                return
+            }
+    })
 
 
     // transfer

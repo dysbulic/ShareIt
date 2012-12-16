@@ -6,57 +6,55 @@ function load()
         // Init user interface
         var ui = new UI(db)
 
+        // Init PeersManager
+        var peersManager = new PeersManager(db)
+
+        function update_sharing_files(fileentry)
+        {
+            // Update sharing files tab
+            db.files_getAll(null, function(files)
+            {
+                ui.update_fileslist_sharing(files)
+            })
+
+            // Update fileentry sharedpoint size
+            db.sharepoints_get(fileentry.sharedpoint.name,
+            function(sharedpoint)
+            {
+                // Increase sharedpoint shared size
+                sharedpoint.size += fileentry.file.size
+                db.sharepoints_put(sharedpoint, function()
+                {
+                    // Update sharedpoints list
+                    db.sharepoints_getAll(null, function(sharepoints)
+                    {
+                        ui.update_fileslist_sharedpoints(sharepoints, db)
+                    })
+                })
+            })
+        }
+
         // Init hasher
         var hasher = new Hasher(db, policy)
-            hasher.onhashed = function(fileentry)
+            hasher.onhashed  = function(fileentry)
             {
-	            db.files_getAll(null, function(files)
-	            {
-	                ui.update_fileslist_sharing(files)
-	            })
+                // Notify the other peers about the new hashed file
+                peersManager._send_file_added(fileentry)
 
-	            db.sharepoints_get(fileentry.sharedpoint.name,
-	            function(sharedpoint)
-	            {
-	                // Increase sharedpoint shared size
-	                sharedpoint.size += fileentry.file.size
-	                db.sharepoints_put(sharedpoint, function()
-	                {
-	                    // Update sharedpoints list
-	                    db.sharepoints_getAll(null, function(sharepoints)
-	                    {
-	                        ui.update_fileslist_sharedpoints(sharepoints, db)
-	                    })
-	                })
-	            })
+                update_sharing_files(fileentry)
             }
             hasher.ondeleted = function(fileentry)
             {
-                db.files_getAll(null, function(files)
-                {
-                    ui.update_fileslist_sharing(files)
-                })
+                // Notify the other peers about the deleted file
+                peersManager._send_file_deleted(fileentry)
 
-                db.sharepoints_get(fileentry.sharedpoint.name,
-                function(sharedpoint)
-                {
-                    // Decrease sharedpoint shared size
-                    sharedpoint.size -= fileentry.file.size
-                    db.sharepoints_put(sharedpoint, function()
-                    {
-                        // Update sharedpoints list
-                        db.sharepoints_getAll(null, function(sharepoints)
-                        {
-                            ui.update_fileslist_sharedpoints(sharepoints, db)
-                        })
-                    })
-                })
+                // File have been removed, so we set file size as negative
+                fileentry.file.size *= -1
+
+                update_sharing_files(fileentry)
             }
 
         ui.setHasher(hasher, db)
-
-        // Init PeersManager
-        var peersManager = new PeersManager(db)
 
         ui.setPeersManager(peersManager, db)
 
