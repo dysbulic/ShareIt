@@ -172,7 +172,7 @@ UI.prototype =
 
         var span = document.createElement('SPAN')
             span.setAttribute("class", "add-sharedpoint")
-            span.appendChild(document.createTextNode("Please add some files"))
+            span.appendChild(document.createTextNode("Please add some folders"))
         anchor.appendChild(span)
 
         noFilesCaption.appendChild(document.createTextNode(" to be shared."))
