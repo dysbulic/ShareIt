@@ -475,7 +475,6 @@ UI.prototype =
                 var a = document.createElement("A");
                     a.href = window.URL.createObjectURL(blob)
                     a.target = "_blank"
-                    a.appendChild(document.createTextNode("Open"));
                 td.appendChild(a)
 
                 // [ToDo] ObjectURL should be destroyed somewhere...
@@ -594,7 +593,7 @@ UI.prototype =
                         return captionCell
                     }
 
-                    function row_peer_buttonFactory()
+                    function row_peer_buttonFactory(fileentry)
                     {
                         var div = document.createElement("DIV");
                             div.id = fileentry.hash
