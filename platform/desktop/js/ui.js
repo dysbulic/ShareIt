@@ -545,8 +545,7 @@ UI.prototype =
 	        var uid = prompt("UID to connect")
 	        if(uid != null && uid != '')
 	        {
-	            // Create connection with the other peer
-	            peersManager.connectTo(uid, function(channel)
+	            function createPeerTab(channel)
 	            {
 	                // Add a new tab for the remote peer files list
 	                $("<li>"+
@@ -741,7 +740,24 @@ UI.prototype =
 
                     // Request the peer's files list
 	                channel.fileslist_query();
-	            },
+	            }
+
+	            // Create connection with the other peer
+                peersManager.connectTo(uid, function(channel)
+                {
+                    var tabs = $("#tabs")
+
+                    // Get index of the peer tab
+                    var index = tabs.find('table').index($('#tabs-'+uid))
+
+                    // Peer tab exists, open it
+                    if(index != -1)
+                        tabs.tabs("option", "active", index);
+
+                    // Peer tab don't exists, create it
+                    else
+                        createPeerTab(channel)
+                },
 	            function(uid, peer, channel)
 	            {
 	                console.error(uid, peer, channel)
