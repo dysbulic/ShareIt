@@ -459,7 +459,7 @@ UI.prototype =
             })
 
             // Fill the table
-	        self._updatefiles_sharing(table, files, noFilesCaption,
+	        self._updatefiles_tree_sharing(table, files, noFilesCaption,
 	        function(fileentry)
 	        {
                 var tr = document.createElement('TR');
@@ -732,8 +732,8 @@ UI.prototype =
                     {
                         var fileslist = event.data[0]
 
-                        self._updatefiles(table, fileslist, noFilesCaption(),
-                                          row_peer)
+                        self._updatefiles_tree_peer(table, fileslist,
+                                                    noFilesCaption(), row_peer)
                     })
 
                     // Request the peer's files list
@@ -794,6 +794,7 @@ UI.prototype =
             tbody.removeChild(tbody.firstChild);
 
         if(fileslist.length)
+        {
             for(var i=0, fileentry; fileentry=fileslist[i]; i++)
             {
                 // Calc path
@@ -819,6 +820,9 @@ UI.prototype =
 
                 tbody.appendChild(tr)
             }
+
+            $(table).treeTable({initialState: "expanded"});
+        }
         else
         {
             var tr = document.createElement('TR')
@@ -826,11 +830,10 @@ UI.prototype =
 
             tbody.appendChild(tr)
         }
-
-        $(table).treeTable({initialState: "expanded"});
     },
 
-    _updatefiles_sharing: function(table, fileslist, noFilesCaption, row_factory)
+    _updatefiles_tree_sharing: function(table, fileslist, noFilesCaption,
+                                        row_factory)
     {
         var tbody = table.getElementsByTagName("tbody")[0]
 
@@ -915,6 +918,69 @@ UI.prototype =
 
                 if(sharedpoint != undefined)
                     tr.setAttribute('class', "child-of-" + sharedpoint)
+
+                tbody.appendChild(tr)
+            }
+
+            $(table).treeTable({initialState: "expanded"});
+        }
+        else
+        {
+            var tr = document.createElement('TR')
+                tr.appendChild(noFilesCaption)
+
+            tbody.appendChild(tr)
+        }
+    },
+
+    _updatefiles_tree_peer: function(table, fileslist, noFilesCaption,
+                                     row_factory)
+    {
+        var tbody = table.getElementsByTagName("tbody")[0]
+
+        // Remove old table and add new empty one
+        while(tbody.firstChild)
+            tbody.removeChild(tbody.firstChild);
+
+        if(fileslist.length)
+        {
+            var prevFolder = ""
+
+            for(var i=0, fileentry; fileentry=fileslist[i]; i++)
+            {
+                // Add folder row
+                var folder = fileentry.path.replace(' ','').replace('/','__')
+                if(prevFolder != folder)
+                {
+                    prevFolder = folder
+
+                    var tr = document.createElement('TR');
+                        tr.id = folder
+
+                    var td = document.createElement('TD');
+                        td.colSpan = 2
+                    tr.appendChild(td)
+
+                    folder = folder.split('__')
+
+                    // Name & icon
+                    var span = document.createElement('SPAN');
+                        span.className = 'folder'
+                        span.appendChild(document.createTextNode(folder.slice(-1)));
+                    td.appendChild(span)
+
+                    folder = folder.slice(0,-1)
+                    if(folder != "")
+                        tr.setAttribute('class', "child-of-" + folder.join('__'))
+
+                    tbody.appendChild(tr)
+                }
+
+                // Add file row
+                var tr = row_factory(fileentry)
+
+                if(prevFolder != undefined)
+                    tr.setAttribute('class', "child-of-" + prevFolder)
 
                 tbody.appendChild(tr)
             }
