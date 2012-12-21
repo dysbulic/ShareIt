@@ -83,6 +83,7 @@ to transfer files through the wild Internet from Findland to Spain... :-) ).
 * [BoolArray.js](https://github.com/piranna/BoolArray.js)
 * [DataChannel-polyfill](https://github.com/piranna/DataChannel-polyfill)
 * [EventTarget.js](https://github.com/piranna/EventTarget.js)
+* [jsSHA](https://github.com/Caligatio/jsSHA)
 
 ## Some related project
 
