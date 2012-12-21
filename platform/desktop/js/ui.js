@@ -713,9 +713,10 @@ UI.prototype =
                         tr.appendChild(td)
 
                         // Size
+                        var size = (fileentry.size != undefined) ? fileentry.size : fileentry.file.size
                         var td = document.createElement('TD');
                             td.className="filesize"
-                            td.appendChild(document.createTextNode(humanize.filesize(fileentry.size || fileentry.file.size)));
+                            td.appendChild(document.createTextNode(humanize.filesize(size)));
                         tr.appendChild(td)
 
                         // Action
