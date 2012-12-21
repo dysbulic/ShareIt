@@ -90,6 +90,7 @@ to transfer files through the wild Internet from Findland to Spain... :-) ).
 * [WebRTC.io](https://github.com/webRTC/webRTC.io)
 * [bonevalue](https://github.com/theninj4/bonevalue)
 * [QuickShare](https://github.com/orefalo/QuickShare)
+* [ShareFest](https://github.com/Peer5/ShareFest)
 
 ## License
 
