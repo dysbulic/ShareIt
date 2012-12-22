@@ -359,19 +359,13 @@ UI.prototype =
                         db.files_getAll(null, function(filelist)
                         {
                             var downloading = []
-                            var sharing = []
 
                             for(var i=0, fileentry; fileentry=filelist[i]; i++)
-                            {
                                 if(fileentry.bitmap)
                                     downloading.push(fileentry)
-                                else
-                                    sharing.push(fileentry)
-                            }
 
-                            // Update Downloading and Sharing files lists
+                            // Update Downloading files list
                             self.update_fileslist_downloading(downloading)
-                            self.update_fileslist_sharing(sharing)
                         })
                 })
 
@@ -454,7 +448,8 @@ UI.prototype =
                 var result = strcmp(a.path, b.path);
                 if(result) return result;
 
-                var result = strcmp(a.file.name, b.file.name);
+                var result = strcmp(a.file ? a.file.name : a.name,
+                                    b.file ? b.file.name : b.name);
                 if(result) return result;
             })
 
@@ -491,13 +486,31 @@ UI.prototype =
                 tr.appendChild(td)
 
                 // Size
+                var size = (fileentry.size != undefined) ? fileentry.size : fileentry.file.size
                 var td = document.createElement('TD');
                     td.className="filesize"
-                    td.appendChild(document.createTextNode(humanize.filesize(fileentry.size || fileentry.file.size)));
+                    td.appendChild(document.createTextNode(humanize.filesize(size)));
                 tr.appendChild(td)
 
                 return tr
 		    })
+
+            peersManager.addEventListener("transfer.end", function(event)
+            {
+                var f = event.data[0]
+
+                db.files_getAll(null, function(filelist)
+                {
+                    var sharing = []
+
+                    for(var i=0, fileentry; fileentry=filelist[i]; i++)
+                        if(!fileentry.bitmap)
+                            sharing.push(fileentry)
+
+                    // Update Sharing files list
+                    self.update_fileslist_sharing(sharing)
+                })
+            })
 	    }
 
 	    function ConnectUser()
@@ -608,12 +621,6 @@ UI.prototype =
                                         // Begin transfer of file
                                         peersManager._transferbegin(fileentry)
 
-                                        // Update downloading files list
-                                        db.files_getAll(null, function(filelist)
-                                        {
-                                            self.update_fileslist_downloading(filelist)
-                                        })
-
                                         // Don't buble click event
                                         return false;
                                     })
@@ -672,6 +679,12 @@ UI.prototype =
 
                             if(fileentry.hash == f.hash)
                                 div.progressbar()
+
+                            // Update downloading files list
+                            db.files_getAll(null, function(filelist)
+                            {
+                                self.update_fileslist_downloading(filelist)
+                            })
                         })
                         peersManager.addEventListener("transfer.update", function(event)
                         {
