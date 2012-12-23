@@ -1,0 +1,142 @@
+function noFilesCaption()
+{
+    // Compose no files shared content (fail-back)
+    var cell = spanedCell(table)
+        cell.appendChild(document.createTextNode("There are no downloads, "))
+
+    var anchor = document.createElement('A')
+        anchor.id = 'ConnectUser'
+        anchor.style.cursor = 'pointer'
+    cell.appendChild(anchor)
+
+    $(anchor).click(self.preferencesDialogOpen)
+
+    var span = document.createElement('SPAN')
+        span.setAttribute("class", "user")
+        span.appendChild(document.createTextNode("Connect to a user"))
+    anchor.appendChild(span)
+
+    cell.appendChild(document.createTextNode(" and get one!"))
+
+    return cell
+}
+
+function TabDownloading(peersManager, db)
+{
+    this.update = function(files)
+    {
+        var self = this
+
+        // Enable the tab if at least one file is being shared. This will only
+        // happen the first time, others the tab will be already enabled and the
+        // no files shared content will be shown
+        if(files.length)
+        {
+            $("#tabs").tabs('enable', 0)
+            $("#tabs").tabs("option", "collapsible", false);
+        }
+
+        var table = document.getElementById('Downloading')
+
+        function rowFactory(fileentry)
+        {
+            var tr = document.createElement('TR');
+
+            var td = document.createElement('TD');
+            tr.appendChild(td)
+
+            // Name & icon
+            var span = document.createElement('SPAN');
+                span.className = self._filetype2className(fileentry.type)
+                span.appendChild(document.createTextNode(fileentry.name));
+            td.appendChild(span)
+
+            // Type
+            var td = document.createElement('TD');
+                td.appendChild(document.createTextNode(fileentry.type));
+            tr.appendChild(td)
+
+            // Size
+            var td = document.createElement('TD');
+                td.className="filesize"
+                td.appendChild(document.createTextNode(humanize.filesize(fileentry.size)));
+            tr.appendChild(td)
+
+            // Downloaded
+            var td = document.createElement('TD');
+                td.className="filesize"
+                td.appendChild(document.createTextNode(humanize.filesize(0)));
+            tr.appendChild(td)
+
+            // Progress
+            var td_progress = document.createElement('TD');
+                td_progress.appendChild(document.createTextNode("0%"));
+
+            peersManager.addEventListener("transfer.update", function(event)
+            {
+                var f = event.data[0]
+                var value = event.data[1]
+
+                if(fileentry.hash == f.hash)
+                {
+                     var progress = document.createTextNode(Math.floor(value*100)+"%")
+
+                     while(td_progress.firstChild)
+                         td_progress.removeChild(td_progress.firstChild);
+                     td_progress.appendChild(progress);
+                }
+            })
+            peersManager.addEventListener("transfer.end", function(event)
+            {
+                var f = event.data[0]
+
+                if(fileentry.hash == f.hash)
+                    db.files_getAll(null, function(filelist)
+                    {
+                        var downloading = []
+
+                        for(var i=0, fileentry; fileentry=filelist[i]; i++)
+                            if(fileentry.bitmap)
+                                downloading.push(fileentry)
+
+                        // Update Downloading files list
+                        self.update(downloading)
+                    })
+            })
+
+            tr.appendChild(td_progress)
+
+            // Status
+            var td = document.createElement('TD');
+                td.appendChild(document.createTextNode("Paused"));
+            tr.appendChild(td)
+
+            // Time remaining
+            var td = document.createElement('TD');
+                td.appendChild(document.createTextNode("Unknown"));
+            tr.appendChild(td)
+
+            // Speed
+            var td = document.createElement('TD');
+                td.className="filesize"
+                td.appendChild(document.createTextNode(humanize.filesize(0)+"/s"));
+            tr.appendChild(td)
+
+            // Peers
+            var td = document.createElement('TD');
+                td.appendChild(document.createTextNode("0"));
+            tr.appendChild(td)
+
+            // Inclusion date
+            var td = document.createElement('TD');
+                td.class = "end"
+                td.appendChild(document.createTextNode("0-0-0000"));
+            tr.appendChild(td)
+
+            return tr
+        }
+
+        // Fill the table
+        this._updatefiles(table, files, noFilesCaption(), rowFactory)
+    }
+}
