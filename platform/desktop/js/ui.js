@@ -294,7 +294,22 @@ UI.prototype =
 
                     // Peer tab don't exists, create it
                     else
-                        createPeerTab(channel)
+                    {
+                        var tablePeer = new TabPeer(peersManager, db)
+
+                        // Get notified when this channel files list is updated
+                        // and update the UI peer files table
+                        channel.addEventListener("fileslist._updated",
+                        function(event)
+                        {
+                            var fileslist = event.data[0]
+
+                            tablePeer.update(fileslist)
+                        })
+
+                        // Request the peer's files list
+                        channel.fileslist_query();
+                    }
                 },
 	            function(uid, peer, channel)
 	            {

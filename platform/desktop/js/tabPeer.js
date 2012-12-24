@@ -1,4 +1,27 @@
-function TabPeer(channel)
+function noFilesCaption()
+{
+    // Compose no files shared content (fail-back)
+    var captionCell = spanedCell(table)
+        captionCell.appendChild(document.createTextNode("Remote peer is not sharing files."))
+
+//    var anchor = document.createElement('A')
+//        anchor.id = 'ConnectUser'
+//        anchor.style.cursor = 'pointer'
+//    captionCell.appendChild(anchor)
+//
+//    $(anchor).click(self.preferencesDialogOpen)
+//
+//    var span = document.createElement('SPAN')
+//        span.setAttribute("class", "user")
+//        span.appendChild(document.createTextNode("Connect to a user"))
+//    anchor.appendChild(span)
+
+    captionCell.appendChild(document.createTextNode(" Why don't ask him about doing it?"))
+
+    return captionCell
+}
+
+function TabPeer(peersManager, db)
 {
     // Add a new tab for the remote peer files list
     $("<li>"+
@@ -56,29 +79,6 @@ function TabPeer(channel)
         td.appendChild(document.createTextNode("Waiting for the peer data"))
     tr.appendChild(td);
 
-
-    function noFilesCaption()
-    {
-        // Compose no files shared content (fail-back)
-        var captionCell = spanedCell(table)
-            captionCell.appendChild(document.createTextNode("Remote peer is not sharing files."))
-
-//        var anchor = document.createElement('A')
-//            anchor.id = 'ConnectUser'
-//            anchor.style.cursor = 'pointer'
-//        captionCell.appendChild(anchor)
-//
-//        $(anchor).click(self.preferencesDialogOpen)
-//
-//        var span = document.createElement('SPAN')
-//            span.setAttribute("class", "user")
-//            span.appendChild(document.createTextNode("Connect to a user"))
-//        anchor.appendChild(span)
-
-        captionCell.appendChild(document.createTextNode(" Why don't ask him about doing it?"))
-
-        return captionCell
-    }
 
     function buttonFactory(fileentry)
     {
@@ -215,77 +215,50 @@ function TabPeer(channel)
         return tr
     }
 
-    channel.addEventListener("fileslist._updated", function(event)
+    function updatefiles(fileslist)
     {
-        var fileslist = event.data[0]
+        var prevFolder = ""
 
-        self._updatefiles(table, fileslist, noFilesCaption(), rowFactory)
-    })
-
-    // Request the peer's files list
-    channel.fileslist_query();
-}
-TabPeer.prototype =
-{
-    _updatefiles: function(table, fileslist, noFilesCaption, row_factory)
-    {
-        var tbody = table.getElementsByTagName("tbody")[0]
-
-        // Remove old table and add new empty one
-        while(tbody.firstChild)
-            tbody.removeChild(tbody.firstChild);
-
-        if(fileslist.length)
+        for(var i=0, fileentry; fileentry=fileslist[i]; i++)
         {
-            var prevFolder = ""
-
-            for(var i=0, fileentry; fileentry=fileslist[i]; i++)
+            // Add folder row
+            var folder = fileentry.path.replace(' ','').replace('/','__')
+            if(prevFolder != folder)
             {
-                // Add folder row
-                var folder = fileentry.path.replace(' ','').replace('/','__')
-                if(prevFolder != folder)
-                {
-                    prevFolder = folder
+                prevFolder = folder
 
-                    var tr = document.createElement('TR');
-                        tr.id = folder
+                var tr = document.createElement('TR');
+                    tr.id = folder
 
-                    var td = document.createElement('TD');
-                        td.colSpan = 2
-                    tr.appendChild(td)
+                var td = document.createElement('TD');
+                    td.colSpan = 2
+                tr.appendChild(td)
 
-                    folder = folder.split('__')
+                folder = folder.split('__')
 
-                    // Name & icon
-                    var span = document.createElement('SPAN');
-                       span.className = 'folder'
-                       span.appendChild(document.createTextNode(folder.slice(-1)));
-                    td.appendChild(span)
+                // Name & icon
+                var span = document.createElement('SPAN');
+                   span.className = 'folder'
+                   span.appendChild(document.createTextNode(folder.slice(-1)));
+                td.appendChild(span)
 
-                    folder = folder.slice(0,-1)
-                    if(folder != "")
-                       tr.setAttribute('class', "child-of-" + folder.join('__'))
-
-                    tbody.appendChild(tr)
-                }
-
-                // Add file row
-                var tr = row_factory(fileentry)
-
-                if(prevFolder != undefined)
-                    tr.setAttribute('class', "child-of-" + prevFolder)
+                folder = folder.slice(0,-1)
+                if(folder != "")
+                   tr.setAttribute('class', "child-of-" + folder.join('__'))
 
                 tbody.appendChild(tr)
             }
 
-            $(table).treeTable({initialState: "expanded"});
-        }
-        else
-        {
-            var tr = document.createElement('TR')
-                tr.appendChild(noFilesCaption)
+            // Add file row
+            var tr = rowFactory(fileentry)
+
+            if(prevFolder != undefined)
+                tr.setAttribute('class', "child-of-" + prevFolder)
 
             tbody.appendChild(tr)
         }
     }
+
+    FilesTable.call(this, tbody, updateFiles, noFilesCaption())
 }
+TabPeer.prototype = new FilesTable
