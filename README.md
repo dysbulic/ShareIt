@@ -9,17 +9,17 @@ based on the [DirtyShare](https://github.com/Miserlou/DirtyShare)
 proof-of-concept by Rich Jones.
 
 This project is also candidate for the [Universitary Free Software Championship]
-(http://www.concursosoftwarelibre.org/1213/).
+(http://www.concursosoftwarelibre.org/1213).
 
 If you will fork the project (and more if you want to do modifications) please
-send me an email to let me know :-)
+send me an email just to let me know :-)
 
 ## About
 
-File transfers in ShareIt! happen between peers transfered directly thanks to
-WebRTC PeerConnection [DataChannels]
-(http://dev.w3.org/2011/webrtc/editor/webrtc.html#rtcdatachannel) or on old
-browsers through a [DataChannel polyfill]
+File transfers in ShareIt! is build over WebRTC PeerConnection [DataChannels]
+(http://dev.w3.org/2011/webrtc/editor/webrtc.html#rtcdatachannel) so they could
+be transfered directly between peers, but since currently they are not available
+natively it's being used a [DataChannel polyfill]
 (https://github.com/piranna/DataChannel-polyfill). This makes it perfect for
 anonymity.
 
@@ -52,25 +52,45 @@ It is currently publicly hosted on
 * [GitHub] (http://piranna.github.com/ShareIt)
 
 The peer connections are managed by an external signaling channel. Currently is
-using [SimpleSignaling](https://github.com/piranna/SimpleSignaling) and a test
-server hosted on Nodejitsu, but it's being researched to use some more standard
-signaling protocols like SIP or XMPP in an anonimous way so could be droped this
+being used primarily [PubNub](http://www.pubnub.com) and [SimpleSignaling]
+(https://github.com/piranna/SimpleSignaling) using a test server hosted on
+Nodejitsu, but it's being researched to use some more standard and distributed
+signaling protocols in an annonimous way so could be dropped this
 single-point-of-failure.
 
 Regarding to the browser, it's recomended to use a high edge one. Test are being
-done on Chromium v24 at this moment. Because the IndexedDB is common accesed by
-all the browser tabs, to test it locally on the same machine instead of with two
-computers/browsers/virtual machines you can do it with Firefox launching two
-instances each one with it's own profile. You can be able to do it with
-'firefox -P -no-remote' to show the Firefox ProfileManager and force to create a
-new full instance instead of open a new browser on the current running up.
+done on Chromium v24 at this moment and currently it's the only officially
+supported (news about it being used sucesfully on other browser are greatly
+accepted!!! :-D ). You can test it locally opening two browser tabs, but it
+should work also if used between several machines (it was succesfully tested
+to transfer files through the wild Internet from Findland to Spain... :-) ).
 
-## TODO
+## External libraries
+### UI
 
-* Send as little data as possible.
-* Find the optimal size for chunking. Currently set at 64Kb - this is arbitrary.
-* Security, of any kind.
-* Drag and drop of files, so my roommate shuts up about it.
+* [jQuery](http://jquery.com)
+* [jQuery UI](http://jqueryui.com)
+* [jQuery TreeTable](http://ludo.cubicphuse.nl/jquery-plugins/treeTable/doc)
+* [Humanize](https://github.com/taijinlee/humanize)
+
+### Signaling
+
+* [SimpleSignaling](https://github.com/piranna/SimpleSignaling)
+* [PubNub](http://www.pubnub.com)
+
+### Random utilities
+
+* [BoolArray.js](https://github.com/piranna/BoolArray.js)
+* [DataChannel-polyfill](https://github.com/piranna/DataChannel-polyfill)
+* [EventTarget.js](https://github.com/piranna/EventTarget.js)
+* [jsSHA](https://github.com/Caligatio/jsSHA)
+
+## Some related project
+
+* [WebRTC.io](https://github.com/webRTC/webRTC.io)
+* [bonevalue](https://github.com/theninj4/bonevalue)
+* [QuickShare](https://github.com/orefalo/QuickShare)
+* [ShareFest](https://github.com/Peer5/ShareFest)
 
 ## License
 
