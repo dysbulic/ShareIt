@@ -1,50 +1,35 @@
-function noFilesCaption()
-{
-    // Compose no files shared content (fail-back)
-    var cell = spanedCell(table)
-        cell.appendChild(document.createTextNode("You are not sharing any file, "+
-                                                 "please add a shared point on the "))
-
-    var anchor = document.createElement('A')
-        anchor.id = 'Preferences'
-        anchor.style.cursor = 'pointer'
-    cell.appendChild(anchor)
-
-    $(anchor).click(this.preferencesDialogOpen)
-
-    var span = document.createElement('SPAN')
-        span.setAttribute("class", "preferences")
-        span.appendChild(document.createTextNode("preferences"))
-    anchor.appendChild(span)
-
-    cell.appendChild(document.createTextNode("."))
-
-    return cell
-}
-
-function TabSharing(peersManager, db)
+function TabSharing(tableId, preferencesDialogOpen)
 {
     var self = this
 
-    var table = document.getElementById('Sharing')
-    var tbody = table.getElementsByTagName("tbody")[0]
+    var table = document.getElementById(tableId)
+    this.tbody = table.getElementsByTagName("tbody")[0]
 
-    peersManager.addEventListener("transfer.end", function(event)
+
+    function noFilesCaption()
     {
-        var f = event.data[0]
+        // Compose no files shared content (fail-back)
+        var cell = spanedCell(table)
+            cell.appendChild(document.createTextNode("You are not sharing any file, "+
+                                                     "please add a shared point on the "))
 
-        db.files_getAll(null, function(filelist)
-        {
-            var sharing = []
+        var anchor = document.createElement('A')
+            anchor.id = 'Preferences'
+            anchor.style.cursor = 'pointer'
+        cell.appendChild(anchor)
 
-            for(var i=0, fileentry; fileentry=filelist[i]; i++)
-                if(!fileentry.bitmap)
-                    sharing.push(fileentry)
+        $(anchor).click(preferencesDialogOpen)
 
-            // Update Sharing files list
-            self.update(sharing)
-        })
-    })
+        var span = document.createElement('SPAN')
+            span.setAttribute("class", "preferences")
+            span.appendChild(document.createTextNode("preferences"))
+        anchor.appendChild(span)
+
+        cell.appendChild(document.createTextNode("."))
+
+        return cell
+    }
+    this.noFilesCaption = noFilesCaption()
 
 
     function rowFactory(fileentry)
@@ -68,7 +53,7 @@ function TabSharing(peersManager, db)
         //window.URL.revokeObjectURL(div.firstChild.href);
 
         var span = document.createElement('SPAN');
-            span.className = self._filetype2className(type)
+            span.className = filetype2className(type)
             span.appendChild(document.createTextNode(fileentry.name || fileentry.file.name));
         a.appendChild(span)
 
@@ -87,7 +72,7 @@ function TabSharing(peersManager, db)
         return tr
     }
 
-    function updatefiles(fileslist)
+    this.updateFiles = function(fileslist)
     {
         var prevSharedpoint = null
         var prevFolder = ""
@@ -119,7 +104,7 @@ function TabSharing(peersManager, db)
                         span.appendChild(document.createTextNode(fileentry.sharedpoint.name));
                     td.appendChild(span)
 
-                    tbody.appendChild(tr)
+                    this.tbody.appendChild(tr)
                 }
             }
 
@@ -152,7 +137,7 @@ function TabSharing(peersManager, db)
                     if(folder)
                         tr.setAttribute('class', "child-of-" + folder.join('__'))
 
-                    tbody.appendChild(tr)
+                    this.tbody.appendChild(tr)
                 }
             }
 
@@ -165,12 +150,10 @@ function TabSharing(peersManager, db)
             if(sharedpoint != undefined)
                 tr.setAttribute('class', "child-of-" + sharedpoint)
 
-            tbody.appendChild(tr)
+            this.tbody.appendChild(tr)
         }
     }
 
-
-    FilesTable.call(this, tbody, updateFiles, noFilesCaption())
 
     this.update = function(fileslist)
     {
@@ -183,28 +166,8 @@ function TabSharing(peersManager, db)
             $("#tabs").tabs("option", "collapsible", false);
         }
 
-        fileslist.sort(function(a, b)
-        {
-            function strcmp(str1, str2)
-            {
-                return ((str1 == str2) ? 0 : ((str1 > str2) ? 1 : -1));
-            }
-
-            var result = strcmp(a.sharedpoint, b.sharedpoint);
-            if(result) return result;
-
-            var result = strcmp(a.path, b.path);
-            if(result) return result;
-
-            var result = strcmp(a.file ? a.file.name : a.name,
-                                b.file ? b.file.name : b.name);
-            if(result) return result;
-        })
-
         // Fill the table
-        this.prototype.update(fileslist)
-
-        $(table).treeTable({initialState: "expanded"});
+        FilesTable.update.call(this, fileslist)
     }
 }
-TabSharing.prototype = new FilesTable
+TabSharing.prototype = FilesTable

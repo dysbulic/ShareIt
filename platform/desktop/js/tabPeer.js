@@ -1,28 +1,7 @@
-function noFilesCaption()
+function TabPeer(uid, preferencesDialogOpen, onclickFactory)
 {
-    // Compose no files shared content (fail-back)
-    var captionCell = spanedCell(table)
-        captionCell.appendChild(document.createTextNode("Remote peer is not sharing files."))
+    EventTarget.call(this)
 
-//    var anchor = document.createElement('A')
-//        anchor.id = 'ConnectUser'
-//        anchor.style.cursor = 'pointer'
-//    captionCell.appendChild(anchor)
-//
-//    $(anchor).click(self.preferencesDialogOpen)
-//
-//    var span = document.createElement('SPAN')
-//        span.setAttribute("class", "user")
-//        span.appendChild(document.createTextNode("Connect to a user"))
-//    anchor.appendChild(span)
-
-    captionCell.appendChild(document.createTextNode(" Why don't ask him about doing it?"))
-
-    return captionCell
-}
-
-function TabPeer(peersManager, db)
-{
     // Add a new tab for the remote peer files list
     $("<li>"+
         "<a href='#tabs-"+uid+"'>UID: "+uid+"</a>"+
@@ -67,11 +46,11 @@ function TabPeer(peersManager, db)
         th.appendChild(document.createTextNode("Action"))
     tr.appendChild(th);
 
-    var tbody = document.createElement("TBODY");
-    table.appendChild(tbody);
+    this.tbody = document.createElement("TBODY");
+    table.appendChild(this.tbody);
 
     var tr = document.createElement("TR");
-    tbody.appendChild(tr);
+    this.tbody.appendChild(tr);
 
     var td = document.createElement("TD");
         td.colSpan = 4
@@ -88,17 +67,7 @@ function TabPeer(peersManager, db)
         div.transfer = function()
         {
             var transfer = document.createElement("A");
-                transfer.onclick = function()
-                {
-                    policy(function()
-                    {
-                        // Begin transfer of file
-                        peersManager._transferbegin(fileentry)
-
-                        // Don't buble click event
-                        return false;
-                    })
-                }
+                transfer.onclick = onclickFactory(fileentry)
                 transfer.appendChild(document.createTextNode("Transfer"));
 
             while(div.firstChild)
@@ -147,37 +116,48 @@ function TabPeer(peersManager, db)
         else
             div.transfer()
 
-        peersManager.addEventListener("transfer.begin", function(event)
+        self.addEventListener(fileentry.hash+".begin", function(event)
         {
-            var f = event.data[0]
-
-            if(fileentry.hash == f.hash)
-                div.progressbar()
-
-            // Update downloading files list
-            db.files_getAll(null, function(filelist)
-            {
-                self.update_fileslist_downloading(filelist)
-            })
+            div.progressbar()
         })
-        peersManager.addEventListener("transfer.update", function(event)
+        self.addEventListener(fileentry.hash+".update", function(event)
         {
-            var f = event.data[0]
-            var value = event.data[1]
+            var value = event.data[0]
 
-            if(fileentry.hash == f.hash)
-                div.progressbar(value)
+            div.progressbar(value)
         })
-        peersManager.addEventListener("transfer.end", function(event)
+        self.addEventListener(fileentry.hash+".end", function(event)
         {
-            var f = event.data[0]
-
-            if(fileentry.hash == f.hash)
-                div.open(f.blob)
+            div.open(f.blob)
         })
 
         return div
     }
+
+    function noFilesCaption()
+    {
+        // Compose no files shared content (fail-back)
+        var captionCell = spanedCell(table)
+            captionCell.appendChild(document.createTextNode("Remote peer is not sharing files."))
+
+//        var anchor = document.createElement('A')
+//            anchor.id = 'ConnectUser'
+//            anchor.style.cursor = 'pointer'
+//        captionCell.appendChild(anchor)
+//
+//        $(anchor).click(preferencesDialogOpen)
+//
+//        var span = document.createElement('SPAN')
+//            span.setAttribute("class", "user")
+//            span.appendChild(document.createTextNode("Connect to a user"))
+//        anchor.appendChild(span)
+
+        captionCell.appendChild(document.createTextNode(" Why don't ask him about doing it?"))
+
+        return captionCell
+    }
+    this.noFilesCaption = noFilesCaption()
+
 
     function rowFactory(fileentry)
     {
@@ -190,7 +170,7 @@ function TabPeer(peersManager, db)
 
         // Name & icon
         var span = document.createElement('SPAN');
-            span.className = self._filetype2className(type)
+            span.className = filetype2className(type)
             span.appendChild(document.createTextNode(fileentry.name || fileentry.file.name));
         td.appendChild(span)
 
@@ -215,7 +195,7 @@ function TabPeer(peersManager, db)
         return tr
     }
 
-    function updatefiles(fileslist)
+    this.updateFiles = function(fileslist)
     {
         var prevFolder = ""
 
@@ -246,7 +226,7 @@ function TabPeer(peersManager, db)
                 if(folder != "")
                    tr.setAttribute('class', "child-of-" + folder.join('__'))
 
-                tbody.appendChild(tr)
+                this.tbody.appendChild(tr)
             }
 
             // Add file row
@@ -255,10 +235,8 @@ function TabPeer(peersManager, db)
             if(prevFolder != undefined)
                 tr.setAttribute('class', "child-of-" + prevFolder)
 
-            tbody.appendChild(tr)
+            this.tbody.appendChild(tr)
         }
     }
-
-    FilesTable.call(this, tbody, updateFiles, noFilesCaption())
 }
-TabPeer.prototype = new FilesTable
+TabPeer.prototype = FilesTable

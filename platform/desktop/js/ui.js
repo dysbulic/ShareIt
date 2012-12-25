@@ -1,22 +1,9 @@
-function No_FileReader()
-{
-	$('#Sharedpoints').html('Your browser is not modern enough to serve as a host. :(<br /><br />(Try Chrome or Firefox!)');
-}
-
-
-function spanedCell(table)
-// Creates a cell that span over all the columns of a table
-{
-    var td = document.createElement('TD');
-        td.colSpan = table.getElementsByTagName("thead")[0].rows[0].cells.length
-        td.align = 'center'
-
-    return td
-}
-
-
 function UI(db)
 {
+    EventTarget.call(this)
+
+    this._db = db
+
     $("#tabs").tabs(
     {
         activate: function(event, ui)
@@ -69,9 +56,6 @@ function UI(db)
     $("#dialog-about").dialog(dialog_options);
     $("#dialog-config").dialog(dialog_options);
 
-    $("#Downloading").treeTable();
-//    $("#Sharing").treeTable();
-    $("#Sharedpoints").treeTable();
 
     // Main menu
     var submenu_active = false;
@@ -124,21 +108,6 @@ function UI(db)
     $("#tools-menu2").click(toolsMenu_open)
     $("#tools-menu3").click(toolsMenu_open)
 
-    var self = this
-
-    this.preferencesDialogOpen = function()
-    {
-        // Get shared points and init them
-        db.sharepoints_getAll(null, function(sharedpoints)
-        {
-            self.update_fileslist_sharedpoints(sharedpoints, db)
-        })
-
-        $("#dialog-config").dialog("open")
-    }
-
-    $("#Preferences").click(self.preferencesDialogOpen)
-    $("#Preferences2").click(self.preferencesDialogOpen)
 
     function aboutDialogOpen()
     {
@@ -151,91 +120,17 @@ function UI(db)
 
 UI.prototype =
 {
-	update_fileslist_sharedpoints: function(sharedpoints, db)
-	{
-	    var self = this
-
-        var table = document.getElementById('Sharedpoints')
-
-        // Compose no files shared content (fail-back)
-        var noFilesCaption = spanedCell(table)
-            noFilesCaption.appendChild(document.createTextNode("There are no shared points. "))
-
-        var anchor = document.createElement('A')
-            anchor.style.cursor = 'pointer'
-        noFilesCaption.appendChild(anchor)
-
-        $(anchor).click(function()
-        {
-            $('#files').click()
-        })
-
-        var span = document.createElement('SPAN')
-            span.setAttribute("class", "add-sharedpoint")
-            span.appendChild(document.createTextNode("Please add some folders"))
-        anchor.appendChild(span)
-
-        noFilesCaption.appendChild(document.createTextNode(" to be shared."))
-
-        // Fill the table
-	    this._updatefiles(table, sharedpoints, noFilesCaption, function(fileentry)
-		{
-		    var tr = document.createElement('TR');
-
-		    var td = document.createElement('TD');
-		    tr.appendChild(td)
-
-		    // Name & icon
-		    var span = document.createElement('SPAN');
-		        span.className = fileentry.type
-		        span.appendChild(document.createTextNode(fileentry.name));
-		    td.appendChild(span)
-
-		    // Shared size
-		    var td = document.createElement('TD');
-		        td.className="filesize"
-		        td.appendChild(document.createTextNode(humanize.filesize(fileentry.size)));
-		    tr.appendChild(td)
-
-		    var td = document.createElement('TD');
-		        td.class = "end"
-		    tr.appendChild(td)
-
-		    var a = document.createElement("A");
-		        a.onclick = function()
-		        {
-		            db.sharepoints_delete(fileentry.name, function()
-		            {
-		                // Update the sharedpoints without the removed one
-		                db.sharepoints_getAll(null, function(sharedpoints)
-		                {
-		                    self.update_fileslist_sharedpoints(sharedpoints, db)
-		                })
-		            })
-		        }
-		        a.appendChild(document.createTextNode("Delete"));
-		    td.appendChild(a);
-
-		    return tr
-		})
-	},
-
-
-    setHasher: function(hasher, db)
+    setHasher: function(hasher)
     {
         var self = this
 
-        document.getElementById('files').addEventListener('change', function(event)
+        document.getElementById('files').addEventListener('change', function()
         {
             policy(function()
             {
                 hasher.hash(event.target.files)
 
-                // Get shared points and init them with the new ones
-                db.sharepoints_getAll(null, function(sharedpoints)
-                {
-                    self.update_fileslist_sharedpoints(sharedpoints, db)
-                })
+                self.dispatchEvent({type: "sharedpoints.update"})
             })
 
             // Reset the input
@@ -265,11 +160,108 @@ UI.prototype =
         }
 	},
 
-	setPeersManager: function(peersManager, db)
+	setPeersManager: function(peersManager)
 	{
         var self = this
 
-	    function ConnectUser()
+
+        // Sharedpoints table
+        var tableSharedpoints
+
+        function sharedpoints_update()
+        {
+            // Get shared points and init them with the new ones
+            self._db.sharepoints_getAll(null, function(sharedpoints)
+            {
+                tableSharedpoints.update(sharedpoints)
+            })
+        }
+
+        tableSharedpoints = new TableSharedpoints('Sharedpoints',
+        function(fileentry)
+        {
+            return function()
+            {
+                self._db.sharepoints_delete(fileentry.name, sharedpoints_update)
+            }
+        })
+
+        this.addEventListener("sharedpoints.update", sharedpoints_update)
+        peersManager.addEventListener("sharedpoints.update", sharedpoints_update)
+
+        this.preferencesDialogOpen = function()
+        {
+            // Get shared points and init them
+            sharedpoints_update()
+
+            $("#dialog-config").dialog("open")
+        }
+
+        $("#Preferences").click(this.preferencesDialogOpen)
+        $("#Preferences2").click(this.preferencesDialogOpen)
+
+
+        // Downloading tab
+        var tabDownloading = new TabDownloading('Downloading',
+                                                this.preferencesDialogOpen)
+
+        function tabDownloading_update(event)
+        {
+            self._db.files_getAll(null, function(filelist)
+            {
+                var downloading = []
+
+                for(var i=0, fileentry; fileentry=filelist[i]; i++)
+                    if(fileentry.bitmap)
+                        downloading.push(fileentry)
+
+                // Update Downloading files list
+                tabDownloading.update(downloading)
+            })
+        }
+
+        peersManager.addEventListener("transfer.begin", tabDownloading_update)
+        peersManager.addEventListener("transfer.update", function(event)
+        {
+            var type = event.data[0]
+            var value = event.data[1]
+
+            tabDownloading.dispatchEvent({type: type, data: [value]})
+        })
+        peersManager.addEventListener("transfer.end", tabDownloading_update)
+
+
+        // Sharing tab
+        var tabSharing = new TabSharing('Sharing', this.preferencesDialogOpen)
+
+        function tabSharing_update()
+        {
+            self._db.files_getAll(null, function(filelist)
+            {
+                var sharing = []
+
+                for(var i=0, fileentry; fileentry=filelist[i]; i++)
+                    if(!fileentry.bitmap)
+                        sharing.push(fileentry)
+
+                // Update Sharing files list
+                tabSharing.update(sharing)
+            })
+        }
+
+        peersManager.addEventListener("transfer.end", tabSharing_update)
+
+        peersManager.addEventListener("file.added",   tabSharing_update)
+        peersManager.addEventListener("file.deleted", tabSharing_update)
+
+        // Show files being shared on Sharing tab
+        tabSharing_update()
+
+
+        /**
+         * User initiated process to connect to a remote peer asking for the UID
+         */
+        function ConnectUser()
 	    {
 	        if(!self.signalingReady)
 	        {
@@ -295,7 +287,42 @@ UI.prototype =
                     // Peer tab don't exists, create it
                     else
                     {
-                        var tablePeer = new TabPeer(peersManager, db)
+                        var tabPeer = new TabPeer(uid, self.preferencesDialogOpen,
+                        function(fileentry)
+                        {
+                            return function()
+                            {
+                                policy(function()
+                                {
+                                    // Begin transfer of file
+                                    peersManager._transferbegin(fileentry)
+
+                                    // Don't buble click event
+                                    return false;
+                                })
+                            }
+                        })
+
+                        peersManager.addEventListener("transfer.begin", function(event)
+                        {
+                            var fileentry = event.data[0]
+
+                            tabPeer.dispatchEvent({type: fileentry.hash+".begin"})
+                        })
+                        peersManager.addEventListener("transfer.update", function(event)
+                        {
+                            var fileentry = event.data[0]
+                            var value = event.data[1]
+
+                            tablePeer.dispatchEvent({type: fileentry.hash+".update",
+                                                     data: [value]})
+                        })
+                        peersManager.addEventListener("transfer.end", function(event)
+                        {
+                            var fileentry = event.data[0]
+
+                            tabPeer.dispatchEvent({type: fileentry.hash+".end"})
+                        })
 
                         // Get notified when this channel files list is updated
                         // and update the UI peer files table
@@ -304,7 +331,7 @@ UI.prototype =
                         {
                             var fileslist = event.data[0]
 
-                            tablePeer.update(fileslist)
+                            tabPeer.update(fileslist)
                         })
 
                         // Request the peer's files list
@@ -323,67 +350,5 @@ UI.prototype =
 
 	    $("#ConnectUser2").unbind('click')
 	    $("#ConnectUser2").click(ConnectUser)
-	},
-
-
-    _filetype2className: function(filetype)
-    {
-        filetype = filetype.split('/')
-    
-        switch(filetype[0])
-        {
-            case 'image':   return "image"
-            case 'video':   return "video"
-        }
-    
-        // Unknown file type, return generic file
-        return "file"
-    },
-
-    _updatefiles: function(table, fileslist, noFilesCaption, row_factory)
-    {
-        var tbody = table.getElementsByTagName("tbody")[0]
-
-        // Remove old table and add new empty one
-        while(tbody.firstChild)
-            tbody.removeChild(tbody.firstChild);
-
-        if(fileslist.length)
-        {
-            for(var i=0, fileentry; fileentry=fileslist[i]; i++)
-            {
-                // Calc path
-                var path = ""
-                if(fileentry.sharedpoint)
-                    path += fileentry.sharedpoint + '/';
-                if(fileentry.path)
-                    path += fileentry.path + '/';
-
-                var name = ""
-                if(fileentry.file)
-                    name = fileentry.file.name
-                else
-                    name = fileentry.name
-
-                var child = path.split('/').slice(0,-1).join('/').replace(' ','')
-
-                // Add file row
-                var tr = row_factory(fileentry)
-//                    tr.id = path + name
-                if(child)
-                    tr.setAttribute('class', "child-of-" + child)
-
-                tbody.appendChild(tr)
-            }
-
-            $(table).treeTable({initialState: "expanded"});
-        }
-        else
-        {
-            var tr = document.createElement('TR')
-                tr.appendChild(noFilesCaption)
-
-            tbody.appendChild(tr)
-        }
-    }
+	}
 }

@@ -1,32 +1,36 @@
-function noFilesCaption()
+function TabDownloading(tableId, preferencesDialogOpen)
 {
-    // Compose no files shared content (fail-back)
-    var cell = spanedCell(table)
-        cell.appendChild(document.createTextNode("There are no downloads, "))
+    EventTarget.call(this)
 
-    var anchor = document.createElement('A')
-        anchor.id = 'ConnectUser'
-        anchor.style.cursor = 'pointer'
-    cell.appendChild(anchor)
-
-    $(anchor).click(self.preferencesDialogOpen)
-
-    var span = document.createElement('SPAN')
-        span.setAttribute("class", "user")
-        span.appendChild(document.createTextNode("Connect to a user"))
-    anchor.appendChild(span)
-
-    cell.appendChild(document.createTextNode(" and get one!"))
-
-    return cell
-}
-
-function TabDownloading(peersManager, db)
-{
     var self = this
 
-    var table = document.getElementById('Downloading')
-    var tbody = table.getElementsByTagName("tbody")[0]
+    var table = document.getElementById(tableId)
+    this.tbody = table.getElementsByTagName("tbody")[0]
+
+
+    function noFilesCaption()
+    {
+        // Compose no files shared content (fail-back)
+        var cell = spanedCell(table)
+            cell.appendChild(document.createTextNode("There are no downloads, "))
+
+        var anchor = document.createElement('A')
+            anchor.id = 'ConnectUser'
+            anchor.style.cursor = 'pointer'
+        cell.appendChild(anchor)
+
+        $(anchor).click(preferencesDialogOpen)
+
+        var span = document.createElement('SPAN')
+            span.setAttribute("class", "user")
+            span.appendChild(document.createTextNode("Connect to a user"))
+        anchor.appendChild(span)
+
+        cell.appendChild(document.createTextNode(" and get one!"))
+
+        return cell
+    }
+    this.noFilesCaption = noFilesCaption()
 
 
     function rowFactory(fileentry)
@@ -38,7 +42,7 @@ function TabDownloading(peersManager, db)
 
         // Name & icon
         var span = document.createElement('SPAN');
-            span.className = self._filetype2className(fileentry.type)
+            span.className = filetype2className(fileentry.type)
             span.appendChild(document.createTextNode(fileentry.name));
         td.appendChild(span)
 
@@ -63,36 +67,15 @@ function TabDownloading(peersManager, db)
         var td_progress = document.createElement('TD');
             td_progress.appendChild(document.createTextNode("0%"));
 
-        peersManager.addEventListener("transfer.update", function(event)
+        self.addEventListener(fileentry.hash, function(event)
         {
-            var f = event.data[0]
-            var value = event.data[1]
+            var value = event.data[0]
 
-            if(fileentry.hash == f.hash)
-            {
-                 var progress = document.createTextNode(Math.floor(value*100)+"%")
+            var progress = document.createTextNode(Math.floor(value*100)+"%")
 
-                 while(td_progress.firstChild)
-                     td_progress.removeChild(td_progress.firstChild);
-                 td_progress.appendChild(progress);
-            }
-        })
-        peersManager.addEventListener("transfer.end", function(event)
-        {
-            var f = event.data[0]
-
-            if(fileentry.hash == f.hash)
-                db.files_getAll(null, function(filelist)
-                {
-                    var downloading = []
-
-                    for(var i=0, fileentry; fileentry=filelist[i]; i++)
-                        if(fileentry.bitmap)
-                            downloading.push(fileentry)
-
-                    // Update Downloading files list
-                    self.update(downloading)
-                })
+            while(td_progress.firstChild)
+                td_progress.removeChild(td_progress.firstChild);
+            td_progress.appendChild(progress);
         })
 
         tr.appendChild(td_progress)
@@ -127,7 +110,7 @@ function TabDownloading(peersManager, db)
         return tr
     }
 
-    function updateFiles(fileslist)
+    this.updateFiles = function(fileslist)
     {
         for(var i=0, fileentry; fileentry=fileslist[i]; i++)
         {
@@ -152,12 +135,10 @@ function TabDownloading(peersManager, db)
             if(child)
                 tr.setAttribute('class', "child-of-" + child)
 
-            tbody.appendChild(tr)
+            this.tbody.appendChild(tr)
         }
     }
 
-
-    FilesTable.call(this, tbody, updateFiles, noFilesCaption())
 
     this.update = function(fileslist)
     {
@@ -171,9 +152,7 @@ function TabDownloading(peersManager, db)
         }
 
         // Fill the table
-        this.prototype.update(fileslist)
-
-        $(table).treeTable({initialState: "expanded"});
+        FilesTable.update.call(this, fileslist)
     }
 }
-TabDownloading.prototype = new FilesTable
+TabDownloading.prototype = FilesTable
