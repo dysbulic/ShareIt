@@ -1,21 +1,43 @@
-// Show an alert about the compatibility issues for the webapp on the browser
+/**
+ * @classdesc Show an alert about the compatibility issues of the webapp
+ * @constructor
+ */
 function CompatibilityManager()
 {
     var errors
     var warnings
 
+    /**
+     * Add an error to the list of compatibility issues. This is mainly intended
+     * for issues that would not allow to the webapp to work correctly at all.
+     * @param {String} component Name of the component that has the issue
+     * @param {String} msg Message to show to the user about the issue
+     */
     this.addError = function(component, msg)
     {
         errors = errors || {}
         errors[component] = msg
     }
 
+    /**
+     * Add a warning to the list of compatibility issues. This is mainly
+     * intended for issues that would not allow to the webapp to work optimaly,
+     * maybe using a polyfill or having some functionality disabled.
+     * @param {String} component Name of the component that has the issue
+     * @param {String} msg Message to show to the user about the issue
+     */
     this.addWarning = function(component, msg)
     {
         warnings = warnings || {}
         warnings[component] = msg
     }
 
+    /**
+     * Show the alert to the user after all the issues have been collected.
+     * It will be shown the first time the webapp is used on a browser, there're
+     * error-cataloged issues or compatibility status has changed (mainly after
+     * a browser update).
+     */
     this.show = function()
     {
         var msg = "<p>ShareIt! will not work "
@@ -87,7 +109,8 @@ function CompatibilityManager()
             newCompatibility = JSON.stringify(newCompatibility)
 
             // Check if compatibility status has changed and notify to user
-            if(localStorage.compatibility != newCompatibility)
+            if(errors
+            || localStorage.compatibility != newCompatibility)
             {
                 msg += "<p>Please upgrade to the latest version of Chrome/Chromium or Firefox.</p>"
 
