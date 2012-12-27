@@ -138,23 +138,23 @@ UI.prototype =
         }, false);
     },
 
-	setSignaling: function(signaling)
+	setHandshake: function(handshake)
 	{
         var self = this
 
 	    // Set UID on user interface
-	    signaling.onopen = function(uid)
+        handshake.onopen = function(uid)
 	    {
 	        document.getElementById("UID").value = uid
 
 	        // Allow to the user to search peers
-	        self.signalingReady = true
+	        self.handshakeReady = true
 
-            console.info("Connected to a signaling channel")
+            console.info("Connected to a handshake channel")
 	    }
-        signaling.onerror = function()
+        handshake.onerror = function()
         {
-            console.error("Unable to connect to a signaling channel")
+            console.error("Unable to connect to a handshake channel")
 
             // Allow backup of cache if there are items
         }
@@ -263,9 +263,9 @@ UI.prototype =
          */
         function ConnectUser()
 	    {
-	        if(!self.signalingReady)
+	        if(!self.handshakeReady)
 	        {
-	            alert("There's no signaling channel available, wait some more seconds")
+	            alert("There's no handshake channel available, wait some more seconds")
                 return 
 	        }
 

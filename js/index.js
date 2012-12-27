@@ -19,8 +19,8 @@ function load()
                 peersManager._send_file_deleted(fileentry)
             }
 
-        var signaling = new SignalingManager('../../json/signaling.json')
-            signaling.onoffer = function(uid, sdp)
+        var handshake = new HandshakeManager('../../json/handshake.json')
+            handshake.onoffer = function(uid, sdp)
             {
                 // Search the peer between the list of currently connected peers
                 var pc = peersManager.getPeer(uid)
@@ -36,13 +36,13 @@ function load()
                 // Send answer
                 pc.createAnswer(function(answer)
                 {
-                    signaling.sendAnswer(uid, answer.sdp)
+                    handshake.sendAnswer(uid, answer.sdp)
 
                     pc.setLocalDescription(new RTCSessionDescription({sdp:  answer.sdp,
                                                                       type: 'answer'}))
                 });
             }
-            signaling.onanswer = function(uid, sdp)
+            handshake.onanswer = function(uid, sdp)
             {
                 // Search the peer on the list of currently connected peers
                 var pc = peersManager.getPeer(uid)
@@ -50,10 +50,10 @@ function load()
                     pc.setRemoteDescription(new RTCSessionDescription({sdp:  sdp,
                                                                        type: 'answer'}))
                 else
-                    console.error("[signaling.answer] PeerConnection '" + uid +
+                    console.error("[handshake.answer] PeerConnection '" + uid +
                                   "' not found");
             }
-//            signaling.onopen = function()
+//            handshake.onopen = function()
 //            {
 //                // Restart downloads
 //                db.files_getAll(null, function(filelist)
@@ -68,13 +68,13 @@ function load()
 //                })
 //            }
 
-        peersManager.setSignaling(signaling)
+        peersManager.setHandshake(handshake)
 
         // Init user interface
         var ui = new UI(db)
             ui.setHasher(hasher)
             ui.setPeersManager(peersManager)
-            ui.setSignaling(signaling)
+            ui.setHandshake(handshake)
     })
 }
 
