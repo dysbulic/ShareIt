@@ -9,7 +9,14 @@ _real_ namespaces?). Also, (almost) each folder has an index.js file inspired by
 the ones from Node.js modules or Python packages (__init__.py). Use them as
 entry point when starting to read the code.
 
-The first file that you should start reading and where "all the magin begins" is
+The code style is event and callbacks oriented, and developed in a way to use
+closures extensively to reduce the necesity to check flags and global variables
+to the minimum necesary. Also, this would lead to only enable some methods and
+attributes when they make sense to be available to being used, reducing the
+memory footprint both for don't create useless objects and also being garbage
+collected faster because having less references to them.
+
+The first file that you should start reading and where "all the magic begins" is
 js/index.js, that manages to do the compatibility checks and initializes the
 webp2p library. For the html files, the entry point is index.html on the source
 root, that does some javascript tricks to detect the current platform and makes
