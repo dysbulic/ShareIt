@@ -24,7 +24,7 @@ The purpose of each folder is:
 * js: ShareIt! common Javascript files
 * js/webp2p: ShareIt! core and implementation of the webp2p protocol.
              This eventually will become an independent project in the future.
-* json: configuration files in JSON format (currently only signaling servers)
+* json: configuration files in JSON format (currently only handshake servers)
 * platform: platform specific files. Each subfolder holds one of them and has a
             similar folders hierarchy that the project root.
 * test images: images and files used for testing and demostration purposes.
