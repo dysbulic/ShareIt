@@ -51,12 +51,12 @@ It is currently publicly hosted on
 * [DropBox](https://dl-web.dropbox.com/spa/je1wmwnmw0lbae2/ShareIt!/index.html)
 * [GitHub] (http://piranna.github.com/ShareIt)
 
-The peer connections are managed by an external signaling channel. Currently is
+The peer connections are managed by an external handshake channel. Currently is
 being used primarily [PubNub](http://www.pubnub.com) and [SimpleSignaling]
 (https://github.com/piranna/SimpleSignaling) using a test server hosted on
 Nodejitsu, but it's being researched to use some more standard and distributed
-signaling protocols in an annonimous way so could be dropped this
-single-point-of-failure.
+handshake protocols in an annonimous way so this single-point-of-failure could
+be dropped.
 
 Regarding to the browser, it's recomended to use a high edge one. Test are being
 done on Chromium v24 at this moment and currently it's the only officially
@@ -73,7 +73,7 @@ to transfer files through the wild Internet from Findland to Spain... :-) ).
 * [jQuery TreeTable](http://ludo.cubicphuse.nl/jquery-plugins/treeTable/doc)
 * [Humanize](https://github.com/taijinlee/humanize)
 
-### Signaling
+### Handshake
 
 * [SimpleSignaling](https://github.com/piranna/SimpleSignaling)
 * [PubNub](http://www.pubnub.com)
