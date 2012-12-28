@@ -19,6 +19,7 @@ function load()
                 peersManager._send_file_deleted(fileentry)
             }
 
+        // Init handshake manager
         var handshake = new HandshakeManager('../../json/handshake.json')
             handshake.onoffer = function(uid, sdp)
             {
