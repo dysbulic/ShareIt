@@ -23,7 +23,7 @@ function load()
         var handshake = new HandshakeManager('../../json/handshake.json')
             handshake.onoffer = function(uid, sdp)
             {
-                var pc = peersManager.onOffer(uid, sdp, function(uid, event)
+                var pc = peersManager.onoffer(uid, sdp, function(uid, event)
                 {
                     console.error("Error creating DataChannel with peer "+uid);
                     console.error(event);
