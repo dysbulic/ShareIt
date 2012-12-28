@@ -22,16 +22,7 @@ function load()
         var handshake = new HandshakeManager('../../json/handshake.json')
             handshake.onoffer = function(uid, sdp)
             {
-                // Search the peer between the list of currently connected peers
-                var pc = peersManager.getPeer(uid)
-
-                // Peer is not connected, create a new channel
-                if(!pc)
-                    pc = peersManager.createPeer(uid);
-
-                // Process offer
-                pc.setRemoteDescription(new RTCSessionDescription({sdp:  sdp,
-                                                                   type: 'offer'}));
+                var pc = peersManager.onOffer(uid, sdp)
 
                 // Send answer
                 pc.createAnswer(function(answer)
@@ -44,14 +35,11 @@ function load()
             }
             handshake.onanswer = function(uid, sdp)
             {
-                // Search the peer on the list of currently connected peers
-                var pc = peersManager.getPeer(uid)
-                if(pc)
-                    pc.setRemoteDescription(new RTCSessionDescription({sdp:  sdp,
-                                                                       type: 'answer'}))
-                else
+                peersManager.onanswer(uid, sdp, function(uid)
+                {
                     console.error("[handshake.answer] PeerConnection '" + uid +
                                   "' not found");
+                })
             }
             handshake.onsynapse = function(uid)
             {
