@@ -51,8 +51,7 @@ function UI()
         }
     }
 
-    $("#dialog-about").dialog(dialog_options);
-
+    var dialogAbout   = new DialogAbout ("dialog-about",  dialog_options);
     this.dialogConfig = new DialogConfig("dialog-config", dialog_options);
 
 
@@ -108,12 +107,10 @@ function UI()
     $("#tools-menu3").click(toolsMenu_open)
 
 
-    function aboutDialogOpen()
+    $("#About").click(function()
     {
-        $("#dialog-about").dialog("open")
-    }
-
-    $("#About").click(aboutDialogOpen)
+        dialogAbout.open()
+    })
 }
 
 UI.prototype =
