@@ -14,7 +14,9 @@ closures extensively to reduce the necesity to check flags and global variables
 to the minimum necesary. Also, this would lead to only enable some methods and
 attributes when they make sense to be available to being used, reducing the
 memory footprint both for don't create useless objects and also being garbage
-collected faster because having less references to them.
+collected faster because having less references to them. Also, it should be
+based on the BSD code style (open blocks on new line), using spaces for indent
+and lines should not be longer than 80 characters as far as possible.
 
 The first file that you should start reading and where "all the magic begins" is
 js/index.js, that manages to do the compatibility checks and initializes the
@@ -24,7 +26,7 @@ a redirection the platform specific index.html file.
 
 The purpose of each folder is:
 
-* css: styles common to all platforms and for the filemanagers
+* css: styles common to all platforms and from external libraries (filemanagers)
 * daemon: headless client developed on Node.js (work in progress)
 * doc: random documentation files, both of ShareIt! arquitecture and externals
 * html_basic: basic interface to transfer files (deprecated)
