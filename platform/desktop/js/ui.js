@@ -1,8 +1,6 @@
-function UI(db)
+function UI()
 {
     EventTarget.call(this)
-
-    this._db = db
 
     $("#tabs").tabs(
     {
@@ -54,8 +52,8 @@ function UI(db)
     }
 
     $("#dialog-about").dialog(dialog_options);
-    $("#dialog-config").dialog(dialog_options);
-    $("#dialog-config").tabs({active: 0})
+
+    this.dialogConfig = new DialogConfig("dialog-config", dialog_options);
 
 
     // Main menu
@@ -116,7 +114,6 @@ function UI(db)
     }
 
     $("#About").click(aboutDialogOpen)
-    $("#About").click(aboutDialogOpen)
 }
 
 UI.prototype =
@@ -158,12 +155,11 @@ UI.prototype =
             console.error("Unable to connect to a handshake channel")
 
             // Allow backup of cache if there are items
-            $("#dialog-config").tabs("option", "active", 1)
-            $("#dialog-config").dialog("open");
+            self.preferencesDialogOpen(1)
         }
 	},
 
-	setPeersManager: function(peersManager)
+	setPeersManager: function(peersManager, db)
 	{
         var self = this
 
@@ -174,7 +170,7 @@ UI.prototype =
         function sharedpoints_update()
         {
             // Get shared points and init them with the new ones
-            self._db.sharepoints_getAll(null, function(sharedpoints)
+            db.sharepoints_getAll(null, function(sharedpoints)
             {
                 tableSharedpoints.update(sharedpoints)
             })
@@ -185,19 +181,19 @@ UI.prototype =
         {
             return function()
             {
-                self._db.sharepoints_delete(fileentry.name, sharedpoints_update)
+                db.sharepoints_delete(fileentry.name, sharedpoints_update)
             }
         })
 
         this.addEventListener("sharedpoints.update", sharedpoints_update)
         peersManager.addEventListener("sharedpoints.update", sharedpoints_update)
 
-        this.preferencesDialogOpen = function()
+        this.preferencesDialogOpen = function(tabIndex)
         {
             // Get shared points and init them
             sharedpoints_update()
 
-            $("#dialog-config").dialog("open")
+            self.dialogConfig.open(tabIndex)
         }
 
         $("#Preferences").click(this.preferencesDialogOpen)
@@ -210,7 +206,7 @@ UI.prototype =
 
         function tabDownloading_update(event)
         {
-            self._db.files_getAll(null, function(filelist)
+            db.files_getAll(null, function(filelist)
             {
                 var downloading = []
 
@@ -239,7 +235,7 @@ UI.prototype =
 
         function tabSharing_update()
         {
-            self._db.files_getAll(null, function(filelist)
+            db.files_getAll(null, function(filelist)
             {
                 var sharing = []
 

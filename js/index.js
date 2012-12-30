@@ -86,9 +86,9 @@ function load()
         peersManager.setHandshake(handshake)
 
         // Init user interface
-        var ui = new UI(db)
+        var ui = new UI()
             ui.setHasher(hasher)
-            ui.setPeersManager(peersManager)
+            ui.setPeersManager(peersManager, db)
             ui.setHandshake(handshake)
     })
 }
