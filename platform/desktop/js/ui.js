@@ -314,8 +314,8 @@ UI.prototype =
                             var fileentry = event.data[0]
                             var value = event.data[1]
 
-                            tablePeer.dispatchEvent({type: fileentry.hash+".update",
-                                                     data: [value]})
+                            tabPeer.dispatchEvent({type: fileentry.hash+".update",
+                                                   data: [value]})
                         })
                         peersManager.addEventListener("transfer.end", function(event)
                         {
