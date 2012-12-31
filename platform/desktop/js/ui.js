@@ -55,56 +55,17 @@ function UI()
     this.dialogConfig = new DialogConfig("dialog-config", dialog_options);
 
 
-    // Main menu
-    var submenu_active = false;
-
-    var menu = $("#tools-menu")
-    menu.mouseenter(function()
-    {
-        submenu_active = true;
-    });
+    // Tools menu
+    var menuTools = new MenuTools("tools-menu")
 
     function toolsMenu_open()
     {
-        var submenu = $("#tools-menu-submenu")
-
-        if(submenu.is(":hidden"))
-        {
-            function timeout(ms)
-            {
-                setTimeout(function()
-                {
-                    if(submenu_active === false)
-                        submenu.slideUp();
-                }, ms);
-            }
-
-            submenu.mouseenter(function()
-            {
-                submenu_active = true;
-            });
-            submenu.mouseleave(function()
-            {
-                submenu_active = false;
-                timeout(1000)
-            });
-
-            menu.mouseleave(function()
-            {
-                submenu_active = false;
-                timeout(1000)
-            });
-
-            submenu.slideDown();
-            timeout(3000)
-        }
-        else
-            submenu.slideUp();
+        menuTools.open()
     }
 
-    menu.click(toolsMenu_open)
-    $("#tools-menu2").click(toolsMenu_open)
-    $("#tools-menu3").click(toolsMenu_open)
+    $("#tools-menu").click(menuTools_open)
+    $("#tools-menu2").click(menuTools_open)
+    $("#tools-menu3").click(menuTools_open)
 
 
     $("#About").click(function()
