@@ -40,7 +40,7 @@ function UI()
     // Tools menu
     var menuTools = new MenuTools("tools-menu")
 
-    function toolsMenu_open()
+    function menuTools_open()
     {
         menuTools.open()
     }

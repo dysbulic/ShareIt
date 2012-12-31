@@ -5,7 +5,7 @@ function DialogConfig(dialogId, options)
     dialog.dialog(options);
     dialog.tabs({active: 0})
 
-    this.open(tabIndex)
+    this.open = function(tabIndex)
     {
         dialog.tabs("option", "active", tabIndex)
         dialog.dialog("open");

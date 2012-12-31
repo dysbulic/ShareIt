@@ -30,7 +30,7 @@ function TabsPeers(tabsId)
         tabs.tabs("refresh");
     });
 
-    this.openOrCreate(uid, preferencesDialogOpen, peersManager, channel)
+    this.openOrCreate = function(uid, preferencesDialogOpen, peersManager, channel)
     {
         // Get index of the peer tab
         var index = tabs.find('table').index($('#'+tabsId+'-'+uid))

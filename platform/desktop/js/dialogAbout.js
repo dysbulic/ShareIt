@@ -4,7 +4,7 @@ function DialogAbout(dialogId, options)
 
     dialog.dialog(options);
 
-    this.open()
+    this.open = function()
     {
         dialog.dialog("open");
     }
