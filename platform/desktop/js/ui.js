@@ -75,9 +75,6 @@ UI.prototype =
 	    {
 	        document.getElementById("UID").value = uid
 
-	        // Allow to the user to search peers
-	        self.handshakeReady = true
-
             console.info("Connected to a handshake channel")
 	    }
         handshake.onerror = function()
@@ -195,7 +192,7 @@ UI.prototype =
          */
         function ConnectUser()
 	    {
-	        if(!self.handshakeReady)
+	        if(!peersManager.handshakeReady())
 	        {
 	            alert("There's no handshake channel available, wait some more seconds")
                 return 
