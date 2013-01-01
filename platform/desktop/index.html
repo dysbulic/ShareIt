@@ -19,6 +19,8 @@
 
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="https://raw.github.com/gildas-lormeau/zip.js/master/WebContent/zip.js"></script>
+        <script type="text/javascript" src="https://raw.github.com/gildas-lormeau/zip.js/master/WebContent/zip-fs.js"></script>
         <script type="text/javascript" src="https://raw.github.com/ludo/jquery-treetable/master/src/javascripts/jquery.treeTable.js"></script>
         <script type="text/javascript" src="https://raw.github.com/taijinlee/humanize/master/humanize.js"></script>
 
@@ -247,6 +249,16 @@
             </div>
 
             <div id="Backup">
+                <div id="message"></div>
+	            <div id="Export">
+	                <img src="../../images/Add-Files-To-Archive-64.png"/>
+	                Export cache to a file
+	            </div>
+	            <div id="Import" onclick="$('#import-backup').click()">
+                    <img src="../../images/extract-love.png"/>
+                    Import cache from a file
+	            </div>
+                <input type="file" id="import-backup" style="height: 20px; opacity: 0; filter:alpha(opacity: 0)"/>
             </div>
         </div>
 
