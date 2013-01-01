@@ -85,11 +85,15 @@ function load()
 
         peersManager.setHandshake(handshake)
 
+        // Init cache backup system
+        var cacheBackup = new CacheBackup(db)
+
         // Init user interface
         var ui = new UI()
             ui.setHasher(hasher)
             ui.setPeersManager(peersManager, db)
             ui.setHandshake(handshake)
+            ui.setCacheBackup(cacheBackup)
     })
 }
 
