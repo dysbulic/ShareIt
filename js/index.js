@@ -21,31 +21,6 @@ function load()
 
         // Init handshake manager
         var handshake = new HandshakeManager('../../json/handshake.json')
-            handshake.onoffer = function(uid, sdp)
-            {
-                var pc = peersManager.onoffer(uid, sdp, function(uid, event)
-                {
-                    console.error("Error creating DataChannel with peer "+uid);
-                    console.error(event);
-                })
-
-                // Send answer
-                pc.createAnswer(function(answer)
-                {
-                    handshake.sendAnswer(uid, answer.sdp)
-
-                    pc.setLocalDescription(new RTCSessionDescription({sdp:  answer.sdp,
-                                                                      type: 'answer'}))
-                });
-            }
-            handshake.onanswer = function(uid, sdp)
-            {
-                peersManager.onanswer(uid, sdp, function(uid)
-                {
-                    console.error("[handshake.answer] PeerConnection '" + uid +
-                                  "' not found");
-                })
-            }
             handshake.onsynapse = function(uid)
             {
                 peersManager.connectTo(uid, function(channel)
