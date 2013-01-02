@@ -5,29 +5,6 @@ function DialogConfig(dialogId, options)
     dialog.dialog(options);
     dialog.tabs({active: 0})
 
-    // Backup tab
-    dialog.find("#Export").click(function()
-    {
-        policy(function()
-        {
-            backup.export()
-        })
-    })
-
-    document.getElementById('import-backup').addEventListener('change', function()
-    {
-        policy(function()
-        {
-            backup.import(event.target.files)
-        })
-
-        // Reset the input
-        this.value = ""
-    }, false);
-    dialog.find("#Import").click(function()
-    {
-        $('#import-backup').click()
-    })
 
     /**
      * Open the config dialog on the selected tab
@@ -38,5 +15,35 @@ function DialogConfig(dialogId, options)
     {
         dialog.tabs("option", "active", tabIndex)
         dialog.dialog("open");
+    }
+
+
+    // Backup tab
+    this.setCacheBackup = function(cacheBackup)
+    {
+        // Export
+        dialog.find("#Export").click(function()
+        {
+            policy(function()
+            {
+                cacheBackup.export()
+            })
+        })
+
+        // Import
+        document.getElementById('import-backup').addEventListener('change', function()
+        {
+            policy(function()
+            {
+                cacheBackup.import(event.target.files)
+            })
+
+            // Reset the input
+            this.value = ""
+        }, false);
+        dialog.find("#Import").click(function()
+        {
+            $('#import-backup').click()
+        })
     }
 }

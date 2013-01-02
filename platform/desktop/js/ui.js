@@ -223,5 +223,10 @@ UI.prototype =
 
 	    $("#ConnectUser2").unbind('click')
 	    $("#ConnectUser2").click(ConnectUser)
+	},
+
+	setCacheBackup: function(cacheBackup)
+	{
+	    this.dialogConfig.setCacheBackup(cacheBackup)
 	}
 }
