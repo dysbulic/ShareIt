@@ -1,36 +1,6 @@
-function UI(db)
+function UI()
 {
     EventTarget.call(this)
-
-    this._db = db
-
-    $("#tabs").tabs(
-    {
-        activate: function(event, ui)
-        {
-            $("#StartHere").remove()
-        },
-
-        active: false,
-        collapsible: true,
-        disabled: true
-    })
-
-    // close icon: removing the tab on click
-    $("#tabs span.ui-icon-closethick").live("click", function()
-    {
-        var index = $("#ui-corner-top", $("#tabs")).index($(this).parent());
-
-        // Remove the tab
-        var tab = $("#tabs").find(".ui-tabs-nav li:eq("+index+")").remove();
-        // Find the id of the associated panel
-        var panelId = tab.attr("aria-controls");
-        // Remove the panel
-        $("#"+panelId).remove();
-
-        // Refresh the tabs widget
-        $("tabs").tabs("refresh");
-    });
 
     var dialog_options =
     {
@@ -53,69 +23,31 @@ function UI(db)
         }
     }
 
-    $("#dialog-about").dialog(dialog_options);
-    $("#dialog-config").dialog(dialog_options);
+
+    // Config dialog
+    this.dialogConfig = new DialogConfig("dialog-config", dialog_options);
 
 
-    // Main menu
-    var submenu_active = false;
+    // About dialog
+    var dialogAbout = new DialogAbout("dialog-about", dialog_options);
 
-    var menu = $("#tools-menu")
-    menu.mouseenter(function()
+    $("#About").click(function()
     {
-        submenu_active = true;
-    });
+        dialogAbout.open()
+    })
 
-    function toolsMenu_open()
+
+    // Tools menu
+    var menuTools = new MenuTools("tools-menu")
+
+    function menuTools_open()
     {
-        var submenu = $("#tools-menu-submenu")
-
-        if(submenu.is(":hidden"))
-        {
-            function timeout(ms)
-            {
-                setTimeout(function()
-                {
-                    if(submenu_active === false)
-                        submenu.slideUp();
-                }, ms);
-            }
-
-            submenu.mouseenter(function()
-            {
-                submenu_active = true;
-            });
-            submenu.mouseleave(function()
-            {
-                submenu_active = false;
-                timeout(1000)
-            });
-
-            menu.mouseleave(function()
-            {
-                submenu_active = false;
-                timeout(1000)
-            });
-
-            submenu.slideDown();
-            timeout(3000)
-        }
-        else
-            submenu.slideUp();
+        menuTools.open()
     }
 
-    menu.click(toolsMenu_open)
-    $("#tools-menu2").click(toolsMenu_open)
-    $("#tools-menu3").click(toolsMenu_open)
-
-
-    function aboutDialogOpen()
-    {
-        $("#dialog-about").dialog("open")
-    }
-
-    $("#About").click(aboutDialogOpen)
-    $("#About").click(aboutDialogOpen)
+    $("#tools-menu").click(menuTools_open)
+    $("#tools-menu2").click(menuTools_open)
+    $("#tools-menu3").click(menuTools_open)
 }
 
 UI.prototype =
@@ -147,9 +79,6 @@ UI.prototype =
 	    {
 	        document.getElementById("UID").value = uid
 
-	        // Allow to the user to search peers
-	        self.handshakeReady = true
-
             console.info("Connected to a handshake channel")
 	    }
         handshake.onerror = function()
@@ -157,10 +86,11 @@ UI.prototype =
             console.error("Unable to connect to a handshake channel")
 
             // Allow backup of cache if there are items
+            self.preferencesDialogOpen(1)
         }
 	},
 
-	setPeersManager: function(peersManager)
+	setPeersManager: function(peersManager, db)
 	{
         var self = this
 
@@ -171,7 +101,7 @@ UI.prototype =
         function sharedpoints_update()
         {
             // Get shared points and init them with the new ones
-            self._db.sharepoints_getAll(null, function(sharedpoints)
+            db.sharepoints_getAll(null, function(sharedpoints)
             {
                 tableSharedpoints.update(sharedpoints)
             })
@@ -182,19 +112,19 @@ UI.prototype =
         {
             return function()
             {
-                self._db.sharepoints_delete(fileentry.name, sharedpoints_update)
+                db.sharepoints_delete(fileentry.name, sharedpoints_update)
             }
         })
 
         this.addEventListener("sharedpoints.update", sharedpoints_update)
         peersManager.addEventListener("sharedpoints.update", sharedpoints_update)
 
-        this.preferencesDialogOpen = function()
+        this.preferencesDialogOpen = function(tabIndex)
         {
             // Get shared points and init them
             sharedpoints_update()
 
-            $("#dialog-config").dialog("open")
+            self.dialogConfig.open(tabIndex)
         }
 
         $("#Preferences").click(this.preferencesDialogOpen)
@@ -207,7 +137,7 @@ UI.prototype =
 
         function tabDownloading_update(event)
         {
-            self._db.files_getAll(null, function(filelist)
+            db.files_getAll(null, function(filelist)
             {
                 var downloading = []
 
@@ -236,7 +166,7 @@ UI.prototype =
 
         function tabSharing_update()
         {
-            self._db.files_getAll(null, function(filelist)
+            db.files_getAll(null, function(filelist)
             {
                 var sharing = []
 
@@ -258,12 +188,15 @@ UI.prototype =
         tabSharing_update()
 
 
+        // Peers tabs
+        var tabs = new TabsPeers("tabs")
+
         /**
          * User initiated process to connect to a remote peer asking for the UID
          */
         function ConnectUser()
 	    {
-	        if(!self.handshakeReady)
+	        if(!peersManager.handshakeReady())
 	        {
 	            alert("There's no handshake channel available, wait some more seconds")
                 return 
@@ -275,68 +208,8 @@ UI.prototype =
 	            // Create connection with the other peer
                 peersManager.connectTo(uid, function(channel)
                 {
-                    var tabs = $("#tabs")
-
-                    // Get index of the peer tab
-                    var index = tabs.find('table').index($('#tabs-'+uid))
-
-                    // Peer tab exists, open it
-                    if(index != -1)
-                        tabs.tabs("option", "active", index);
-
-                    // Peer tab don't exists, create it
-                    else
-                    {
-                        var tabPeer = new TabPeer(uid, self.preferencesDialogOpen,
-                        function(fileentry)
-                        {
-                            return function()
-                            {
-                                policy(function()
-                                {
-                                    // Begin transfer of file
-                                    peersManager._transferbegin(fileentry)
-
-                                    // Don't buble click event
-                                    return false;
-                                })
-                            }
-                        })
-
-                        peersManager.addEventListener("transfer.begin", function(event)
-                        {
-                            var fileentry = event.data[0]
-
-                            tabPeer.dispatchEvent({type: fileentry.hash+".begin"})
-                        })
-                        peersManager.addEventListener("transfer.update", function(event)
-                        {
-                            var fileentry = event.data[0]
-                            var value = event.data[1]
-
-                            tabPeer.dispatchEvent({type: fileentry.hash+".update",
-                                                   data: [value]})
-                        })
-                        peersManager.addEventListener("transfer.end", function(event)
-                        {
-                            var fileentry = event.data[0]
-
-                            tabPeer.dispatchEvent({type: fileentry.hash+".end"})
-                        })
-
-                        // Get notified when this channel files list is updated
-                        // and update the UI peer files table
-                        channel.addEventListener("fileslist._updated",
-                        function(event)
-                        {
-                            var fileslist = event.data[0]
-
-                            tabPeer.update(fileslist)
-                        })
-
-                        // Request the peer's files list
-                        channel.fileslist_query();
-                    }
+                    tabs.openOrCreate(uid, self.preferencesDialogOpen,
+                                      peersManager, channel)
                 },
 	            function(uid, peer, channel)
 	            {
@@ -350,5 +223,10 @@ UI.prototype =
 
 	    $("#ConnectUser2").unbind('click')
 	    $("#ConnectUser2").click(ConnectUser)
+	},
+
+	setCacheBackup: function(cacheBackup)
+	{
+	    this.dialogConfig.setCacheBackup(cacheBackup)
 	}
 }
