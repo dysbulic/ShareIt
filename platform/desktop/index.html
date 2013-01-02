@@ -35,10 +35,14 @@
         <script type="text/javascript" src="../../js/index.js"></script>
         <script type="text/javascript" src="../../js/policy.js"></script>
 
+        <script type="text/javascript" src="js/dialogAbout.js"></script>
+        <script type="text/javascript" src="js/dialogConfig.js"></script>
         <script type="text/javascript" src="js/filesTable.js"></script>
+        <script type="text/javascript" src="js/menuTools.js"></script>
         <script type="text/javascript" src="js/tabDownloading.js"></script>
         <script type="text/javascript" src="js/tabPeer.js"></script>
         <script type="text/javascript" src="js/tabSharing.js"></script>
+        <script type="text/javascript" src="js/tabsPeers.js"></script>
         <script type="text/javascript" src="js/tableSharedpoints.js"></script>
         <script type="text/javascript" src="js/ui.js"></script>
     </head>
@@ -218,22 +222,42 @@
         <!-- Dialogs -->
 
         <div id="dialog-config" title="Config" style="display: none">
-            <div style="max-height:425px;height:425px">
-	            <table id="Sharedpoints">
-	                <thead>
-	                    <tr>
-	                        <th scope="col" width="100%">Path</th>
-	                        <th scope="col">Shared</th>
-	                        <th scope="col">Remove</th>
-	                    </tr>
-	                </thead>
-	                <tbody/>
-	            </table>
+            <ul>
+                <li><a href="#Sharedpoints-tab">Sharedpoints</a></li>
+                <li><a href="#Backup">Backup</a></li>
+            </ul>
+
+            <div id="Sharedpoints-tab">
+                <div style="max-height:425px;height:425px">
+		            <table id="Sharedpoints">
+		                <thead>
+		                    <tr>
+		                        <th scope="col" width="100%">Path</th>
+		                        <th scope="col">Shared</th>
+		                        <th scope="col">Remove</th>
+		                    </tr>
+		                </thead>
+		                <tbody/>
+		            </table>
+	            </div>
+                <a onclick="$('#files').click()">
+                    <span class="add-sharedpoint">Add shared point</span>
+                </a>
+                <input type="file" id="files" name="files[]" directory webkitdirectory multiple style="height: 20px; opacity: 0; filter:alpha(opacity: 0)"/>
             </div>
-            <a onclick="$('#files').click()">
-                <span class="add-sharedpoint">Add shared point</span>
-            </a>
-            <input type="file" id="files" name="files[]" directory webkitdirectory multiple style="height: 20px; opacity: 0; filter:alpha(opacity: 0)"/>
+
+            <div id="Backup">
+                <div id="message"></div>
+	            <div id="Export">
+	                <img src="../../images/Add-Files-To-Archive-64.png"/>
+	                Export cache to a file
+	            </div>
+	            <div id="Import">
+                    <img src="../../images/extract-love.png"/>
+                    Import cache from a file
+	            </div>
+                <input type="file" id="import-backup" style="height: 20px; opacity: 0; filter:alpha(opacity: 0)"/>
+            </div>
         </div>
 
         <div id="dialog-about" title="About ShareIt!" style="display: none">

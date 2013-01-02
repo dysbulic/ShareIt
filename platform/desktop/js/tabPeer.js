@@ -59,6 +59,8 @@ function TabPeer(uid, preferencesDialogOpen, onclickFactory)
     tr.appendChild(td);
 
 
+    var self = this
+
     function buttonFactory(fileentry)
     {
         var div = document.createElement("DIV");
@@ -128,7 +130,7 @@ function TabPeer(uid, preferencesDialogOpen, onclickFactory)
         })
         self.addEventListener(fileentry.hash+".end", function(event)
         {
-            div.open(f.blob)
+            div.open(fileentry.blob)
         })
 
         return div
