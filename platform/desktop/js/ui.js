@@ -196,9 +196,9 @@ UI.prototype =
          */
         function ConnectUser()
 	    {
-	        if(!peersManager.handshakeReady())
+	        if(!peersManager.getChannels().length)
 	        {
-	            alert("There's no handshake channel available, wait some more seconds")
+	            alert("There's no routing available, wait some more seconds")
                 return 
 	        }
 
