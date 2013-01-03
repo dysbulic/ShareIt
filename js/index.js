@@ -20,9 +20,9 @@ function load()
             }
 
         // Init handshake manager
-        var handshake = new HandshakeManager('../../json/handshake.json',
-                                             peersManager)
-            handshake.onerror = function()
+        var handshakeManager = new HandshakeManager('../../json/handshake.json',
+                                                    peersManager)
+            handshakeManager.onerror = function()
             {
                 if(!peersManager.numPeers())
                 {
@@ -45,7 +45,7 @@ function load()
 //                })
 //            }
 
-        peersManager.setHandshake(handshake)
+        peersManager.setHandshakeManager(handshakeManager)
 
         // Init cache backup system
         var cacheBackup = new CacheBackup(db)
