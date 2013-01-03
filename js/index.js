@@ -20,21 +20,8 @@ function load()
             }
 
         // Init handshake manager
-        var handshake = new HandshakeManager('../../json/handshake.json')
-            handshake.onsynapse = function(uid)
-            {
-                peersManager.connectTo(uid, function(channel)
-                {
-                    handshake.pending_synapses--
-
-                    if(handshake.pending_synapses == 0)
-                       handshake.close()
-                },
-                function(uid, peer, channel)
-                {
-                    console.error(uid, peer, channel)
-                })
-            }
+        var handshake = new HandshakeManager('../../json/handshake.json',
+                                             peersManager)
             handshake.onerror = function()
             {
                 if(!peersManager.numPeers())
