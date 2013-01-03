@@ -54,7 +54,7 @@ function load()
         var ui = new UI()
             ui.setHasher(hasher)
             ui.setPeersManager(peersManager, db)
-            ui.setHandshake(handshake)
+            ui.setHandshakeManager(handshakeManager)
             ui.setCacheBackup(cacheBackup)
     })
 }

@@ -70,18 +70,11 @@ UI.prototype =
         }, false);
     },
 
-	setHandshake: function(handshake)
+    setHandshakeManager: function(handshakeManager)
 	{
         var self = this
 
-	    // Set UID on user interface
-        handshake.onopen = function(uid)
-	    {
-	        document.getElementById("UID").value = uid
-
-            console.info("Connected to a handshake channel")
-	    }
-        handshake.onerror = function()
+        handshakeManager.onerror = function()
         {
             console.error("Unable to connect to a handshake channel")
 
@@ -94,6 +87,9 @@ UI.prototype =
 	{
         var self = this
 
+
+        // Set UID on user interface
+        document.getElementById("UID").value = peersManager.uid
 
         // Sharedpoints table
         var tableSharedpoints
