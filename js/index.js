@@ -22,13 +22,10 @@ function load()
         // Init handshake manager
         var handshakeManager = new HandshakeManager('../../json/handshake.json',
                                                     peersManager)
-            handshakeManager.onerror = function()
+            handshakeManager.onerror = function(error)
             {
-                if(!peersManager.numPeers())
-                {
-                    console.warn("You are not connected to any peer")
-                    alert("You are not connected to any peer")
-                }
+                console.error(error)
+                alert(error)
             }
 //            handshake.onopen = function()
 //            {
