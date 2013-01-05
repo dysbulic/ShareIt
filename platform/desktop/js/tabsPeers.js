@@ -42,7 +42,7 @@ function TabsPeers(tabsId)
         // Peer tab don't exists, create it
         else
         {
-            var tabPeer = new TabPeer(uid, preferencesDialogOpen,
+            var tabPeer = new TabPeer(uid, tabsId, preferencesDialogOpen,
             function(fileentry)
             {
                 return function()
