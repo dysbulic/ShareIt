@@ -188,7 +188,7 @@ UI.prototype =
          */
         function ConnectUser()
 	    {
-	        if(!peersManager.getChannels().length)
+	        if(!Object.keys(peersManager.getChannels()).length)
 	        {
 	            alert("There's no routing available, wait some more seconds")
                 return 
