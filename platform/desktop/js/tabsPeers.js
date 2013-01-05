@@ -14,26 +14,12 @@ function TabsPeers(tabsId)
         disabled: true
     })
 
-    // close icon: removing the tab on click
-    $("#"+tabsId+" span.ui-icon-closethick").live("click", function()
-    {
-        var index = $("#ui-corner-top", tabs).index($(this).parent());
-
-        // Remove the tab
-        var tab = tabs.find(".ui-tabs-nav li:eq("+index+")").remove();
-        // Find the id of the associated panel
-        var panelId = tab.attr("aria-controls");
-        // Remove the panel
-        $("#"+panelId).remove();
-
-        // Refresh the tabs widget
-        tabs.tabs("refresh");
-    });
-
     this.openOrCreate = function(uid, preferencesDialogOpen, peersManager, channel)
     {
+        var tabPanelId = '#'+tabsId+'-'+uid
+
         // Get index of the peer tab
-        var index = tabs.find('table').index($('#'+tabsId+'-'+uid))
+        var index = tabs.find('table').index($(tabPanelId))
 
         // Peer tab exists, open it
         if(index != -1)
@@ -42,7 +28,37 @@ function TabsPeers(tabsId)
         // Peer tab don't exists, create it
         else
         {
-            var tabPeer = new TabPeer(uid, preferencesDialogOpen,
+            // Tab
+            var li = document.createElement("LI");
+
+            var a = document.createElement("A");
+                a.href = tabPanelId
+                a.appendChild(document.createTextNode("UID: "+uid))
+            li.appendChild(a);
+
+            var span = document.createElement("SPAN");
+                span.setAttribute('class', "ui-icon ui-icon-closethick")
+                span.appendChild(document.createTextNode("Remove Tab"))
+                span.onclick = function()
+                {
+                    channel.fileslist_disableUpdates();
+
+                    // Remove the tab
+                    var index = $("#ui-corner-top", tabs).index($(this).parent());
+                    tabs.find(".ui-tabs-nav li:eq("+index+")").remove();
+
+                    // Remove the panel
+                    $(tabPanelId).remove();
+
+                    // Refresh the tabs widget
+                    tabs.tabs("refresh");
+                }
+            li.appendChild(span);
+
+            $(li).appendTo("#"+tabsId+" .ui-tabs-nav");
+
+            // Tab panel
+            var tabPeer = new TabPeer(uid, tabsId, preferencesDialogOpen,
             function(fileentry)
             {
                 return function()
@@ -89,7 +105,14 @@ function TabsPeers(tabsId)
             })
 
             // Request the peer's files list
-            channel.fileslist_query();
+            var SEND_UPDATES = 1
+//            var SMALL_FILES_ACCELERATOR = 2
+
+            var flags = SEND_UPDATES
+//            if()
+//                flags |= SMALL_FILES_ACCELERATOR
+
+            channel.fileslist_query(flags);
         }
     }
 }

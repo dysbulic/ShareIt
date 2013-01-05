@@ -70,30 +70,22 @@ UI.prototype =
         }, false);
     },
 
-	setHandshake: function(handshake)
-	{
-        var self = this
-
-	    // Set UID on user interface
-        handshake.onopen = function(uid)
-	    {
-	        document.getElementById("UID").value = uid
-
-            console.info("Connected to a handshake channel")
-	    }
-        handshake.onerror = function()
-        {
-            console.error("Unable to connect to a handshake channel")
-
-            // Allow backup of cache if there are items
-            self.preferencesDialogOpen(1)
-        }
-	},
-
 	setPeersManager: function(peersManager, db)
 	{
         var self = this
 
+
+        peersManager.addEventListener("error.noPeers", function()
+        {
+            console.error("Not connected to any peer")
+
+            // Allow backup of cache if there are items
+            self.preferencesDialogOpen(1)
+        })
+
+
+        // Set UID on user interface
+        document.getElementById("UID").value = peersManager.uid
 
         // Sharedpoints table
         var tableSharedpoints
@@ -196,9 +188,9 @@ UI.prototype =
          */
         function ConnectUser()
 	    {
-	        if(!peersManager.handshakeReady())
+	        if(!Object.keys(peersManager.getChannels()).length)
 	        {
-	            alert("There's no handshake channel available, wait some more seconds")
+	            alert("There's no routing available, wait some more seconds")
                 return 
 	        }
 

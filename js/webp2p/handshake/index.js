@@ -1,31 +1,79 @@
-/**
- * Remove leading 'falsy' items (null, undefined, '0', {}...) from an array
- * @param {Array} array {Array} where to remove the leading 'falsy' items
- * @returns {Array} The cleaned {Array}
- */
-function removeLeadingFalsy(array)
+function Transport_Presence_init(transport, peersManager, max_connections)
 {
-    var end = array.length
-    while(!array[end-1])
-        end--
-    return array.slice(0, end)
+    // Count the maximum number of pending connections allowed to be
+    // done with this handshake server (undefined == unlimited)
+    transport.connections = 0
+    transport.max_connections = max_connections
+
+    transport.presence = function()
+    {
+        transport.emit('presence', peersManager.uid)
+    }
+
+    transport.addEventListener('presence', function(event)
+    {
+        var uid = event.data[0]
+
+        // Don't try to connect to ourselves
+        if(uid != peersManager.uid)
+        {
+            // Check if we should ignore this new peer to increase
+            // entropy in the network mesh
+
+            // Do the connection with the new peer
+            peersManager.connectTo(uid, function()
+            {
+                // Increase the number of connections reached throught
+                // this handshake server
+                transport.connections++
+
+                // Close connection with handshake server if we got its
+                // quota of peers
+                if(transport.connections == transport.max_connections)
+                   transport.close()
+            },
+            function(uid, peer, channel)
+            {
+                console.error(uid, peer, channel)
+            },
+            transport)
+        }
+    })
 }
+
 
 /**
  * Manage the handshake channel using several servers
  * @constructor
  * @param {String} json_uri URI of the handshake servers configuration
  */
-function HandshakeManager(json_uri)
+function HandshakeManager(json_uri, peersManager)
 {
     var self = this
 
-    var handshake = null
+    var channels = {}
+    var status = 'disconnected'
 
-    /**
-     * UUID generator
-     */
-    var UUIDv4 = function b(a){return a?(a^Math.random()*16>>a/4).toString(16):([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,b)}
+
+    function nextHandshake(configuration)
+    {
+        // Remove the configuration from the poll
+        configuration.splice(index, 1)
+
+        // If there are more pending configurations, go to the next one
+        if(configuration.length)
+            getRandomHandshake(configuration)
+
+        // There are no more pending configurations and all channels have been
+        // closed, set as disconnected and notify to the PeersManager
+        else if(!Object.keys(channels).length)
+        {
+            status = 'disconnected'
+
+            peersManager.handshakeDisconnected()
+        }
+    }
+
 
     /**
      * Get a random handshake channel or test for the next one
@@ -33,140 +81,106 @@ function HandshakeManager(json_uri)
      */
     function getRandomHandshake(configuration)
     {
-        if(!configuration.length)
-        {
-            if(self.onerror)
-                self.onerror()
-            return
-        }
-
         var index = Math.floor(Math.random()*configuration.length)
         var index = 0   // Forced until redirection works
 
         var type = configuration[index][0]
         var conf = configuration[index][1]
 
-        function onerror(error)
-        {
-            console.error(error)
-
-            // Try to get an alternative handshake channel
-            configuration.splice(index, 1)
-            getRandomHandshake(configuration)
-        }
-
+        var channelConstructor
         switch(type)
         {
             case 'PubNub':
-                conf.uuid = conf.uuid || UUIDv4()
-                handshake = new Handshake_PubNub(conf)
+                conf.uuid = peersManager.uid
+                channelConstructor = Handshake_PubNub
                 break;
 
             case 'SimpleSignaling':
-                conf.uid = conf.uid || UUIDv4()
-                handshake = new Handshake_SimpleSignaling(conf)
+                conf.uid = peersManager.uid
+                channelConstructor = Handshake_SimpleSignaling
                 break;
 
             default:
-                onerror("Invalidad handshake server type '"+type+"'")
-                return
+                console.error("Invalidad handshake server type '"+type+"'")
+
+                // Try to get an alternative handshake channel
+                nextHandshake()
         }
 
-        // Count the maximum number of pending connections allowed to be done
-        // with this handshake server (undefined == unlimited)
-        self.pending_synapses = conf.max_synapses
+        var channel = new channelConstructor(conf)
+            channel.isPubsub = true
+            channel.uid = type
+            channels[channel.uid] = channel
 
-        handshake.onopen = function(uid)
+        Transport_init(channel)
+        Transport_Presence_init(channel, peersManager, conf.max_connections)
+        Transport_Routing_init(channel, peersManager)
+
+        channel.onopen = function()
         {
-            handshake.onmessage = function(uid, data)
-            {
-                if(data)
-                    switch(data[0])
-                    {
-                        case 'offer':
-                            if(self.onoffer)
-                                self.onoffer(uid, data[1])
-                            break
-
-                        case 'answer':
-                            if(self.onanswer)
-                                self.onanswer(uid, data[1])
-                    }
-                else if(self.onsynapse)
-                    self.onsynapse(uid)
-            }
+            status = 'connected'
 
             // Notify our presence to the other peers on the handshake server
-            handshake.send()
+            channel.presence()
 
             if(self.onopen)
-               self.onopen(uid)
+               self.onopen()
         }
-        handshake.onclose = function()
+        channel.onclose = function()
         {
-            delete self.pending_synapses
+            // Delete the channel from the current ones
+            delete channels[channel.uid]
 
-            configuration.splice(index, 1)
-            getRandomHandshake(configuration)
+            // Try to get an alternative handshake channel
+            nextHandshake(configuration)
         }
-        handshake.onerror = onerror
+        channel.onerror = function(error)
+        {
+            console.error(error)
+
+            // Close the channel (and try with the next one)
+            channel.close()
+        }
     }
+
+
+    /**
+     * Get the channels of all the connected peers and handshake servers
+     */
+    this.getChannels = function()
+    {
+        return channels
+    }
+
 
     var http_request = new XMLHttpRequest();
         http_request.open("GET", json_uri);
         http_request.onload = function()
         {
             if(this.status == 200)
-                getRandomHandshake(JSON.parse(http_request.response))
+            {
+                status = 'connecting'
+
+                var configuration = JSON.parse(http_request.response)
+
+                if(configuration.length)
+                    getRandomHandshake(configuration)
+
+                else if(self.onerror)
+                {
+                    status = 'disconnected'
+
+                    self.onerror('Handshake servers configuration is empty')
+                }
+            }
 
             else if(self.onerror)
-                self.onerror()
+                self.onerror('Unable to fetch handshake servers configuration')
         };
         http_request.onerror = function()
         {
             if(self.onerror)
-                self.onerror()
+                self.onerror('Unable to fetch handshake servers configuration')
         }
         http_request.send();
-
-
-    /**
-     * Send a RTCPeerConnection offer through the active handshake channel
-     * @param {UUID} uid Identifier of the other peer
-     * @param {String} sdp Content of the SDP object
-     */
-    this.sendOffer = function(uid, sdp)
-    {
-        if(handshake && handshake.send)
-            handshake.send(uid, ["offer", sdp]);
-        else
-            console.warn("Handshake channel is not available");
-    }
-
-    /**
-     * Send a RTCPeerConnection answer through the active handshake channel
-     * @param {UUID} uid Identifier of the other peer
-     * @param {String} sdp Content of the SDP object
-     */
-    this.sendAnswer = function(uid, sdp)
-    {
-        if(handshake)
-            handshake.send(uid, ["answer", sdp]);
-        else
-            console.warn("Handshake channel is not available");
-    }
-
-    /**
-     * Return the handshake server instance we are connected
-     */
-    this.handshake = function()
-    {
-        return handshake
-    }
-
-    this.close = function()
-    {
-        if(handshake)
-            handshake.close();
-    }
 }
