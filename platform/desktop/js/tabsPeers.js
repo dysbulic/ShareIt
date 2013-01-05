@@ -89,7 +89,14 @@ function TabsPeers(tabsId)
             })
 
             // Request the peer's files list
-            channel.fileslist_query();
+            var SEND_UPDATES = 1
+//            var SMALL_FILES_ACCELERATOR = 2
+
+            var flags = SEND_UPDATES
+//            if()
+//                flags |= SMALL_FILES_ACCELERATOR
+
+            channel.fileslist_query(flags);
         }
     }
 }
