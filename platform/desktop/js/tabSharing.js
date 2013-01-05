@@ -59,7 +59,7 @@ function TabSharing(tableId, preferencesDialogOpen)
 
         // Type
         var td = document.createElement('TD');
-            td.appendChild(document.createTextNode(type || "(unknown type)"));
+            td.appendChild(document.createTextNode(type || "(unknown)"));
         tr.appendChild(td)
 
         // Size

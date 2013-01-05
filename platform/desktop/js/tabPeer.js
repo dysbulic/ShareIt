@@ -172,7 +172,7 @@ function TabPeer(uid, tabsId, preferencesDialogOpen, onclickFactory)
 
         // Type
         var td = document.createElement('TD');
-            td.appendChild(document.createTextNode(type || "(unknown type)"));
+            td.appendChild(document.createTextNode(type || "(unknown)"));
         tr.appendChild(td)
 
         // Size
