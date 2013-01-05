@@ -20,53 +20,12 @@ function load()
             }
 
         // Init handshake manager
-        var handshake = new HandshakeManager('../../json/handshake.json')
-            handshake.onoffer = function(uid, sdp)
+        var handshakeManager = new HandshakeManager('../../json/handshake.json',
+                                                    peersManager)
+            handshakeManager.onerror = function(error)
             {
-                var pc = peersManager.onoffer(uid, sdp, function(uid, event)
-                {
-                    console.error("Error creating DataChannel with peer "+uid);
-                    console.error(event);
-                })
-
-                // Send answer
-                pc.createAnswer(function(answer)
-                {
-                    handshake.sendAnswer(uid, answer.sdp)
-
-                    pc.setLocalDescription(new RTCSessionDescription({sdp:  answer.sdp,
-                                                                      type: 'answer'}))
-                });
-            }
-            handshake.onanswer = function(uid, sdp)
-            {
-                peersManager.onanswer(uid, sdp, function(uid)
-                {
-                    console.error("[handshake.answer] PeerConnection '" + uid +
-                                  "' not found");
-                })
-            }
-            handshake.onsynapse = function(uid)
-            {
-                peersManager.connectTo(uid, function(channel)
-                {
-                    handshake.pending_synapses--
-
-                    if(handshake.pending_synapses == 0)
-                       handshake.close()
-                },
-                function(uid, peer, channel)
-                {
-                    console.error(uid, peer, channel)
-                })
-            }
-            handshake.onerror = function()
-            {
-                if(!peersManager.numPeers())
-                {
-                    console.warn("You are not connected to any peer")
-                    alert("You are not connected to any peer")
-                }
+                console.error(error)
+                alert(error)
             }
 //            handshake.onopen = function()
 //            {
@@ -83,7 +42,7 @@ function load()
 //                })
 //            }
 
-        peersManager.setHandshake(handshake)
+        peersManager.setHandshakeManager(handshakeManager)
 
         // Init cache backup system
         var cacheBackup = new CacheBackup(db)
@@ -92,7 +51,6 @@ function load()
         var ui = new UI()
             ui.setHasher(hasher)
             ui.setPeersManager(peersManager, db)
-            ui.setHandshake(handshake)
             ui.setCacheBackup(cacheBackup)
     })
 }
