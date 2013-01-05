@@ -2,12 +2,6 @@ function TabPeer(uid, tabsId, preferencesDialogOpen, onclickFactory)
 {
     EventTarget.call(this)
 
-    // Add a new tab for the remote peer files list
-    $("<li>"+
-        "<a href='#"+tabsId+"-"+uid+"'>UID: "+uid+"</a>"+
-        "<span class='ui-icon ui-icon-closethick'>Remove Tab</span>"+
-    "</li>").appendTo("#"+tabsId+" .ui-tabs-nav");
-
     var table = document.createElement("TABLE");
         table.id = tabsId+"-"+uid
     $(table).appendTo("#"+tabsId);
