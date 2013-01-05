@@ -41,6 +41,8 @@ function TabsPeers(tabsId)
                 span.appendChild(document.createTextNode("Remove Tab"))
                 span.onclick = function()
                 {
+                    channel.fileslist_disableUpdates();
+
                     // Remove the tab
                     var index = $("#ui-corner-top", tabs).index($(this).parent());
                     tabs.find(".ui-tabs-nav li:eq("+index+")").remove();
