@@ -40,13 +40,10 @@ function UI()
     // Tools menu
     var menuTools = new MenuTools("tools-menu")
 
-    function menuTools_open()
+    $("#tools-menu").click(function()
     {
         menuTools.open()
-    }
-
-    $("#tools-menu").click(menuTools_open)
-    $("#tools-menu3").click(menuTools_open)
+    })
 }
 
 UI.prototype =
