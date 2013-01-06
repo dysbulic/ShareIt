@@ -6,7 +6,7 @@ function TabsPeers(tabsId)
     {
         activate: function(event, ui)
         {
-            $("#StartHere").remove()
+            $("#Home").remove()
         },
 
         active: false,

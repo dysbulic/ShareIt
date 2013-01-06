@@ -46,7 +46,6 @@ function UI()
     }
 
     $("#tools-menu").click(menuTools_open)
-    $("#tools-menu2").click(menuTools_open)
     $("#tools-menu3").click(menuTools_open)
 }
 
