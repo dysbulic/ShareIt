@@ -41,12 +41,18 @@ span.add-sharedpoint {
 /* Tools menu
  * ------------------------------------------------------------------------- */
 
+#tools-menu
+{
+  float: right;
+}
+
 #tools-menu-submenu
 {
     width: 240px;   /* If this is commented, tools menu is showed horizontal */
     display: none;
     position: absolute;
-    top: 45px
+    top: 45px;
+    left: -200px
 }
 
 #tools-menu ul {
