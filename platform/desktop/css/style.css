@@ -82,8 +82,13 @@ span.about {
 }
 
 
-#Home #logo {
-    float: right;
+#Home
+{
+    text-align: center
+}
+
+#Home #logo
+{
     height: 120px
 }
 
@@ -97,6 +102,7 @@ span.about {
     list-style: disc;
     line-height: 150%
 }
+
 
 #Preferences2 {
     cursor: pointer
