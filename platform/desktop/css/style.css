@@ -41,12 +41,18 @@ span.add-sharedpoint {
 /* Tools menu
  * ------------------------------------------------------------------------- */
 
+#tools-menu
+{
+  float: right;
+}
+
 #tools-menu-submenu
 {
     width: 240px;   /* If this is commented, tools menu is showed horizontal */
     display: none;
     position: absolute;
-    top: 45px
+    top: 45px;
+    left: -200px
 }
 
 #tools-menu ul {
@@ -76,26 +82,22 @@ span.about {
 }
 
 
-#StartHere #tools-menu2 {
-    float: left;
-    vertical-align: middle
+#Home
+{
+    text-align: center
 }
 
-#StartHere #logo {
-    float: right;
+#Home #logo
+{
     height: 120px
 }
 
-#StartHere span {
+#Home span {
   background-position: center left;
   background-repeat: no-repeat;
   padding: .2em 0 .2em 1.5em;
 }
 
-#StartHere ul {
-    list-style: disc;
-    line-height: 150%
-}
 
 #Preferences2 {
     cursor: pointer
@@ -106,14 +108,6 @@ span.about {
 }
 
 #About2 {
-    cursor: pointer
-}
-
-#tools-menu2 {
-    cursor: pointer
-}
-
-#tools-menu3 {
     cursor: pointer
 }
 

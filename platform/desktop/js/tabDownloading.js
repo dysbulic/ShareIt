@@ -142,9 +142,9 @@ function TabDownloading(tableId, preferencesDialogOpen)
 
     this.update = function(fileslist)
     {
-        // Enable the tab if at least one file is being shared. This will only
-        // happen the first time, others the tab will be already enabled and the
-        // no files shared content will be shown
+        // Enable the tab if at least one file is being downloaded. This will
+        // only happen the first time, others the tab will be already enabled
+        // and the no files shared content will be shown.
         if(fileslist.length)
         {
             $("#tabs").tabs('enable', 0)
