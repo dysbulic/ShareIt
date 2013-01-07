@@ -81,7 +81,7 @@ UI.prototype =
 
 
         // Set UID on user interface
-        document.getElementById("UID").value = peersManager.uid
+        $("#UID-home, #UID-about").val(peersManager.uid)
 
         // Sharedpoints table
         var tableSharedpoints

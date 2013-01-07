@@ -94,31 +94,21 @@
 
             <div id="Home">
                 <a href="https://5apps.com/demos/piranna/shareit">
-                    <img id="logo" src="../../images/logo.svg" alt="ShareIt!"/>
-                </a>
+                    <img id="logo" src="../../images/logo.svg" alt="ShareIt!"/></a>
 
                 <br/>
+                <p style="line-height: 150%">
+                    <a id="Preferences2"><span class="preferences">configure</span></a>
+                    some shared points
                 <br/>
-
-                <ul>
-                    <li>
-                        <a id="Preferences2"><span class="preferences">configure</span></a>
-                        some shared points, or
-                    </li>
-                    <li>
-                        <a id="ConnectUser2"><span class="user">connect to a peer</span></a>
-                        using it's UID.
-                    </li>
-                    <!-- 
-                    <li>
-                        Your UID is on the
-                        <a id="About2"><span class="about">about</span></a>
-                        dialog.
-                    </li>
-                     -->
-                </ul>
-
+                    <a id="ConnectUser2"><span class="user">connect to a peer</span></a>
+                    using it's UID
                 <br/>
+                <span>
+                    <label for="UID">UID:</label>
+                    <input id="UID-home" readonly size="40" style="font-size: 13px"/>
+                </span>
+                </p>
                 <br/>
 
                 <h1>P2P filesharing in pure JavaScript &amp; HTML5</h1>
@@ -269,7 +259,7 @@
             </p>
             <span>
                 <label for="UID">UID:</label>
-                <input id="UID" readonly size="40"/>
+                <input id="UID-about" readonly size="40"/>
             </span>
             <br/>
             Based on
