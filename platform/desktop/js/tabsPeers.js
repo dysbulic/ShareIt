@@ -1,12 +1,14 @@
 function TabsPeers(tabsId)
 {
+    var home = $("#Home")
+
     var tabs = $("#"+tabsId)
 
     tabs.tabs(
     {
         activate: function(event, ui)
         {
-            $("#StartHere").remove()
+            home.detach()
         },
 
         active: false,
@@ -49,6 +51,17 @@ function TabsPeers(tabsId)
 
                     // Remove the panel
                     $(tabPanelId).remove();
+
+                    // If there are no more peer/search tabs, check if we are
+                    // sharing or downloading a file and if not, show again the
+                    // Home screen
+                    var disabled = $("#"+tabsId).tabs("option", "disabled")
+//                    if(!index && disabled.length == 2)
+                    if(disabled.length == 2)
+                    {
+                        $("#"+tabsId).tabs("option", "collapsible", true);
+                        home.appendTo("#"+tabsId);
+                    }
 
                     // Refresh the tabs widget
                     tabs.tabs("refresh");
