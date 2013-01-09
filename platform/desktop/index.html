@@ -57,25 +57,27 @@
             <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
                 <li id="tools-menu">
                     <img src="../../images/icon_gear.png" alt="Main menu" height="37px"/>
-                    <div id="tools-menu-submenu" class="ui-widget-header">
-                        <ul>
-                            <li>
-                                <a id="Preferences">
-                                    <span class="preferences">Preferences</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a id="ConnectUser">
-                                    <span class="user">Connect to user</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a id="About">
-                                    <span class="about">About</span>
-                                </a>
-                            </li>
-                        </ul>
+
+                    <div data-role="page" id="tools-menu-submenu" class="ui-widget-header">
+                      <ul data-role="listview" data-inset="true">
+                        <li>
+                          <a id="Preferences">
+                            <span class="preferences">Preferences</span>
+                          </a>
+                        </li>
+                        <li>
+                          <a id="ConnectUser">
+                            <span class="user">Connect to user</span>
+                          </a>
+                        </li>
+                        <li>
+                          <a id="About">
+                            <span class="about">About</span>
+                          </a>
+                        </li>
+                      </ul>
                     </div>
+
                 </li>
 <!--
                  <li style="float: right">
