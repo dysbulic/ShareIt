@@ -25,7 +25,7 @@
       <div data-role="popup" id="tools-menu-submenu" class="ui-widget-header">
         <ul data-role="listview" data-inset="true">
           <li>
-            <a href="#preferences">
+            <a href="#Sharedpoints-tab">
               <span class="preferences">Preferences</span>
             </a>
           </li>
@@ -57,49 +57,59 @@
 
     </div>
 
-    <div id="preferences" data-role="page" data-add-back-btn="true">
-      <div data-role="header" data-position="fixed">
+    <div id="Sharedpoints-tab" data-role="page" data-add-back-btn="true">
+      <div data-role="header" data-id="preferences" data-position="fixed">
         <h1>Config</h1>
 
         <div data-role="navbar">
           <ul>
-            <li><a href="#Sharedpoints-tab">Sharedpoints</a></li>
+            <li><a href="#Sharedpoints-tab" class="ui-btn-active ui-state-persist">Sharedpoints</a></li>
             <li><a href="#Backup">Backup</a></li>
           </ul>
         </div>
       </div>
 
-      <div id="Sharedpoints-tab">
-        <div style="max-height:425px;height:425px">
-          <table id="Sharedpoints">
-            <thead>
-              <tr>
-                <th scope="col" width="100%">Path</th>
-                <th scope="col">Shared</th>
-                <th scope="col">Remove</th>
-              </tr>
-            </thead>
-            <tbody/>
-          </table>
-        </div>
+      <table id="Sharedpoints">
+        <thead>
+          <tr>
+            <th scope="col" width="100%">Path</th>
+            <th scope="col">Shared</th>
+            <th scope="col">Remove</th>
+          </tr>
+        </thead>
+        <tbody/>
+      </table>
+
+      <div data-role="footer" data-position="fixed">
         <a onclick="$('#files').click()">
           <span class="add-sharedpoint">Add shared point</span>
         </a>
-        <input type="file" id="files" name="files[]" directory webkitdirectory multiple style="height: 20px; opacity: 0; filter:alpha(opacity: 0)"/>
+      </div>
+      <input type="file" id="files" name="files[]" directory webkitdirectory multiple style="height: 20px; opacity: 0; filter:alpha(opacity: 0)"/>
+    </div>
+
+    <div id="Backup" data-role="page" data-add-back-btn="true">
+      <div data-role="header" data-id="preferences" data-position="fixed">
+        <h1>Config</h1>
+
+        <div data-role="navbar">
+          <ul>
+            <li><a href="#Sharedpoints-tab" class="ui-btn-active ui-state-persist">Sharedpoints</a></li>
+            <li><a href="#Backup">Backup</a></li>
+          </ul>
+        </div>
       </div>
 
-      <div id="Backup">
-        <div id="message"></div>
-        <div id="Export">
-          <img src="../../images/Add-Files-To-Archive-64.png"/>
-          Export cache to a file
-        </div>
-        <div id="Import">
-          <img src="../../images/extract-love.png"/>
-          Import cache from a file
-        </div>
-        <input type="file" id="import-backup" style="height: 20px; opacity: 0; filter:alpha(opacity: 0)"/>
+      <div id="message"></div>
+      <div id="Export">
+        <img src="../../images/Add-Files-To-Archive-64.png"/>
+        Export cache to a file
       </div>
+      <div id="Import">
+        <img src="../../images/extract-love.png"/>
+        Import cache from a file
+      </div>
+      <input type="file" id="import-backup" style="height: 20px; opacity: 0; filter:alpha(opacity: 0)"/>
     </div>
 
     <div id="about" data-role="page" data-add-back-btn="true">
