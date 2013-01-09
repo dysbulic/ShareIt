@@ -18,8 +18,28 @@
   <body>
     <div id="Home" data-role="page">
       <div data-role="header">
-        <a href="#tools-menu-submenu" data-icon="gear" class="ui-btn-right" data-rel="dialog">Options</a>
+        <a href="#tools-menu-submenu" data-icon="gear" class="ui-btn-right" data-rel="popup">Options</a>
         <span class="ui-title" />
+      </div>
+
+      <div data-role="popup" id="tools-menu-submenu" class="ui-widget-header">
+        <ul data-role="listview" data-inset="true">
+          <li>
+            <a href="#preferences">
+              <span class="preferences">Preferences</span>
+            </a>
+          </li>
+          <li>
+            <a href="#connectUser">
+              <span class="user">Connect to user</span>
+            </a>
+          </li>
+          <li>
+            <a href="#about">
+              <span class="about">About</span>
+            </a>
+          </li>
+        </ul>
       </div>
 
       <img id="logo" src="images/logo.svg" alt="ShareIt!"/>
@@ -35,26 +55,6 @@
         </li>
       </ul>
 
-    </div>
-
-    <div data-role="page" id="tools-menu-submenu" class="ui-widget-header">
-      <ul data-role="listview" data-inset="true">
-        <li>
-          <a href="#preferences">
-            <span class="preferences">Preferences</span>
-          </a>
-        </li>
-        <li>
-          <a href="#connectUser">
-            <span class="user">Connect to user</span>
-          </a>
-        </li>
-        <li>
-          <a href="#about">
-            <span class="about">About</span>
-          </a>
-        </li>
-      </ul>
     </div>
 
     <div id="preferences" data-role="page" data-add-back-btn="true">
