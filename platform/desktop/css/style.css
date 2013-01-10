@@ -72,15 +72,15 @@ span.add-sharedpoint {
 }
 
 span.preferences {
-  background-image: url(../images/preferences.png);
+  background-image: url(../../../images/preferences.png);
 }
 
 span.user {
-  background-image: url(../images/user.png);
+  background-image: url(../../../images/user.png);
 }
 
 span.about {
-  background-image: url(../images/about.png);
+  background-image: url(../../../images/about.png);
 }
 
 
