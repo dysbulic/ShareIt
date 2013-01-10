@@ -178,29 +178,29 @@
 
             <!-- Tabs contents -->
 
-            <table id="Downloading" style="display: none;">
+            <table id="Downloading" style="display: none;" data-role="table" data-mode="columntoggle">
                 <thead>
-                    <tr>
+                    <tr class="ui-bar-d">
                         <th scope="col" width="100%">Filename</th>
-                        <th scope="col">Type</th>
-                        <th scope="col">Size</th>
-                        <th scope="col">Downloaded</th>
-                        <th scope="col">Progress</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Time remaining</th>
-                        <th scope="col">Speed</th>
-                        <th scope="col">Sources</th>
-                        <th scope="col">Date added</th>
+                        <th scope="col" data-priority="6">Type</th>
+                        <th scope="col" data-priority="5">Size</th>
+                        <th scope="col" data-priority="4">Downloaded</th>
+                        <th scope="col" data-priority="1">Progress</th>
+                        <th scope="col" data-priority="5">Status</th>
+                        <th scope="col" data-priority="3">Time remaining</th>
+                        <th scope="col" data-priority="2">Speed</th>
+                        <th scope="col" data-priority="4">Sources</th>
+                        <th scope="col" data-priority="6">Date added</th>
                     </tr>
                 </thead>
                 <tbody/>
             </table>
-            <table id="Sharing" style="display: none;">
+            <table id="Sharing" style="display: none;" data-role="table" data-mode="columntoggle">
                 <thead>
-                    <tr>
+                    <tr class="ui-bar-d">
                         <th scope="col" width="100%">Filename</th>
-                        <th scope="col">Type</th>
-                        <th scope="col">Size</th>
+                        <th scope="col" data-priority="2">Type</th>
+                        <th scope="col" data-priority="1">Size</th>
                     </tr>
                 </thead>
                 <tbody/>
@@ -216,18 +216,22 @@
             </ul>
 
             <div id="Sharedpoints-tab">
+
                 <div style="max-height:425px;height:425px">
-		            <table id="Sharedpoints">
-		                <thead>
-		                    <tr>
-		                        <th scope="col" width="100%">Path</th>
-		                        <th scope="col">Shared</th>
-		                        <th scope="col">Remove</th>
-		                    </tr>
-		                </thead>
-		                <tbody/>
-		            </table>
-	            </div>
+
+                  <table id="Sharedpoints" data-role="table" data-mode="columntoggle">
+                    <thead>
+                      <tr class="ui-bar-d">
+                        <th scope="col" width="100%">Path</th>
+                        <th scope="col" data-priority="2">Shared</th>
+                        <th scope="col" data-priority="1">Remove</th>
+                      </tr>
+                    </thead>
+                    <tbody/>
+                  </table>
+
+                </div>
+
                 <a onclick="$('#files').click()">
                     <span class="add-sharedpoint">Add shared point</span>
                 </a>
