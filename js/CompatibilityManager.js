@@ -45,7 +45,7 @@ function CompatibilityManager()
 
         if(errors)
         {
-            icon = "../../images/smiley-sad.svg"
+            icon = "images/smiley-sad.svg"
 
             msg += "on your browser because it doesn't meet the following requeriments:</p>"
 
@@ -66,7 +66,7 @@ function CompatibilityManager()
         }
         else if(warnings)
         {
-            icon = "../../images/smiley-quiet.svg"
+            icon = "images/smiley-quiet.svg"
 
             msg += "optimally on your browser because the following issues:</p>"
 
@@ -123,7 +123,7 @@ function CompatibilityManager()
         // Browser have been upgraded and now it's fully compatible
         else if(localStorage.compatibility)
         {
-            showDialog("../../images/smiley-happy.svg",
+            showDialog("images/smiley-happy.svg",
                        "Congratulations! Your browser is now fully compatible.")
 
             localStorage.removeItem('compatibility')

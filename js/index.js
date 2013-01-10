@@ -20,7 +20,7 @@ function load()
             }
 
         // Init handshake manager
-        var handshakeManager = new HandshakeManager('../../json/handshake.json',
+        var handshakeManager = new HandshakeManager('json/handshake.json',
                                                     peersManager)
             handshakeManager.onerror = function(error)
             {
