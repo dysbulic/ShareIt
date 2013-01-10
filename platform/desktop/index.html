@@ -234,18 +234,20 @@
                 <input type="file" id="files" name="files[]" directory webkitdirectory multiple style="height: 20px; opacity: 0; filter:alpha(opacity: 0)"/>
             </div>
 
-            <div id="Backup">
-                <div id="message"></div>
-	            <div id="Export">
-	                <img src="../../images/Add-Files-To-Archive-64.png"/>
-	                Export cache to a file
-	            </div>
-	            <div id="Import">
-                    <img src="../../images/extract-love.png"/>
-                    Import cache from a file
-	            </div>
-                <input type="file" id="import-backup" style="height: 20px; opacity: 0; filter:alpha(opacity: 0)"/>
+            <div id="Backup" data-role="page" data-add-back-btn="true">
+
+              <div id="message"></div>
+              <a data-role="button" id="Export">
+                <img src="../../images/Add-Files-To-Archive-64.png"/>
+                Export cache to a file
+              </a>
+	          <a data-role="button" id="Import">
+                <img src="../../images/extract-love.png"/>
+                Import cache from a file
+              </a>
+              <input type="file" id="import-backup" style="height: 20px; opacity: 0; filter:alpha(opacity: 0)"/>
             </div>
+
         </div>
 
         <div id="dialog-about" title="About ShareIt!" style="display: none">
