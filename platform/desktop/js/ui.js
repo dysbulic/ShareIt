@@ -48,7 +48,7 @@ function UI()
 
 UI.prototype =
 {
-    setHasher: function(hasher)
+    setSharedpointsManager: function(sharedpointsManager)
     {
         var self = this
 
@@ -56,9 +56,15 @@ UI.prototype =
         {
             policy(function()
             {
-                hasher.hash(event.target.files)
-
-                self.dispatchEvent({type: "sharedpoints.update"})
+                sharedpointsManager.addSharedpoint_Folder(event.target.files,
+                function()
+                {
+                    self.dispatchEvent({type: "sharedpoints.update"})
+                },
+                function()
+                {
+                    console.warn('Sharedpoint already defined')
+                })
             })
 
             // Reset the input
