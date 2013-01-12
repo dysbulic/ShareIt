@@ -74,81 +74,90 @@ function TabSharing(tableId, preferencesDialogOpen)
 
     this.updateFiles = function(fileslist)
     {
+        function classEscape(text)
+        {
+            return text.replace(/ /g,'_').replace(/\//g,'__')
+        }
+
         var prevSharedpoint = null
-        var prevFolder = ""
+        var prevPath = ""
 
         for(var i=0, fileentry; fileentry=fileslist[i]; i++)
         {
             // Add sharedpoint row
             var sharedpoint = fileentry.sharedpoint
-            if(sharedpoint)
-                sharedpoint = sharedpoint.name.replace(' ','')
 
             if(prevSharedpoint != sharedpoint)
             {
-                prevSharedpoint = sharedpoint
-                prevFolder = ""
-
                 if(sharedpoint)
                 {
+                    // Sharedpoint row
                     var tr = document.createElement('TR');
-                        tr.id = sharedpoint
+                        tr.id = classEscape(sharedpoint)
 
                     var td = document.createElement('TD');
                         td.colSpan = 2
                     tr.appendChild(td)
 
-                    // Name & icon
+                    // Sharedpoint name & icon
                     var span = document.createElement('SPAN');
-                        span.className = fileentry.sharedpoint.type
-                        span.appendChild(document.createTextNode(fileentry.sharedpoint.name));
+//                        span.className = fileentry.sharedpoint.type
+                        span.appendChild(document.createTextNode(sharedpoint));
                     td.appendChild(span)
 
                     this.tbody.appendChild(tr)
                 }
+
+                prevSharedpoint = sharedpoint
+                prevPath = ""
             }
 
             // Add folder row
-            if(prevSharedpoint)
+            var path = fileentry.path
+
+            if(path)
             {
-                var folder = fileentry.path.replace(' ','').replace('/','__')
-                if(prevFolder != folder)
+                if(prevSharedpoint)
+                    path = prevSharedpoint+'/'+path
+
+                if(prevPath != path)
                 {
-                    prevFolder = folder
-
-                    folder = prevSharedpoint+'__'+folder
-
+                    // Folder row
                     var tr = document.createElement('TR');
-                        tr.id = folder
+                        tr.id = classEscape(path)
 
                     var td = document.createElement('TD');
                         td.colSpan = 2
                     tr.appendChild(td)
 
-                    folder = folder.split('__')
+                    var path_tokens = path.split('/')
 
-                    // Name & icon
+                    // Folder name & icon
                     var span = document.createElement('SPAN');
                         span.className = 'folder'
-                        span.appendChild(document.createTextNode(folder.slice(-1)));
+                        span.appendChild(document.createTextNode(path_tokens.slice(-1)));
                     td.appendChild(span)
 
-                    folder = folder.slice(0,-1)
-                    if(folder)
-                        tr.setAttribute('class', "child-of-" + folder.join('__'))
+                    path_tokens = path_tokens.slice(0,-1)
+                    if(path_tokens)
+                        tr.setAttribute('class', "child-of-" + classEscape(path_tokens.join('/')))
 
                     this.tbody.appendChild(tr)
+
+                    prevPath = path
                 }
             }
 
             // Add file row
-            if(prevFolder)
-                sharedpoint += '__' + prevFolder
-
             var tr = rowFactory(fileentry)
 
-            if(sharedpoint != undefined)
-                tr.setAttribute('class', "child-of-" + sharedpoint)
+            if(sharedpoint)
+            {
+                if(prevPath)
+                    sharedpoint = prevPath
+
+                tr.setAttribute('class', "child-of-" + classEscape(sharedpoint))
+            }
 
             this.tbody.appendChild(tr)
         }
