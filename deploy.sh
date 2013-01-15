@@ -37,6 +37,14 @@ if [ $status -ne 0 ];then
 fi
 
 git merge master
+
+status=$?
+if [ $status -ne 0 ];then
+    echo "* There was a problem merging       *"
+    echo "* Probably modified & deleted files *"
+    exit $status
+fi
+
 git rm -rf "daemon" "doc" "html_basic" "test images" "COLLABORATE.md" "deploy.sh" "README.md"
 git commit --allow-empty-message
 
@@ -45,11 +53,11 @@ git checkout master
 
 echo
 echo "* Deploy in GitHub *"
-git push --force origin $PRODUCTION_BRANCH
+git push origin $PRODUCTION_BRANCH
 
 echo
 echo "* Deploy to 5Apps *"
-git push --force 5apps $PRODUCTION_BRANCH:master
+git push 5apps $PRODUCTION_BRANCH:master
 
 
 echo
