@@ -1,0 +1,5 @@
+JQuery widgets are ARIA accesibility compliant.
+Table headers with scope and clear cells content for screen readers.
+
+Could work on mobile phones, the first Internet enabled device that 500 million
+will have ever on developing countries.
