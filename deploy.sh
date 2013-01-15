@@ -28,6 +28,14 @@ git push origin master
 echo
 echo "* Update changes on production branch (gh-pages) *"
 git checkout $PRODUCTION_BRANCH
+
+status=$?
+if [ $status -ne 0 ];then
+    echo "* There was a problem doing checkout *"
+    echo "* Probably a non staged file         *"
+    exit $status
+fi
+
 git merge master
 git rm -rf "daemon" "doc" "html_basic" "test images" "COLLABORATE.md" "deploy.sh" "README.md"
 git commit --allow-empty-message
