@@ -7,7 +7,7 @@
 
 
 PRODUCTION_BRANCH="gh-pages"
-PRODUCTION_REMOVE="daemon doc html_basic test\ images COLLABORATE.md deploy.sh README.md"
+PRODUCTION_REMOVE="daemon doc html_basic test_images COLLABORATE.md deploy.sh README.md"
 
 
 echo
