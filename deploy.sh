@@ -16,8 +16,8 @@ git pull --ff-only
 
 status=$?
 if [ $status -ne 0 ];then
-    echo "* There was a problem pull from master *"
-    echo "* Pprobably a non fast-forward merge   *"
+    echo "* There was a problem pulling from master *"
+    echo "* Probably a non fast-forward merge       *"
     exit $status
 fi
 
@@ -28,7 +28,11 @@ git push origin master
 echo
 echo "* Update changes on production branch (gh-pages) *"
 git checkout $PRODUCTION_BRANCH
-git rebase master
+git merge master
+git rm -r "daemon" "doc" "html_basic" "test images" "COLLABORATE.md" "deploy.sh" "README.md"
+git commit --amend
+
+# Come back to master branch
 git checkout master
 
 echo
@@ -38,3 +42,7 @@ git push --force origin $PRODUCTION_BRANCH
 echo
 echo "* Deploy to 5Apps *"
 git push --force 5apps $PRODUCTION_BRANCH:master
+
+
+echo
+echo ""
