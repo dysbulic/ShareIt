@@ -41,13 +41,8 @@ git merge master
 
 status=$?
 if [ $status -ne 0 ];then
-    echo
-    echo "* There was a problem merging       *"
-    echo "* Probably modified & deleted files *"
-    echo
-
     rm -rf $PRODUCTION_REMOVE
-    git commit -a --allow-empty-message
+    git commit -a --no-edit --allow-empty-message
 fi
 
 # Come back to master branch
