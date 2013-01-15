@@ -42,7 +42,10 @@ status=$?
 if [ $status -ne 0 ];then
     echo "* There was a problem merging       *"
     echo "* Probably modified & deleted files *"
-    exit $status
+#    exit $status
+
+    rm -rf "daemon" "doc" "html_basic" "test images" "COLLABORATE.md" "deploy.sh" "README.md"
+    git commit --allow-empty-message
 fi
 
 git rm -rf "daemon" "doc" "html_basic" "test images" "COLLABORATE.md" "deploy.sh" "README.md"
