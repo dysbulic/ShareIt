@@ -29,8 +29,8 @@ echo
 echo "* Update changes on production branch (gh-pages) *"
 git checkout $PRODUCTION_BRANCH
 git merge master
-git rm -r "daemon" "doc" "html_basic" "test images" "COLLABORATE.md" "deploy.sh" "README.md"
-git commit --amend
+git rm -rf "daemon" "doc" "html_basic" "test images" "COLLABORATE.md" "deploy.sh" "README.md"
+git commit --allow-empty-message
 
 # Come back to master branch
 git checkout master
@@ -45,4 +45,6 @@ git push --force 5apps $PRODUCTION_BRANCH:master
 
 
 echo
-echo ""
+echo "* Clean local repository *"
+git gc --aggressive
+git clean -n -d
