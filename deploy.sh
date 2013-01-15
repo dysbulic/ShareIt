@@ -6,6 +6,9 @@
 # It will be of none interest for you since it's only purposed for internal use
 
 
+PRODUCTION_BRANCH="gh-pages"
+
+
 echo
 echo "* Looking for remote changes on master branch *"
 git checkout master
@@ -24,14 +27,14 @@ git push origin master
 
 echo
 echo "* Update changes on production branch (gh-pages) *"
-git checkout gh-pages
+git checkout $PRODUCTION_BRANCH
 git rebase master
 git checkout master
 
 echo
 echo "* Deploy in GitHub *"
-git push --force origin gh-pages
+git push --force origin $PRODUCTION_BRANCH
 
 echo
 echo "* Deploy to 5Apps *"
-git push --force 5apps gh-pages:master
+git push --force 5apps $PRODUCTION_BRANCH:master
