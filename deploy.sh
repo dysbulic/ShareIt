@@ -7,6 +7,7 @@
 
 
 PRODUCTION_BRANCH="gh-pages"
+PRODUCTION_REMOVE="daemon doc html_basic test\ images COLLABORATE.md deploy.sh README.md"
 
 
 echo
@@ -40,16 +41,14 @@ git merge master
 
 status=$?
 if [ $status -ne 0 ];then
+    echo
     echo "* There was a problem merging       *"
     echo "* Probably modified & deleted files *"
-#    exit $status
+    echo
 
-    rm -rf "daemon" "doc" "html_basic" "test images" "COLLABORATE.md" "deploy.sh" "README.md"
-    git commit --allow-empty-message
+    rm -rf $PRODUCTION_REMOVE
+    git commit -a --allow-empty-message
 fi
-
-git rm -rf "daemon" "doc" "html_basic" "test images" "COLLABORATE.md" "deploy.sh" "README.md"
-git commit --allow-empty-message
 
 # Come back to master branch
 git checkout master
