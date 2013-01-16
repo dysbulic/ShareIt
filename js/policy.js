@@ -2,7 +2,7 @@
  * Show a dialog with the usage policy of the webapp and checks if it's accepted
  * @param {Function} onaccept Callback if policy was previously accepted
  */
-function policy(onaccept)
+function policy(onaccept, oncancel)
 {
     // Exec 'onaccept' callback automatically if policy was accepted previously
     if(onaccept && localStorage.policy_acepted)
@@ -38,6 +38,9 @@ function policy(onaccept)
                             localStorage.removeItem('policy_acepted')
 
                             console.warn("Policy was not accepted")
+
+                            if(oncancel)
+                                oncancel();
                         },
                         Accept: function()
                         {
