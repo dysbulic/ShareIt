@@ -59,10 +59,15 @@ UI.prototype =
                 hasher.hash(event.target.files)
 
                 self.dispatchEvent({type: "sharedpoints.update"})
-            })
 
-            // Reset the input
-            this.value = ""
+                // Reset the input after send the files to hash
+                this.value = ""
+            },
+            function()
+            {
+                // Reset the input after NOT accepting the policy
+                this.value = ""
+            })
         }, false);
     },
 
@@ -134,6 +139,7 @@ UI.prototype =
                         downloading.push(fileentry)
 
                 // Update Downloading files list
+                self.isDownloading = downloading.length
                 tabDownloading.update(downloading)
             })
         }
@@ -163,6 +169,7 @@ UI.prototype =
                         sharing.push(fileentry)
 
                 // Update Sharing files list
+                self.isSharing = sharing.length
                 tabSharing.update(sharing)
             })
         }
@@ -211,6 +218,26 @@ UI.prototype =
 
 	    $("#ConnectUser2").unbind('click')
 	    $("#ConnectUser2").click(ConnectUser)
+
+
+	    /**
+	     * Prevent to close the webapp by accident
+	     */
+	    window.onbeforeunload = function()
+	    {
+            // Downloading
+            if(self.isDownloading)
+                return "You are currently downloading files."
+
+            // Sharing
+            if(self.isSharing)
+                return "You are currently sharing files."
+
+	        // Routing (connected to at least two peers or handshake servers)
+            var peers = Object.keys(peersManager.getChannels()).length
+	        if(peers >= 2)
+	            return "You are currently routing between "+peers+" peers."
+	    }
 	},
 
 	setCacheBackup: function(cacheBackup)
