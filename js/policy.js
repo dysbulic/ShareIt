@@ -6,14 +6,17 @@ function policy(onaccept, oncancel)
 {
     function check()
     {
-        // Exec 'onaccept' callback automatically if policy was accepted previously
-        if(onaccept && localStorage.policy_acepted)
+        // Exec 'onaccept' callback automatically if policy was accepted
+        // previously and it's currently valid
+        if(localStorage.policy_acepted != undefined
+        && localStorage.policy_acepted >= policy.lastModified
+        && onaccept)
         {
             onaccept();
             return
         }
 
-        // Policy was not accepted previously
+        // Policy was not accepted previously or was outdated
         // or we are showing it ('onaccept' callback was not defined)
         policy.dialog.dialog(
         {
@@ -40,7 +43,7 @@ function policy(onaccept, oncancel)
                     $(this).dialog("close");
 
                     // Policy acepted, set date and exec 'onaccept'
-                    localStorage.policy_acepted = policy.lastModified.getTime()
+                    localStorage.policy_acepted = (new Date()).getTime()
 
                     console.warn("Policy was accepted")
 
@@ -68,11 +71,8 @@ function policy(onaccept, oncancel)
                     case 200:   // Ok
                     {
                         // Get policy modification date
-                        var lastModified = http_request.getResponseHeader("Last-Modified")
-                        if(lastModified)
-                           policy.lastModified = new Date(lastModified)
-                        else
-                           policy.lastModified = new Date(0); // January 1, 1970
+                        var lastModified = http_request.getResponseHeader("Last-Modified") || 0;  // January 1, 1970
+                        policy.lastModified = (new Date(lastModified)).getTime()
 
                         // Set the policy text on the dialog
                         policy.dialog = $("#dialog-policy")
