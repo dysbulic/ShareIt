@@ -40,7 +40,7 @@ function policy(onaccept, oncancel)
                     $(this).dialog("close");
 
                     // Policy acepted, set date and exec 'onaccept'
-                    localStorage.policy_acepted = (new Date()).getTime()
+                    localStorage.policy_acepted = policy.lastModified.getTime()
 
                     console.warn("Policy was accepted")
 
@@ -59,20 +59,33 @@ function policy(onaccept, oncancel)
     else
     {
         var http_request = new XMLHttpRequest();
-            http_request.open("GET", "../../policy.html");
+            http_request.open("GET", "../../policy.html", true);
             http_request.onload = function()
             {
                 // Policy text loaded successfully, fill the dialog and check it
-                if(this.status == 200)
+                switch(this.status)
                 {
-                    policy.dialog = $("#dialog-policy")
-                    policy.dialog.html(http_request.response)
+                    case 200:   // Ok
+                    {
+                        // Get policy modification date
+                        var lastModified = http_request.getResponseHeader("Last-Modified")
+                        if(lastModified)
+                           policy.lastModified = new Date(lastModified)
+                        else
+                           policy.lastModified = new Date(0); // January 1, 1970
 
-                    check()
+                        // Set the policy text on the dialog
+                        policy.dialog = $("#dialog-policy")
+                        policy.dialog.html(http_request.response)
+
+                        // Check if policy was accepted
+                        check()
+                    }
+                    break
+
+                    default:    // Error
+                        console.error("There was an error loading the Usage Policy")
                 }
-
-                else
-                    console.error("There was an error loading the Usage Policy")
             };
             http_request.onerror = function()
             {
