@@ -52,22 +52,25 @@ UI.prototype =
     {
         var self = this
 
-        document.getElementById('files').addEventListener('change',
-        function(event)
+        var input = document.getElementById('files')
+
+        input.addEventListener('change', function(event)
         {
+            var files = event.target.files
+
             policy(function()
             {
-                hasher.hash(event.target.files)
+                hasher.hash(files)
 
                 self.dispatchEvent({type: "sharedpoints.update"})
 
                 // Reset the input after send the files to hash
-                this.value = ""
+                input.value = ""
             },
             function()
             {
                 // Reset the input after NOT accepting the policy
-                this.value = ""
+                input.value = ""
             })
         }, false);
     },
