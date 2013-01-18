@@ -229,6 +229,11 @@ UI.prototype =
 	     */
 	    window.onbeforeunload = function()
 	    {
+	        // Allow to exit the application normally if we are not connected
+            var peers = Object.keys(peersManager.getChannels()).length
+            if(!peers)
+                return
+
             // Downloading
             if(self.isDownloading)
                 return "You are currently downloading files."
@@ -238,9 +243,8 @@ UI.prototype =
                 return "You are currently sharing files."
 
 	        // Routing (connected to at least two peers or handshake servers)
-            var peers = Object.keys(peersManager.getChannels()).length
-	        if(peers >= 2)
-	            return "You are currently routing between "+peers+" peers."
+            if(peers >= 2)
+                return "You are currently routing between "+peers+" peers."
 	    }
 	},
 
