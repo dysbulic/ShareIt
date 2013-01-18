@@ -51,7 +51,7 @@ function DialogConfig(dialogId, options)
         {
             policy(function()
             {
-                cacheBackup.import(event.target.files)
+                cacheBackup.import(event.target.files[0])
             })
 
             // Reset the input
