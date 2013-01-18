@@ -52,7 +52,8 @@ UI.prototype =
     {
         var self = this
 
-        document.getElementById('files').addEventListener('change', function()
+        document.getElementById('files').addEventListener('change',
+        function(event)
         {
             policy(function()
             {
