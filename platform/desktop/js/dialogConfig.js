@@ -26,7 +26,23 @@ function DialogConfig(dialogId, options)
         {
             policy(function()
             {
-                cacheBackup.export()
+                cacheBackup.export(function(blob)
+                {
+                    if(blob)
+                    {
+                        var date = new Date()
+                        var name = 'WebP2P-CacheBackup_'+date.toISOString()+'.zip'
+
+                        savetodisk(blob, name)
+                    }
+                    else
+                        alert("Cache has no files")
+                },
+                undefined,
+                function()
+                {
+                    console.error("There was an error exporting the cache")
+                })
             })
         })
 
