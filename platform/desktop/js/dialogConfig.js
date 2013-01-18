@@ -1,5 +1,7 @@
 function DialogConfig(dialogId, options)
 {
+    EventTarget.call(this)
+
     var dialog = $("#"+dialogId)
 
     dialog.dialog(options);
@@ -15,6 +17,35 @@ function DialogConfig(dialogId, options)
     {
         dialog.tabs("option", "active", tabIndex)
         dialog.dialog("open");
+    }
+
+
+    // Sharedpoints tab
+    this.setHasher = function(hasher)
+    {
+        var self = this
+
+        var input = dialog.find('#files')
+
+        input.change(function(event)
+        {
+            var files = event.target.files
+
+            policy(function()
+            {
+                hasher.hash(files)
+
+                self.dispatchEvent({type: "sharedpoints.update"})
+
+                // Reset the input after send the files to hash
+                input.val("")
+            },
+            function()
+            {
+                // Reset the input after NOT accepting the policy
+                input.val("")
+            })
+        });
     }
 
 
@@ -47,19 +78,29 @@ function DialogConfig(dialogId, options)
         })
 
         // Import
-        document.getElementById('import-backup').addEventListener('change', function()
+        var input = dialog.find('#import-backup')
+
+        input.change(function(event)
         {
+            var file = event.target.files[0]
+
             policy(function()
             {
-                cacheBackup.import(event.target.files[0])
-            })
+                cacheBackup.import(file)
 
-            // Reset the input
-            this.value = ""
-        }, false);
+                // Reset the input after got the backup file
+                input.val("")
+            },
+            function()
+            {
+                // Reset the input after NOT accepting the policy
+                input.val("")
+            })
+        });
+
         dialog.find("#Import").click(function()
         {
-            $('#import-backup').click()
+            input.click()
         })
     }
 }

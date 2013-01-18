@@ -50,29 +50,11 @@ UI.prototype =
 {
     setHasher: function(hasher)
     {
-        var self = this
-
-        var input = document.getElementById('files')
-
-        input.addEventListener('change', function(event)
+        this.dialogConfig.setHasher(hasher)
+        this.dialogConfig.addEventListener("sharedpoints.update", function()
         {
-            var files = event.target.files
-
-            policy(function()
-            {
-                hasher.hash(files)
-
-                self.dispatchEvent({type: "sharedpoints.update"})
-
-                // Reset the input after send the files to hash
-                input.value = ""
-            },
-            function()
-            {
-                // Reset the input after NOT accepting the policy
-                input.value = ""
-            })
-        }, false);
+            self.dispatchEvent({type: "sharedpoints.update"})
+        })
     },
 
 	setPeersManager: function(peersManager, db)
