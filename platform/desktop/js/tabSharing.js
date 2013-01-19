@@ -39,11 +39,11 @@ function TabSharing(tableId, preferencesDialogOpen)
         var td = document.createElement('TD');
         tr.appendChild(td)
 
-        var type = (fileentry.type != undefined)? fileentry.type: fileentry.file.type
+        var blob = fileentry.file || fileentry.blob || fileentry
+
+        var type = blob.type
 
         // Name & icon
-        var blob = fileentry.blob || fileentry.file || fileentry
-
         var a = document.createElement("A");
             a.href = window.URL.createObjectURL(blob)
             a.target = "_blank"
@@ -63,7 +63,8 @@ function TabSharing(tableId, preferencesDialogOpen)
         tr.appendChild(td)
 
         // Size
-        var size = (fileentry.size != undefined) ? fileentry.size : fileentry.file.size
+        var size = blob.size
+
         var td = document.createElement('TD');
             td.className="filesize"
             td.appendChild(document.createTextNode(humanize.filesize(size)));

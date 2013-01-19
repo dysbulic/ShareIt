@@ -1,4 +1,4 @@
-function CacheBackup(db)
+function CacheBackup(db, peersManager)
 {
     zip.workerScriptsPath = "../../js/webp2p/lib/zip.js/";
 
@@ -101,23 +101,14 @@ function CacheBackup(db)
                                             {
                                                 var data = evt.target.result
 
-                                                updateFile(fileentry, chunk, data)
-
-                                                // Check for pending chunks and require them or save the file
-                                                var pending_chunks = fileentry.bitmap.indexes(false).length
-
-                                                // There are no more chunks, set file as fully downloaded
-                                                if(!pending_chunks)
-                                                    delete fileentry.bitmap;
-
-                                                // Update the fileentry status on the database
-                                                db.files_put(fileentry)
+                                                peersManager.updateFile(fileentry, chunk, data)
                                             }
 
                                         var start = chunk * chunksize;
                                         var stop  = start + chunksize;
 
-                                        blob.getBlob(null, function(blob)
+                                        blob.getBlob(zip.getMimeType(file.name),
+                                        function(blob)
                                         {
                                             var filesize = parseInt(blob.size);
                                             if(stop > filesize)
@@ -130,7 +121,8 @@ function CacheBackup(db)
 
                             function fileentry_add(file)
                             {
-                                blob.getBlob(null, function(blob)
+                                blob.getBlob(zip.getMimeType(file.name),
+                                function(blob)
                                 {
                                     var fileentry = {hash: file.hash,
                                                      path: file.path,
@@ -139,7 +131,20 @@ function CacheBackup(db)
                                     if(file.bitmap)
                                         fileentry.bitmap = file.bitmap
 
-                                    db.files_add(fileentry)
+                                    db.files_add(fileentry, function()
+                                    {
+                                        // File was not completed, notify update
+                                        if(file.bitmap)
+                                        {
+                                            var pending_chunks = fileentry.bitmap.indexes(false).length
+
+                                            peersManager.transfer_update(fileentry, pending_chunks)
+                                        }
+
+                                        // File was completed, notify finished
+                                        else
+                                            peersManager.transfer_end(fileentry)
+                                    })
                                 })
                             }
 
