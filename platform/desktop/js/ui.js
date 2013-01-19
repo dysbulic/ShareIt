@@ -51,24 +51,6 @@ UI.prototype =
     setSharedpointsManager: function(sharedpointsManager)
     {
         this.dialogConfig.setSharedpointsManager(sharedpointsManager)
-        this.dialogConfig.addEventListener("sharedpoints.update", function()
-        {
-            policy(function()
-            {
-                sharedpointsManager.addSharedpoint_Folder(event.target.files,
-                function()
-                {
-                    self.dispatchEvent({type: "sharedpoints.update"})
-                },
-                function()
-                {
-                    console.warn('Sharedpoint already defined')
-                })
-            })
-
-            // Reset the input
-            this.value = ""
-        }, false);
     },
 
 	setPeersManager: function(peersManager, db)
