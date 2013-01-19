@@ -48,13 +48,9 @@ function UI()
 
 UI.prototype =
 {
-    setHasher: function(hasher)
+    setSharedpointsManager: function(sharedpointsManager)
     {
-        this.dialogConfig.setHasher(hasher)
-        this.dialogConfig.addEventListener("sharedpoints.update", function()
-        {
-            self.dispatchEvent({type: "sharedpoints.update"})
-        })
+        this.dialogConfig.setSharedpointsManager(sharedpointsManager)
     },
 
 	setPeersManager: function(peersManager, db)

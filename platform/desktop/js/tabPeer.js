@@ -193,43 +193,18 @@ function TabPeer(uid, tabsId, preferencesDialogOpen, onclickFactory)
 
     this.updateFiles = function(fileslist)
     {
-        var prevFolder = ""
+        var prevPath = ""
 
         for(var i=0, fileentry; fileentry=fileslist[i]; i++)
         {
             // Add folder row
-            var folder = fileentry.path.replace(' ','').replace('/','__')
-            if(prevFolder != folder)
-            {
-                prevFolder = folder
-
-                var tr = document.createElement('TR');
-                    tr.id = folder
-
-                var td = document.createElement('TD');
-                    td.colSpan = 2
-                tr.appendChild(td)
-
-                folder = folder.split('__')
-
-                // Name & icon
-                var span = document.createElement('SPAN');
-                   span.className = 'folder'
-                   span.appendChild(document.createTextNode(folder.slice(-1)));
-                td.appendChild(span)
-
-                folder = folder.slice(0,-1)
-                if(folder != "")
-                   tr.setAttribute('class', "child-of-" + folder.join('__'))
-
-                this.tbody.appendChild(tr)
-            }
+            prevPath = rowFolder(this.tbody, prevPath, fileentry.path)
 
             // Add file row
             var tr = rowFactory(fileentry)
 
-            if(prevFolder != undefined)
-                tr.setAttribute('class', "child-of-" + prevFolder)
+            if(prevPath)
+                tr.setAttribute('class', "child-of-" + classEscape(prevPath))
 
             this.tbody.appendChild(tr)
         }
