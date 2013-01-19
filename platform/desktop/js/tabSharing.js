@@ -73,6 +73,25 @@ function TabSharing(tableId, preferencesDialogOpen)
         return tr
     }
 
+    function rowSharedpoint(tbody, sharedpoint)
+    {
+        // Sharedpoint row
+        var tr = document.createElement('TR');
+            tr.id = classEscape(sharedpoint)
+
+        var td = document.createElement('TD');
+            td.colSpan = 2
+        tr.appendChild(td)
+
+        // Sharedpoint name & icon
+        var span = document.createElement('SPAN');
+//            span.className = fileentry.sharedpoint.type
+            span.appendChild(document.createTextNode(sharedpoint));
+        td.appendChild(span)
+
+        tbody.appendChild(tr)
+    }
+
     this.updateFiles = function(fileslist)
     {
         var prevSharedpoint = null
@@ -86,35 +105,16 @@ function TabSharing(tableId, preferencesDialogOpen)
             if(prevSharedpoint != sharedpoint)
             {
                 if(sharedpoint)
-                {
-                    // Sharedpoint row
-                    var tr = document.createElement('TR');
-                        tr.id = classEscape(sharedpoint)
-
-                    var td = document.createElement('TD');
-                        td.colSpan = 2
-                    tr.appendChild(td)
-
-                    // Sharedpoint name & icon
-                    var span = document.createElement('SPAN');
-//                        span.className = fileentry.sharedpoint.type
-                        span.appendChild(document.createTextNode(sharedpoint));
-                    td.appendChild(span)
-
-                    this.tbody.appendChild(tr)
-                }
+                    rowSharedpoint(this.tbody, sharedpoint)
 
                 prevSharedpoint = sharedpoint
                 prevPath = ""
             }
 
             // Add folder row
-            var path = fileentry.path
-
-            if(path)
+            if(prevSharedpoint)
             {
-                if(prevSharedpoint)
-                    path = prevSharedpoint+'/'+path
+                var path = prevSharedpoint+'/'+fileentry.path
 
                 prevPath = rowFolder(this.tbody, prevPath, path)
             }
