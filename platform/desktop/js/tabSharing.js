@@ -73,83 +73,62 @@ function TabSharing(tableId, preferencesDialogOpen)
         return tr
     }
 
+    function rowSharedpoint(tbody, sharedpoint)
+    {
+        // Sharedpoint row
+        var tr = document.createElement('TR');
+            tr.id = classEscape(sharedpoint)
+
+        var td = document.createElement('TD');
+            td.colSpan = 2
+        tr.appendChild(td)
+
+        // Sharedpoint name & icon
+        var span = document.createElement('SPAN');
+//            span.className = fileentry.sharedpoint.type
+            span.appendChild(document.createTextNode(sharedpoint));
+        td.appendChild(span)
+
+        tbody.appendChild(tr)
+    }
+
     this.updateFiles = function(fileslist)
     {
         var prevSharedpoint = null
-        var prevFolder = ""
+        var prevPath = ""
 
         for(var i=0, fileentry; fileentry=fileslist[i]; i++)
         {
             // Add sharedpoint row
             var sharedpoint = fileentry.sharedpoint
-            if(sharedpoint)
-                sharedpoint = sharedpoint.name.replace(' ','')
 
             if(prevSharedpoint != sharedpoint)
             {
-                prevSharedpoint = sharedpoint
-                prevFolder = ""
-
                 if(sharedpoint)
-                {
-                    var tr = document.createElement('TR');
-                        tr.id = sharedpoint
+                    rowSharedpoint(this.tbody, sharedpoint)
 
-                    var td = document.createElement('TD');
-                        td.colSpan = 2
-                    tr.appendChild(td)
-
-                    // Name & icon
-                    var span = document.createElement('SPAN');
-                        span.className = fileentry.sharedpoint.type
-                        span.appendChild(document.createTextNode(fileentry.sharedpoint.name));
-                    td.appendChild(span)
-
-                    this.tbody.appendChild(tr)
-                }
+                prevSharedpoint = sharedpoint
+                prevPath = ""
             }
 
             // Add folder row
             if(prevSharedpoint)
             {
-                var folder = fileentry.path.replace(' ','').replace('/','__')
-                if(prevFolder != folder)
-                {
-                    prevFolder = folder
+                var path = prevSharedpoint+'/'+fileentry.path
 
-                    folder = prevSharedpoint+'__'+folder
-
-                    var tr = document.createElement('TR');
-                        tr.id = folder
-
-                    var td = document.createElement('TD');
-                        td.colSpan = 2
-                    tr.appendChild(td)
-
-                    folder = folder.split('__')
-
-                    // Name & icon
-                    var span = document.createElement('SPAN');
-                        span.className = 'folder'
-                        span.appendChild(document.createTextNode(folder.slice(-1)));
-                    td.appendChild(span)
-
-                    folder = folder.slice(0,-1)
-                    if(folder)
-                        tr.setAttribute('class', "child-of-" + folder.join('__'))
-
-                    this.tbody.appendChild(tr)
-                }
+                prevPath = rowFolder(this.tbody, prevPath, path)
             }
 
             // Add file row
-            if(prevFolder)
-                sharedpoint += '__' + prevFolder
-
             var tr = rowFactory(fileentry)
 
-            if(sharedpoint != undefined)
-                tr.setAttribute('class', "child-of-" + sharedpoint)
+            if(sharedpoint)
+            {
+                if(prevPath)
+                    sharedpoint = prevPath
+
+                tr.setAttribute('class', "child-of-" + classEscape(sharedpoint))
+            }
 
             this.tbody.appendChild(tr)
         }

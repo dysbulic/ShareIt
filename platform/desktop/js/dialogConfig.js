@@ -21,7 +21,7 @@ function DialogConfig(dialogId, options)
 
 
     // Sharedpoints tab
-    this.setHasher = function(hasher)
+    this.setSharedpointsManager = function(sharedpointsManager)
     {
         var self = this
 
@@ -33,9 +33,15 @@ function DialogConfig(dialogId, options)
 
             policy(function()
             {
-                hasher.hash(files)
-
-                self.dispatchEvent({type: "sharedpoints.update"})
+                sharedpointsManager.addSharedpoint_Folder(files,
+                function()
+                {
+                    self.dispatchEvent({type: "sharedpoints.update"})
+                },
+                function()
+                {
+                    console.warn('Sharedpoint already defined')
+                })
 
                 // Reset the input after send the files to hash
                 input.val("")

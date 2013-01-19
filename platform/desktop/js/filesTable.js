@@ -22,6 +22,41 @@ function spanedCell(table)
  return td
 }
 
+function classEscape(text)
+{
+    return text.replace(/ /g,'_').replace(/\//g,'__')
+}
+
+function rowFolder(tbody, prevPath, path)
+{
+    if(prevPath == path)
+        return prevPath
+
+    // Folder row
+    var tr = document.createElement('TR');
+        tr.id = classEscape(path)
+
+    var td = document.createElement('TD');
+        td.colSpan = 2
+    tr.appendChild(td)
+
+    var path_tokens = path.split('/')
+
+    // Folder name & icon
+    var span = document.createElement('SPAN');
+        span.className = 'folder'
+        span.appendChild(document.createTextNode(path_tokens.slice(-1)));
+    td.appendChild(span)
+
+    var path_tokens = path_tokens.slice(0,-1)
+    if(path_tokens.length)
+        tr.setAttribute('class', "child-of-" + classEscape(path_tokens.join('/')))
+
+    tbody.appendChild(tr)
+
+    return path
+}
+
 
 var FilesTable =
 {
