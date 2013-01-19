@@ -50,20 +50,11 @@ UI.prototype =
 {
     setHasher: function(hasher)
     {
-        var self = this
-
-        document.getElementById('files').addEventListener('change', function()
+        this.dialogConfig.setHasher(hasher)
+        this.dialogConfig.addEventListener("sharedpoints.update", function()
         {
-            policy(function()
-            {
-                hasher.hash(event.target.files)
-
-                self.dispatchEvent({type: "sharedpoints.update"})
-            })
-
-            // Reset the input
-            this.value = ""
-        }, false);
+            self.dispatchEvent({type: "sharedpoints.update"})
+        })
     },
 
 	setPeersManager: function(peersManager, db)
@@ -134,6 +125,7 @@ UI.prototype =
                         downloading.push(fileentry)
 
                 // Update Downloading files list
+                self.isDownloading = downloading.length
                 tabDownloading.update(downloading)
             })
         }
@@ -163,6 +155,7 @@ UI.prototype =
                         sharing.push(fileentry)
 
                 // Update Sharing files list
+                self.isSharing = sharing.length
                 tabSharing.update(sharing)
             })
         }
@@ -211,6 +204,30 @@ UI.prototype =
 
 	    $("#ConnectUser2").unbind('click')
 	    $("#ConnectUser2").click(ConnectUser)
+
+
+	    /**
+	     * Prevent to close the webapp by accident
+	     */
+	    window.onbeforeunload = function()
+	    {
+	        // Allow to exit the application normally if we are not connected
+            var peers = Object.keys(peersManager.getChannels()).length
+            if(!peers)
+                return
+
+            // Downloading
+            if(self.isDownloading)
+                return "You are currently downloading files."
+
+            // Sharing
+            if(self.isSharing)
+                return "You are currently sharing files."
+
+	        // Routing (connected to at least two peers or handshake servers)
+            if(peers >= 2)
+                return "You are currently routing between "+peers+" peers."
+	    }
 	},
 
 	setCacheBackup: function(cacheBackup)
