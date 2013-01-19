@@ -75,11 +75,6 @@ function TabSharing(tableId, preferencesDialogOpen)
 
     this.updateFiles = function(fileslist)
     {
-        function classEscape(text)
-        {
-            return text.replace(/ /g,'_').replace(/\//g,'__')
-        }
-
         var prevSharedpoint = null
         var prevPath = ""
 
@@ -140,7 +135,7 @@ function TabSharing(tableId, preferencesDialogOpen)
                     td.appendChild(span)
 
                     path_tokens = path_tokens.slice(0,-1)
-                    if(path_tokens)
+                    if(path_tokens.length)
                         tr.setAttribute('class', "child-of-" + classEscape(path_tokens.join('/')))
 
                     this.tbody.appendChild(tr)

@@ -22,6 +22,11 @@ function spanedCell(table)
  return td
 }
 
+function classEscape(text)
+{
+    return text.replace(/ /g,'_').replace(/\//g,'__')
+}
+
 
 var FilesTable =
 {

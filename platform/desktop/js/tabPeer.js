@@ -193,43 +193,45 @@ function TabPeer(uid, tabsId, preferencesDialogOpen, onclickFactory)
 
     this.updateFiles = function(fileslist)
     {
-        var prevFolder = ""
+        var prevPath = ""
 
         for(var i=0, fileentry; fileentry=fileslist[i]; i++)
         {
             // Add folder row
-            var folder = fileentry.path.replace(' ','').replace('/','__')
-            if(prevFolder != folder)
-            {
-                prevFolder = folder
+            var path = fileentry.path
 
+            if(prevPath != path)
+            {
+                // Folder row
                 var tr = document.createElement('TR');
-                    tr.id = folder
+                    tr.id = classEscape(path)
 
                 var td = document.createElement('TD');
                     td.colSpan = 2
                 tr.appendChild(td)
 
-                folder = folder.split('__')
+                var path_tokens = path.split('/')
 
-                // Name & icon
+                // Folder name & icon
                 var span = document.createElement('SPAN');
                    span.className = 'folder'
-                   span.appendChild(document.createTextNode(folder.slice(-1)));
+                   span.appendChild(document.createTextNode(path_tokens.slice(-1)));
                 td.appendChild(span)
 
-                folder = folder.slice(0,-1)
-                if(folder != "")
-                   tr.setAttribute('class', "child-of-" + folder.join('__'))
+                path_tokens = path_tokens.slice(0,-1)
+                if(path_tokens.length)
+                    tr.setAttribute('class', "child-of-" + classEscape(path_tokens.join('/')))
 
                 this.tbody.appendChild(tr)
+
+                prevPath = path
             }
 
             // Add file row
             var tr = rowFactory(fileentry)
 
-            if(prevFolder != undefined)
-                tr.setAttribute('class', "child-of-" + prevFolder)
+            if(prevPath)
+                tr.setAttribute('class', "child-of-" + classEscape(prevPath))
 
             this.tbody.appendChild(tr)
         }
