@@ -50,7 +50,7 @@ UI.prototype =
 {
     setSharedpointsManager: function(sharedpointsManager)
     {
-        this.dialogConfig.setHasher(hasher)
+        this.dialogConfig.setSharedpointsManager(sharedpointsManager)
         this.dialogConfig.addEventListener("sharedpoints.update", function()
         {
             policy(function()
