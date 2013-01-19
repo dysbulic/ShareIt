@@ -45,7 +45,7 @@ function load()
         peersManager.setHandshakeManager(handshakeManager)
 
         // Init cache backup system
-        var cacheBackup = new CacheBackup(db)
+        var cacheBackup = new CacheBackup(db, peersManager)
 
         // Init user interface
         var ui = new UI()
