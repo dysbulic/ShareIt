@@ -118,7 +118,11 @@ UI.prototype =
 
             beforeActivate: function(event, ui)
             {
-                console.log("beforeActivate")
+                switch(ui.newPanel['0'].id)
+                {
+                    case 'Sharing':
+                        tabSharing_update()
+                }
             },
 
             active: false,
@@ -172,29 +176,27 @@ UI.prototype =
 
                 // Update Sharing files list
                 self.isSharing = sharing.length
-                if(self.isSharing)
-                {
-                    // Enable the tab if at least one file is being shared. This
-                    // will only happen the first time, others the tab will be
-                    // already enabled and the 'no files shared' caption will be
-                    // shown.
-                    tabs.tabs('enable', 1)
-                    tabs.tabs("option", "collapsible", false);
-
-                    // Only update the sharing tab if it's active
-                    if(tabs.tabs("option", "active") == 1)
-                        tabSharing.update(sharing)
-                }
+                tabSharing.update(sharing)
             })
         }
 
-        peersManager.addEventListener("transfer.end", tabSharing_update)
-        peersManager.addEventListener("file.added",   tabSharing_update)
+        function tabSharing_checkAndUpdate()
+        {
+            // Only update the sharing tab if it's active
+            if(tabs.tabs("option", "active") != 1)
+            {
+                tabs.tabs('enable', 1)
+                tabs.tabs("option", "collapsible", false);
+                return
+            }
 
-        peersManager.addEventListener("file.deleted", tabSharing_update)
+            tabSharing_update()
+        }
 
-//        // Show files being shared on Sharing tab
-//        tabSharing_update()
+        peersManager.addEventListener("transfer.end", tabSharing_checkAndUpdate)
+
+        peersManager.addEventListener("file.added",   tabSharing_checkAndUpdate)
+        peersManager.addEventListener("file.deleted", tabSharing_checkAndUpdate)
 
 
         // Peers tabs
