@@ -24,7 +24,7 @@ function spanedCell(table)
 
 function classEscape(text)
 {
-    return text.replace(/ /g,'_').replace(/\//g,'__')
+    return text.replace(/\./g,'_').replace(/ /g,'__').replace(/\//g,'___')
 }
 
 function rowFolder(tbody, prevPath, path)
