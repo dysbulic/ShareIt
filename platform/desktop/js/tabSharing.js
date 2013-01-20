@@ -112,9 +112,11 @@ function TabSharing(tableId, preferencesDialogOpen)
             }
 
             // Add folder row
-            if(prevSharedpoint)
+            var path = fileentry.path
+
+            if(prevSharedpoint && path)
             {
-                var path = prevSharedpoint+'/'+fileentry.path
+                path = prevSharedpoint+'/'+path
 
                 prevPath = rowFolder(this.tbody, prevPath, path)
             }
