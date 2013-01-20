@@ -1,20 +1,6 @@
 function TabsPeers(tabsId)
 {
-    var home = $("#Home")
-
     var tabs = $("#"+tabsId)
-
-    tabs.tabs(
-    {
-        activate: function(event, ui)
-        {
-            home.detach()
-        },
-
-        active: false,
-        collapsible: true,
-        disabled: true
-    })
 
     this.openOrCreate = function(uid, preferencesDialogOpen, peersManager, channel)
     {
@@ -60,7 +46,7 @@ function TabsPeers(tabsId)
                     if(disabled.length == 2)
                     {
                         $("#"+tabsId).tabs("option", "collapsible", true);
-                        home.appendTo("#"+tabsId);
+                        $("#Home").appendTo("#"+tabsId);
                     }
 
                     // Refresh the tabs widget

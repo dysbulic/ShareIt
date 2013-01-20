@@ -106,6 +106,26 @@ UI.prototype =
         $("#Preferences2").click(this.preferencesDialogOpen)
 
 
+        // Tabs
+        var tabs = $("#tabs")
+
+        tabs.tabs(
+        {
+            activate: function(event, ui)
+            {
+                $("#Home").detach()
+            },
+
+            beforeActivate: function(event, ui)
+            {
+                console.log("beforeActivate")
+            },
+
+            active: false,
+            collapsible: true,
+            disabled: true
+        })
+
         // Downloading tab
         var tabDownloading = new TabDownloading('Downloading',
                                                 this.preferencesDialogOpen)
@@ -152,21 +172,33 @@ UI.prototype =
 
                 // Update Sharing files list
                 self.isSharing = sharing.length
-                tabSharing.update(sharing)
+                if(self.isSharing)
+                {
+                    // Enable the tab if at least one file is being shared. This
+                    // will only happen the first time, others the tab will be
+                    // already enabled and the 'no files shared' caption will be
+                    // shown.
+                    tabs.tabs('enable', 1)
+                    tabs.tabs("option", "collapsible", false);
+
+                    // Only update the sharing tab if it's active
+                    if(tabs.tabs("option", "active") == 1)
+                        tabSharing.update(sharing)
+                }
             })
         }
 
         peersManager.addEventListener("transfer.end", tabSharing_update)
-
         peersManager.addEventListener("file.added",   tabSharing_update)
+
         peersManager.addEventListener("file.deleted", tabSharing_update)
 
-        // Show files being shared on Sharing tab
-        tabSharing_update()
+//        // Show files being shared on Sharing tab
+//        tabSharing_update()
 
 
         // Peers tabs
-        var tabs = new TabsPeers("tabs")
+        var tabsPeers = new TabsPeers("tabs")
 
         /**
          * User initiated process to connect to a remote peer asking for the UID
@@ -185,8 +217,8 @@ UI.prototype =
 	            // Create connection with the other peer
                 peersManager.connectTo(uid, function(channel)
                 {
-                    tabs.openOrCreate(uid, self.preferencesDialogOpen,
-                                      peersManager, channel)
+                    tabsPeers.openOrCreate(uid, self.preferencesDialogOpen,
+                                           peersManager, channel)
                 },
 	            function(uid, peer, channel)
 	            {
