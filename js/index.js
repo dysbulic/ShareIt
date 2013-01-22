@@ -51,10 +51,8 @@ function load()
         var sharedpointsManager = new SharedpointsManager(db, hasher)
 
         // Init user interface
-        var ui = new UI()
-            ui.setCacheBackup(cacheBackup)
-            ui.setPeersManager(peersManager, db)
-            ui.setSharedpointsManager(sharedpointsManager)
+        var ui = new UI(cacheBackup, sharedpointsManager)
+            ui.setPeersManager(peersManager)
     })
 }
 

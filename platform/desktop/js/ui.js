@@ -1,4 +1,4 @@
-function UI()
+function UI(cacheBackup, sharedpointsManager)
 {
     EventTarget.call(this)
 
@@ -26,15 +26,8 @@ function UI()
 
     // Config dialog
     var dialogConfig = new DialogConfig("dialog-config", dialog_options);
-
-    this.setSharedpointsManager = function(sharedpointsManager)
-    {
-        dialogConfig.setSharedpointsManager(sharedpointsManager)
-    }
-    this.setCacheBackup = function(cacheBackup)
-    {
         dialogConfig.setCacheBackup(cacheBackup)
-    }
+        dialogConfig.setSharedpointsManager(sharedpointsManager)
 
 
     // About dialog
@@ -48,7 +41,7 @@ function UI()
 
 UI.prototype =
 {
-	setPeersManager: function(peersManager, db)
+	setPeersManager: function(peersManager)
 	{
         var self = this
 
