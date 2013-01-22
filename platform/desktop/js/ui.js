@@ -113,7 +113,7 @@ UI.prototype =
         var tabDownloading = new TabDownloading('Downloading',
                                                 this.preferencesDialogOpen)
 
-        function tabDownloading_update(event)
+        function tabDownloading_update()
         {
             db.files_getAll(null, function(filelist)
             {
@@ -129,7 +129,20 @@ UI.prototype =
             })
         }
 
-        peersManager.addEventListener("transfer.begin", tabDownloading_update)
+        function tabDownloading_checkAndUpdate()
+        {
+            // Only update the sharing tab if it's active
+            if(tabsMain.tabs("option", "active") != 0)
+            {
+                tabsMain.tabs('enable', 0)
+                tabsMain.tabs("option", "collapsible", false);
+                return
+            }
+
+            tabDownloading_update()
+        }
+
+        peersManager.addEventListener("transfer.begin", tabDownloading_checkAndUpdate)
         peersManager.addEventListener("transfer.update", function(event)
         {
             var type = event.data[0]
@@ -137,7 +150,7 @@ UI.prototype =
 
             tabDownloading.dispatchEvent({type: type, data: [value]})
         })
-        peersManager.addEventListener("transfer.end", tabDownloading_update)
+        peersManager.addEventListener("transfer.end", tabDownloading_checkAndUpdate)
 
 
         // Sharing tab
@@ -197,7 +210,7 @@ UI.prototype =
                 peersManager.connectTo(uid, function(channel)
                 {
                     tabsMain.openOrCreatePeer(uid, self.preferencesDialogOpen,
-                                               peersManager, channel)
+                                              peersManager, channel)
                 },
 	            function(uid, peer, channel)
 	            {
