@@ -1,6 +1,27 @@
-function TabsMain(tabsId)
+function TabsMain(tabsId, tabSharing_update)
 {
     var tabs = $("#"+tabsId)
+
+    tabs.tabs(
+    {
+        activate: function(event, ui)
+        {
+            $("#Home").detach()
+        },
+
+        beforeActivate: function(event, ui)
+        {
+            switch(ui.newPanel['0'].id)
+            {
+                case 'Sharing':
+                    tabSharing_update()
+            }
+        },
+
+        active: false,
+        collapsible: true,
+        disabled: true
+    })
 
     this.openOrCreatePeer = function(uid, preferencesDialogOpen, peersManager,
                                      channel)

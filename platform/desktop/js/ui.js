@@ -107,28 +107,7 @@ UI.prototype =
 
 
         // Tabs
-        var tabs = $("#tabs")
-
-        tabs.tabs(
-        {
-            activate: function(event, ui)
-            {
-                $("#Home").detach()
-            },
-
-            beforeActivate: function(event, ui)
-            {
-                switch(ui.newPanel['0'].id)
-                {
-                    case 'Sharing':
-                        tabSharing_update()
-                }
-            },
-
-            active: false,
-            collapsible: true,
-            disabled: true
-        })
+        var tabsMain = new TabsMain("tabs", tabSharing_update)
 
         // Downloading tab
         var tabDownloading = new TabDownloading('Downloading',
@@ -183,10 +162,10 @@ UI.prototype =
         function tabSharing_checkAndUpdate()
         {
             // Only update the sharing tab if it's active
-            if(tabs.tabs("option", "active") != 1)
+            if(tabsMain.tabs("option", "active") != 1)
             {
-                tabs.tabs('enable', 1)
-                tabs.tabs("option", "collapsible", false);
+                tabsMain.tabs('enable', 1)
+                tabsMain.tabs("option", "collapsible", false);
                 return
             }
 
@@ -200,8 +179,6 @@ UI.prototype =
 
 
         // Peers tabs
-        var tabsMain = new TabsMain("tabs")
-
         /**
          * User initiated process to connect to a remote peer asking for the UID
          */
