@@ -1,5 +1,9 @@
-function TabsMain(tabsId, tabSharing_update)
+function TabsMain(tabsId, peersManager)
 {
+    EventTarget.call(this)
+
+    var self = this
+
     var tabs = $("#"+tabsId)
 
     tabs.tabs(
@@ -22,6 +26,91 @@ function TabsMain(tabsId, tabSharing_update)
         collapsible: true,
         disabled: true
     })
+
+
+    // Downloading tab
+    var tabDownloading = new TabDownloading('Downloading',
+                                            this.preferencesDialogOpen)
+
+    function tabDownloading_update()
+    {
+        db.files_getAll(null, function(filelist)
+        {
+            var downloading = []
+
+            for(var i=0, fileentry; fileentry=filelist[i]; i++)
+                if(fileentry.bitmap)
+                    downloading.push(fileentry)
+
+            // Update Downloading files list
+            self.isDownloading = downloading.length
+            tabDownloading.update(downloading)
+        })
+    }
+
+    function tabDownloading_checkAndUpdate()
+    {
+        // Only update the sharing tab if it's active
+        if(self.tabs("option", "active") != 0)
+        {
+            self.tabs('enable', 0)
+            self.tabs("option", "collapsible", false);
+            return
+        }
+
+        tabDownloading_update()
+    }
+
+    peersManager.addEventListener("transfer.begin", tabDownloading_checkAndUpdate)
+    peersManager.addEventListener("transfer.update", function(event)
+    {
+        var type = event.data[0]
+        var value = event.data[1]
+
+        tabDownloading.dispatchEvent({type: type, data: [value]})
+    })
+    peersManager.addEventListener("transfer.end", tabDownloading_checkAndUpdate)
+
+
+    // Sharing tab
+    var tabSharing = new TabSharing('Sharing', this.preferencesDialogOpen)
+
+    function tabSharing_update()
+    {
+        db.files_getAll(null, function(filelist)
+        {
+            var sharing = []
+
+            for(var i=0, fileentry; fileentry=filelist[i]; i++)
+                if(!fileentry.bitmap)
+                    sharing.push(fileentry)
+
+            // Update Sharing files list
+            self.isSharing = sharing.length
+            tabSharing.update(sharing)
+        })
+    }
+
+    function tabSharing_checkAndUpdate()
+    {
+        // Only update the sharing tab if it's active
+        if(self.tabs("option", "active") != 1)
+        {
+            self.tabs('enable', 1)
+            self.tabs("option", "collapsible", false);
+            return
+        }
+
+        tabSharing_update()
+    }
+
+    peersManager.addEventListener("transfer.end", tabSharing_checkAndUpdate)
+
+    peersManager.addEventListener("file.added",   tabSharing_checkAndUpdate)
+    peersManager.addEventListener("file.deleted", tabSharing_checkAndUpdate)
+
+
+    // Peers tabs
 
     this.openOrCreatePeer = function(uid, preferencesDialogOpen, peersManager,
                                      channel)
