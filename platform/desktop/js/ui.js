@@ -62,7 +62,14 @@ UI.prototype =
         $("#UID-home, #UID-about").val(peersManager.uid)
 
         // Sharedpoints table
-        var tableSharedpoints
+        var tableSharedpoints = new TableSharedpoints('Sharedpoints',
+        function(fileentry)
+        {
+            return function()
+            {
+                db.sharepoints_delete(fileentry.name, sharedpoints_update)
+            }
+        })
 
         function sharedpoints_update()
         {
@@ -72,15 +79,6 @@ UI.prototype =
                 tableSharedpoints.update(sharedpoints)
             })
         }
-
-        tableSharedpoints = new TableSharedpoints('Sharedpoints',
-        function(fileentry)
-        {
-            return function()
-            {
-                db.sharepoints_delete(fileentry.name, sharedpoints_update)
-            }
-        })
 
         this.addEventListener("sharedpoints.update", sharedpoints_update)
         peersManager.addEventListener("sharedpoints.update", sharedpoints_update)
