@@ -25,7 +25,16 @@ function UI()
 
 
     // Config dialog
-    this.dialogConfig = new DialogConfig("dialog-config", dialog_options);
+    var dialogConfig = new DialogConfig("dialog-config", dialog_options);
+
+    this.setSharedpointsManager = function(sharedpointsManager)
+    {
+        dialogConfig.setSharedpointsManager(sharedpointsManager)
+    }
+    this.setCacheBackup = function(cacheBackup)
+    {
+        dialogConfig.setCacheBackup(cacheBackup)
+    }
 
 
     // About dialog
@@ -39,11 +48,6 @@ function UI()
 
 UI.prototype =
 {
-    setSharedpointsManager: function(sharedpointsManager)
-    {
-        this.dialogConfig.setSharedpointsManager(sharedpointsManager)
-    },
-
 	setPeersManager: function(peersManager, db)
 	{
         var self = this
@@ -60,39 +64,6 @@ UI.prototype =
 
         // Set UID on user interface
         $("#UID-home, #UID-about").val(peersManager.uid)
-
-        // Sharedpoints table
-        var tableSharedpoints = new TableSharedpoints('Sharedpoints',
-        function(fileentry)
-        {
-            return function()
-            {
-                db.sharepoints_delete(fileentry.name, sharedpoints_update)
-            }
-        })
-
-        function sharedpoints_update()
-        {
-            // Get shared points and init them with the new ones
-            db.sharepoints_getAll(null, function(sharedpoints)
-            {
-                tableSharedpoints.update(sharedpoints)
-            })
-        }
-
-        this.addEventListener("sharedpoints.update", sharedpoints_update)
-        peersManager.addEventListener("sharedpoints.update", sharedpoints_update)
-
-        this.preferencesDialogOpen = function(tabIndex)
-        {
-            // Get shared points and init them
-            sharedpoints_update()
-
-            self.dialogConfig.open(tabIndex)
-        }
-
-        $("#Preferences").click(this.preferencesDialogOpen)
-        $("#Preferences2").click(this.preferencesDialogOpen)
 
 
         // Tabs
@@ -154,10 +125,5 @@ UI.prototype =
             if(peers >= 2)
                 return "You are currently routing between "+peers+" peers."
 	    }
-	},
-
-	setCacheBackup: function(cacheBackup)
-	{
-	    this.dialogConfig.setCacheBackup(cacheBackup)
 	}
 }

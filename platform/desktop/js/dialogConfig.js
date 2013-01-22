@@ -2,6 +2,8 @@ function DialogConfig(dialogId, options)
 {
     EventTarget.call(this)
 
+    var self = this
+
     var dialog = $("#"+dialogId)
 
     dialog.dialog(options);
@@ -21,6 +23,41 @@ function DialogConfig(dialogId, options)
 
 
     // Sharedpoints tab
+
+    // Sharedpoints table
+    var tableSharedpoints = new TableSharedpoints('Sharedpoints',
+    function(fileentry)
+    {
+        return function()
+        {
+            db.sharepoints_delete(fileentry.name, sharedpoints_update)
+        }
+    })
+
+    function sharedpoints_update()
+    {
+        // Get shared points and init them with the new ones
+        db.sharepoints_getAll(null, function(sharedpoints)
+        {
+            tableSharedpoints.update(sharedpoints)
+        })
+    }
+
+    this.addEventListener("sharedpoints.update", sharedpoints_update)
+    peersManager.addEventListener("sharedpoints.update", sharedpoints_update)
+
+    this.preferencesDialogOpen = function(tabIndex)
+    {
+        // Get shared points and init them
+        sharedpoints_update()
+
+        self.open(tabIndex)
+    }
+
+    $("#Preferences").click(this.preferencesDialogOpen)
+    $("#Preferences2").click(this.preferencesDialogOpen)
+
+
     this.setSharedpointsManager = function(sharedpointsManager)
     {
         var self = this
