@@ -1,8 +1,9 @@
-function TabsPeers(tabsId)
+function TabsMain(tabsId)
 {
     var tabs = $("#"+tabsId)
 
-    this.openOrCreate = function(uid, preferencesDialogOpen, peersManager, channel)
+    this.openOrCreatePeer = function(uid, preferencesDialogOpen, peersManager,
+                                     channel)
     {
         var tabPanelId = '#'+tabsId+'-'+uid
 

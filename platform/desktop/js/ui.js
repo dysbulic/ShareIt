@@ -200,7 +200,7 @@ UI.prototype =
 
 
         // Peers tabs
-        var tabsPeers = new TabsPeers("tabs")
+        var tabsMain = new TabsMain("tabs")
 
         /**
          * User initiated process to connect to a remote peer asking for the UID
@@ -219,8 +219,8 @@ UI.prototype =
 	            // Create connection with the other peer
                 peersManager.connectTo(uid, function(channel)
                 {
-                    tabsPeers.openOrCreate(uid, self.preferencesDialogOpen,
-                                           peersManager, channel)
+                    tabsMain.openOrCreatePeer(uid, self.preferencesDialogOpen,
+                                               peersManager, channel)
                 },
 	            function(uid, peer, channel)
 	            {
