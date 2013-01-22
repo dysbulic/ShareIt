@@ -17,6 +17,10 @@ function TabsMain(tabsId, peersManager)
         {
             switch(ui.newPanel['0'].id)
             {
+                case 'Downloading':
+                    tabDownloading_update()
+                    break
+
                 case 'Sharing':
                     tabSharing_update()
             }
