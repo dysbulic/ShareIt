@@ -225,4 +225,8 @@ function TabsMain(tabsId, peersManager)
             channel.fileslist_query(flags);
         }
     }
+
+
+    // Tools menu
+    MenuTools("tools-menu")
 }

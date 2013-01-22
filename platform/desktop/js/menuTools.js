@@ -8,7 +8,7 @@ function MenuTools(menuId)
             submenu_active = true;
         });
 
-    this.open = function()
+    menu.click(function()
     {
         var submenu = $("#tools-menu-submenu")
 
@@ -44,5 +44,5 @@ function MenuTools(menuId)
         }
         else
             submenu.slideUp();
-    }
+    })
 }

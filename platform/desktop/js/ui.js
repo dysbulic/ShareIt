@@ -35,15 +35,6 @@ function UI()
     {
         dialogAbout.open()
     })
-
-
-    // Tools menu
-    var menuTools = new MenuTools("tools-menu")
-
-    $("#tools-menu").click(function()
-    {
-        menuTools.open()
-    })
 }
 
 UI.prototype =
