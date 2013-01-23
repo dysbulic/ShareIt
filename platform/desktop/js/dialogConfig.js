@@ -1,4 +1,4 @@
-function DialogConfig(dialogId, options)
+function DialogConfig(dialogId, options, sharedpointsManager)
 {
     EventTarget.call(this)
 
@@ -30,21 +30,20 @@ function DialogConfig(dialogId, options)
     {
         return function()
         {
-            db.sharepoints_delete(fileentry.name, sharedpoints_update)
+            tableSharedpoints.delete(fileentry.name, sharedpoints_update)
         }
     })
 
     function sharedpoints_update()
     {
         // Get shared points and init them with the new ones
-        db.sharepoints_getAll(null, function(sharedpoints)
+        sharedpointsManager.getSharedpoints(function(sharedpoints)
         {
             tableSharedpoints.update(sharedpoints)
         })
     }
 
     this.addEventListener("sharedpoints.update", sharedpoints_update)
-    peersManager.addEventListener("sharedpoints.update", sharedpoints_update)
 
     this.preferencesDialogOpen = function(tabIndex)
     {
@@ -58,38 +57,34 @@ function DialogConfig(dialogId, options)
     $("#Preferences2").click(this.preferencesDialogOpen)
 
 
-    this.setSharedpointsManager = function(sharedpointsManager)
+    // Add sharedpoint
+    var input = dialog.find('#files')
+
+    input.change(function(event)
     {
-        var self = this
+        var files = event.target.files
 
-        var input = dialog.find('#files')
-
-        input.change(function(event)
+        policy(function()
         {
-            var files = event.target.files
-
-            policy(function()
+            sharedpointsManager.addSharedpoint_Folder(files,
+            function()
             {
-                sharedpointsManager.addSharedpoint_Folder(files,
-                function()
-                {
-                    self.dispatchEvent({type: "sharedpoints.update"})
-                },
-                function()
-                {
-                    console.warn('Sharedpoint already defined')
-                })
-
-                // Reset the input after send the files to hash
-                input.val("")
+                self.dispatchEvent({type: "sharedpoints.update"})
             },
             function()
             {
-                // Reset the input after NOT accepting the policy
-                input.val("")
+                console.warn('Sharedpoint already defined')
             })
-        });
-    }
+
+            // Reset the input after send the files to hash
+            input.val("")
+        },
+        function()
+        {
+            // Reset the input after NOT accepting the policy
+            input.val("")
+        })
+    });
 
 
     // Backup tab

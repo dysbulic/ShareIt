@@ -98,10 +98,10 @@ function TabsMain(tabsId, peersManager)
     function tabSharing_checkAndUpdate()
     {
         // Only update the sharing tab if it's active
-        if(self.tabs("option", "active") != 1)
+        if(tabs.tabs("option", "active") != 1)
         {
-            self.tabs('enable', 1)
-            self.tabs("option", "collapsible", false);
+            tabs.tabs('enable', 1)
+            tabs.tabs("option", "collapsible", false);
             return
         }
 
