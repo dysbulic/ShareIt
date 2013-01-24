@@ -38,17 +38,10 @@ function TabsMain(tabsId, peersManager)
 
     function tabDownloading_update()
     {
-        db.files_getAll(null, function(filelist)
+        peersManager.files_downloading(function(filelist)
         {
-            var downloading = []
-
-            for(var i=0, fileentry; fileentry=filelist[i]; i++)
-                if(fileentry.bitmap)
-                    downloading.push(fileentry)
-
-            // Update Downloading files list
-            self.isDownloading = downloading.length
-            tabDownloading.update(downloading)
+            self.isDownloading = filelist.length
+            tabDownloading.update(filelist)
         })
     }
 
@@ -81,17 +74,10 @@ function TabsMain(tabsId, peersManager)
 
     function tabSharing_update()
     {
-        db.files_getAll(null, function(filelist)
+        peersManager.files_sharing(function(filelist)
         {
-            var sharing = []
-
-            for(var i=0, fileentry; fileentry=filelist[i]; i++)
-                if(!fileentry.bitmap)
-                    sharing.push(fileentry)
-
-            // Update Sharing files list
-            self.isSharing = sharing.length
-            tabSharing.update(sharing)
+            self.isSharing = filelist.length
+            tabSharing.update(filelist)
         })
     }
 
