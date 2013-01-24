@@ -48,7 +48,7 @@ UI.prototype =
 
         peersManager.addEventListener("sharedpoints.update", function()
         {
-            this.dialogConfig.dispathEvent({type: "sharedpoints.update"})
+            self.dialogConfig.dispatchEvent({type: "sharedpoints.update"})
         })
 
         peersManager.addEventListener("error.noPeers", function()

@@ -48,10 +48,10 @@ function TabsMain(tabsId, peersManager)
     function tabDownloading_checkAndUpdate()
     {
         // Only update the sharing tab if it's active
-        if(self.tabs("option", "active") != 0)
+        if(tabs.tabs("option", "active") != 0)
         {
-            self.tabs('enable', 0)
-            self.tabs("option", "collapsible", false);
+            tabs.tabs('enable', 0)
+            tabs.tabs("option", "collapsible", false);
             return
         }
 
