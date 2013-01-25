@@ -60,6 +60,8 @@ function rowFolder(tbody, prevPath, path)
 
 var FilesTable =
 {
+    dirty: true,
+
     update: function(fileslist)
     {
         // Remove old table and add new empty one

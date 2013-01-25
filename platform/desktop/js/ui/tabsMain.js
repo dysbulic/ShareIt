@@ -13,19 +13,6 @@ function TabsMain(tabsId, peersManager)
             $("#Home").detach()
         },
 
-        beforeActivate: function(event, ui)
-        {
-            switch(ui.newPanel['0'].id)
-            {
-                case 'Downloading':
-                    tabDownloading_update()
-                    break
-
-                case 'Sharing':
-                    tabSharing_update()
-            }
-        },
-
         active: false,
         collapsible: true,
         disabled: true
@@ -38,11 +25,16 @@ function TabsMain(tabsId, peersManager)
 
     function tabDownloading_update()
     {
-        peersManager.files_downloading(function(filelist)
+        tabDownloading.dirty = requestAnimationFrame(function()
         {
-            self.isDownloading = filelist.length
-            tabDownloading.update(filelist)
-        })
+            peersManager.files_downloading(function(filelist)
+            {
+                self.isDownloading = filelist.length
+                tabDownloading.update(filelist)
+
+                tabDownloading.dirty = false
+            })
+        }, tabDownloading.tbody)
     }
 
     function tabDownloading_checkAndUpdate()
@@ -74,11 +66,16 @@ function TabsMain(tabsId, peersManager)
 
     function tabSharing_update()
     {
-        peersManager.files_sharing(function(filelist)
+        tabSharing.dirty = requestAnimationFrame(function()
         {
-            self.isSharing = filelist.length
-            tabSharing.update(filelist)
-        })
+            peersManager.files_sharing(function(filelist)
+            {
+                self.isSharing = filelist.length
+                tabSharing.update(filelist)
+
+                tabSharing.dirty = false
+            })
+        }, tabSharing.tbody)
     }
 
     function tabSharing_checkAndUpdate()
@@ -99,6 +96,22 @@ function TabsMain(tabsId, peersManager)
     peersManager.addEventListener("file.added",   tabSharing_checkAndUpdate)
     peersManager.addEventListener("file.deleted", tabSharing_checkAndUpdate)
 
+
+    tabs.on("tabsbeforeactivate", function(event, ui)
+    {
+        switch(ui.newPanel['0'].id)
+        {
+            case 'Downloading':
+                if(tabDownloading.dirty)
+                    tabDownloading_update()
+                break
+
+            case 'Sharing':
+                if(tabSharing.dirty)
+                    tabSharing_update()
+                break
+        }
+    });
 
     // Peers tabs
 
