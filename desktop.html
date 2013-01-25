@@ -32,6 +32,8 @@
         <script src="https://raw.github.com/piranna/SimpleSignaling/master/simpleSignaling.js"></script>
         <script src="https://raw.github.com/pubnub/pubnub-api/master/javascript/3.3.1/pubnub-3.3.1.js"></script>
 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dropbox.js/0.8.0/dropbox.min.js"></script>
+
         <script src="https://raw.github.com/piranna/BoolArray.js/master/BoolArray.js"></script>
         <script src="https://raw.github.com/piranna/DataChannel-polyfill/master/datachannel.js"></script>
         <script src="https://raw.github.com/piranna/EventTarget.js/master/EventTarget.js"></script>
@@ -44,16 +46,9 @@
         <script src="js/index.js"></script>
         <script src="js/policy.js"></script>
 
-        <script src="platform/desktop/js/dialogAbout.js"></script>
-        <script src="platform/desktop/js/dialogConfig.js"></script>
-        <script src="platform/desktop/js/filesTable.js"></script>
-        <script src="platform/desktop/js/menuTools.js"></script>
-        <script src="platform/desktop/js/tabDownloading.js"></script>
-        <script src="platform/desktop/js/tabPeer.js"></script>
-        <script src="platform/desktop/js/tabSharing.js"></script>
-        <script src="platform/desktop/js/tabsPeers.js"></script>
-        <script src="platform/desktop/js/tableSharedpoints.js"></script>
-        <script src="platform/desktop/js/ui.js"></script>
+        <script type="text/javascript" src="platform/desktop/js/polyfills/rAF.js"></script>
+
+        <script type="text/javascript" src="platform/desktop/js/ui/index.js"></script>
     </head>
     <body>
 
@@ -117,7 +112,7 @@
                 <br/>
                 <span>
                     <label for="UID">UID:</label>
-                    <input id="UID-home" readonly size="40" style="font-size: 13px"/>
+                    <input id="UID-home" value="Connecting..." readonly size="40" style="font-size: 13px"/>
                 </span>
                 </p>
                 <br/>
@@ -278,7 +273,7 @@
             </p>
             <span>
                 <label for="UID">UID:</label>
-                <input id="UID-about" readonly size="40"/>
+                <input id="UID-about" value="Connecting..." readonly size="40"/>
             </span>
             <br/>
             Based on
