@@ -1,6 +1,8 @@
-function TabsPeers(tabsId)
+function TabsMain(tabsId, peersManager)
 {
-    var home = $("#Home")
+    EventTarget.call(this)
+
+    var self = this
 
     var tabs = $("#"+tabsId)
 
@@ -8,7 +10,7 @@ function TabsPeers(tabsId)
     {
         activate: function(event, ui)
         {
-            home.detach()
+            $("#Home").detach()
         },
 
         active: false,
@@ -16,7 +18,105 @@ function TabsPeers(tabsId)
         disabled: true
     })
 
-    this.openOrCreate = function(uid, preferencesDialogOpen, peersManager, channel)
+
+    // Downloading tab
+    var tabDownloading = new TabDownloading('Downloading',
+                                            this.preferencesDialogOpen)
+
+    function tabDownloading_update()
+    {
+        tabDownloading.dirty = requestAnimationFrame(function()
+        {
+            peersManager.files_downloading(function(filelist)
+            {
+                self.isDownloading = filelist.length
+                tabDownloading.update(filelist)
+
+                tabDownloading.dirty = false
+            })
+        }, tabDownloading.tbody)
+    }
+
+    function tabDownloading_checkAndUpdate()
+    {
+        // Only update the sharing tab if it's active
+        if(tabs.tabs("option", "active") != 0)
+        {
+            tabs.tabs('enable', 0)
+            tabs.tabs("option", "collapsible", false);
+            return
+        }
+
+        tabDownloading_update()
+    }
+
+    peersManager.addEventListener("transfer.begin", tabDownloading_checkAndUpdate)
+    peersManager.addEventListener("transfer.update", function(event)
+    {
+        var type = event.data[0]
+        var value = event.data[1]
+
+        tabDownloading.dispatchEvent({type: type, data: [value]})
+    })
+    peersManager.addEventListener("transfer.end", tabDownloading_checkAndUpdate)
+
+
+    // Sharing tab
+    var tabSharing = new TabSharing('Sharing', this.preferencesDialogOpen)
+
+    function tabSharing_update()
+    {
+        tabSharing.dirty = requestAnimationFrame(function()
+        {
+            peersManager.files_sharing(function(filelist)
+            {
+                self.isSharing = filelist.length
+                tabSharing.update(filelist)
+
+                tabSharing.dirty = false
+            })
+        }, tabSharing.tbody)
+    }
+
+    function tabSharing_checkAndUpdate()
+    {
+        // Only update the sharing tab if it's active
+        if(tabs.tabs("option", "active") != 1)
+        {
+            tabs.tabs('enable', 1)
+            tabs.tabs("option", "collapsible", false);
+            return
+        }
+
+        tabSharing_update()
+    }
+
+    peersManager.addEventListener("transfer.end", tabSharing_checkAndUpdate)
+
+    peersManager.addEventListener("file.added",   tabSharing_checkAndUpdate)
+    peersManager.addEventListener("file.deleted", tabSharing_checkAndUpdate)
+
+
+    tabs.on("tabsbeforeactivate", function(event, ui)
+    {
+        switch(ui.newPanel['0'].id)
+        {
+            case 'Downloading':
+                if(tabDownloading.dirty)
+                    tabDownloading_update()
+                break
+
+            case 'Sharing':
+                if(tabSharing.dirty)
+                    tabSharing_update()
+                break
+        }
+    });
+
+    // Peers tabs
+
+    this.openOrCreatePeer = function(uid, preferencesDialogOpen, peersManager,
+                                     channel)
     {
         var tabPanelId = '#'+tabsId+'-'+uid
 
@@ -60,7 +160,7 @@ function TabsPeers(tabsId)
                     if(disabled.length == 2)
                     {
                         $("#"+tabsId).tabs("option", "collapsible", true);
-                        home.appendTo("#"+tabsId);
+                        $("#Home").appendTo("#"+tabsId);
                     }
 
                     // Refresh the tabs widget
@@ -128,4 +228,8 @@ function TabsPeers(tabsId)
             channel.fileslist_query(flags);
         }
     }
+
+
+    // Tools menu
+    MenuTools("tools-menu")
 }
