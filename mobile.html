@@ -3,20 +3,31 @@
   <head>
     <title>ShareIt!</title>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8"/>
+    <meta name="keywords" content="node, nodejs, javascript, p2p, filesharing, webp2p, web peer to peer, p2pweb, open source" />
+    <meta name="description" content="ShareIt!, Peer to Peer filesharing system written in pure Javascript" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
     <link rel="SHORTCUT ICON" href="images/favicon.png"/>
+
+    <!-- Stylesheets -->
 
     <link rel="stylesheet" href="platform/mobile/lib/jquery.mobile-1.2.0/jquery.mobile-1.2.0.min.css"/>
 
     <link type="text/css" rel="stylesheet" href="platform/mobile/css/style.css" media="screen"/>
 
+    <!-- External libraries -->
+
     <script src="lib/jquery-1.8.3.min.js"></script>
 
     <script src="platform/mobile/lib/jquery.mobile-1.2.0/jquery.mobile-1.2.0.min.js"></script>
+
+    <!-- Javascript -->
+
   </head>
   <body>
+
+    <!-- Tabs -->
 
     <!-- Tabs headers -->
 
@@ -83,7 +94,7 @@
       <tbody/>
     </table>
 
-            <table id="Sharing" data-role="table" data-mode="columntoggle">
+    <table id="Sharing" data-role="table" data-mode="columntoggle">
       <thead>
         <tr class="ui-bar-d">
           <th scope="col" width="100%">Filename</th>
@@ -174,7 +185,7 @@
         <li>
 	      <span>
 	        <label for="UID">UID:</label>
-	        <input id="UID-about" readonly size="40"/>
+                <input id="UID-about" value="Connecting..." readonly size="40"/>
 	      </span>
         </li>
         <li data-role="list-divider" role="heading">Based on</li>
