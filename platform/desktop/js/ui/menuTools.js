@@ -8,10 +8,10 @@ function MenuTools(menuId)
             submenu_active = true;
         });
 
-    this.open = function()
-    {
-        var submenu = $("#tools-menu-submenu")
+    var submenu = $("#"+menuId+"-submenu")
 
+    menu.click(function()
+    {
         if(submenu.is(":hidden"))
         {
             function timeout(ms)
@@ -44,5 +44,5 @@ function MenuTools(menuId)
         }
         else
             submenu.slideUp();
-    }
+    })
 }

@@ -135,21 +135,5 @@ function TabSharing(tableId, preferencesDialogOpen)
             this.tbody.appendChild(tr)
         }
     }
-
-
-    this.update = function(fileslist)
-    {
-        // Enable the tab if at least one file is being shared. This will only
-        // happen the first time, others the tab will be already enabled and the
-        // no files shared content will be shown.
-        if(fileslist.length)
-        {
-            $("#tabs").tabs('enable', 1)
-            $("#tabs").tabs("option", "collapsible", false);
-        }
-
-        // Fill the table
-        FilesTable.update.call(this, fileslist)
-    }
 }
 TabSharing.prototype = FilesTable
