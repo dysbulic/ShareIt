@@ -35,6 +35,8 @@ If you'd like to discuss P2P web applications further, send an email to
 and you'll be part of the discussion mailing list! ([Archives here]
 (http://librelist.com/browser/webp2p/)).
 
+[Development blog](http://pirannafs.blogspot.com.es)
+
 ## How to test it
 
 The webapp is designed to be fully client side, so files can be served by any
@@ -68,29 +70,34 @@ to transfer files through the wild Internet from Finland to Spain... :-) ).
 ## External libraries
 ### UI
 
-* [jQuery](http://jquery.com)
-* [jQuery UI](http://jqueryui.com)
+* [jQuery]          (http://jquery.com)
+* [jQuery UI]       (http://jqueryui.com)
 * [jQuery TreeTable](http://ludo.cubicphuse.nl/jquery-plugins/treeTable/doc)
-* [Humanize](https://github.com/taijinlee/humanize)
+* [Humanize]        (https://github.com/taijinlee/humanize)
 
 ### Handshake
 
 * [SimpleSignaling](https://github.com/piranna/SimpleSignaling)
-* [PubNub](http://www.pubnub.com)
+* [PubNub]         (http://www.pubnub.com)
 
 ### Random utilities
 
-* [BoolArray.js](https://github.com/piranna/BoolArray.js)
+* [BoolArray.js]        (https://github.com/piranna/BoolArray.js)
 * [DataChannel-polyfill](https://github.com/piranna/DataChannel-polyfill)
-* [EventTarget.js](https://github.com/piranna/EventTarget.js)
-* [jsSHA](https://github.com/Caligatio/jsSHA)
+* [EventTarget.js]      (https://github.com/piranna/EventTarget.js)
+* [jsSHA]               (https://github.com/Caligatio/jsSHA)
 
-## Some related project
+## Some related projects
 
-* [WebRTC.io](https://github.com/webRTC/webRTC.io)
-* [bonevalue](https://github.com/theninj4/bonevalue)
+* [WebRTC.io] (https://github.com/webRTC/webRTC.io)
+* [bonevalue] (https://github.com/theninj4/bonevalue)
 * [QuickShare](https://github.com/orefalo/QuickShare)
-* [ShareFest](https://github.com/Peer5/ShareFest)
+* [ShareFest] (https://github.com/Peer5/ShareFest)
+
+## Derivated projects
+
+* [WhatAreYouDownloading](http://whatareyoudownloading.com)
+* [Ampere]               (http://hcliff.github.com/ampere)
 
 ## License
 
