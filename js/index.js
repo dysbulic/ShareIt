@@ -6,31 +6,6 @@ function load()
         // Init PeersManager
         var peersManager = new PeersManager(db)
 
-        // Init handshake manager
-        var handshakeManager = new HandshakeManager('json/handshake.json',
-                                                    peersManager)
-            handshakeManager.onerror = function(error)
-            {
-                console.error(error)
-                alert(error)
-            }
-//            handshake.onopen = function()
-//            {
-//                // Restart downloads
-//                db.files_getAll(null, function(filelist)
-//                {
-//                    if(filelist.length)
-//                        policy(function()
-//                        {
-//                            for(var i=0, fileentry; fileentry=filelist[i]; i++)
-//                                if(fileentry.bitmap)
-//                                    peersManager.transfer_query(fileentry)
-//                        })
-//                })
-//            }
-
-        peersManager.setHandshakeManager(handshakeManager)
-
         // Init cache backup system
         var cacheBackup = new CacheBackup(db, peersManager)
 
