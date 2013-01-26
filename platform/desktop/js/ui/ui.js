@@ -60,48 +60,59 @@ UI.prototype =
         })
 
 
-        // Set UID on user interface
-        $("#UID-home, #UID-about").val(peersManager.uid)
-
-
         // Tabs
         var tabsMain = new TabsMain("tabs", peersManager)
+
+        // Set UID on user interface
+        peersManager.addEventListener("uid", function(event)
+        {
+            var uid = event.data[0]
+
+            $("#UID-home, #UID-about").val(uid)
+
+
+            /**
+             * User initiated process to connect to a remote peer asking for the UID
+             */
+            function ConnectUser()
+            {
+                var uid = prompt("UID to connect")
+                if(uid != null && uid != '')
+                {
+                    // Create connection with the other peer
+                    peersManager.connectTo(uid, function(channel)
+                    {
+                        tabsMain.openOrCreatePeer(uid, self.preferencesDialogOpen,
+                                                  peersManager, channel)
+                    },
+                    function(uid, peer, channel)
+                    {
+                        console.error(uid, peer, channel)
+                    })
+                }
+            }
+
+            $("#ConnectUser").unbind('click')
+            $("#ConnectUser").click(ConnectUser)
+
+            $("#ConnectUser2").unbind('click')
+            $("#ConnectUser2").click(ConnectUser)
+        })
+
 
         /**
          * User initiated process to connect to a remote peer asking for the UID
          */
         function ConnectUser()
-	    {
-	        if(!Object.keys(peersManager.getChannels()).length)
-	        {
-	            alert("There's no routing available, wait some more seconds")
-                return 
-	        }
+        {
+            alert("There's no routing available, wait some more seconds")
+        }
 
-	        var uid = prompt("UID to connect")
-	        if(uid != null && uid != '')
-	        {
-	            // Create connection with the other peer
-                peersManager.connectTo(uid, function(channel)
-                {
-                    tabsMain.openOrCreatePeer(uid, self.preferencesDialogOpen,
-                                              peersManager, channel)
-                },
-	            function(uid, peer, channel)
-	            {
-	                console.error(uid, peer, channel)
-	            })
-	        }
-	    }
-
-	    $("#ConnectUser").unbind('click')
-	    $("#ConnectUser").click(ConnectUser)
-
-	    $("#ConnectUser2").unbind('click')
-	    $("#ConnectUser2").click(ConnectUser)
+        $("#ConnectUser").click(ConnectUser)
+        $("#ConnectUser2").click(ConnectUser)
 
 
-	    /**
+        /**
 	     * Prevent to close the webapp by accident
 	     */
 	    window.onbeforeunload = function()
