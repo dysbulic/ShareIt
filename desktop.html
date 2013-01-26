@@ -1,57 +1,57 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>ShareIt!</title>
+  <head>
+    <title>ShareIt!</title>
 
-        <meta charset="UTF-8"/>
-        <meta name="keywords" content="node, nodejs, javascript, p2p, filesharing, webp2p, web peer to peer, p2pweb, open source" />
-        <meta name="description" content="ShareIt!, Peer to Peer filesharing system written in pure Javascript" />
+    <meta charset="UTF-8"/>
+    <meta name="keywords" content="node, nodejs, javascript, p2p, filesharing, webp2p, web peer to peer, p2pweb, open source" />
+    <meta name="description" content="ShareIt!, Peer to Peer filesharing system written in pure Javascript" />
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-        <link rel="SHORTCUT ICON" href="images/favicon.png"/>
+    <link rel="SHORTCUT ICON" href="images/favicon.png"/>
 
-        <!-- Stylesheets -->
+    <!-- Stylesheets -->
 
-        <link type="text/css" rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/themes/base/jquery-ui.css"/>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/themes/base/jquery-ui.css"/>
 
-        <link type="text/css" rel="stylesheet" href="lib/jquery-treetable/stylesheets/jquery.treeTable.css"/>
+    <link rel="stylesheet" href="lib/jquery-treetable/stylesheets/jquery.treeTable.css"/>
 
-        <link type="text/css" rel="stylesheet" href="css/common.css" media="screen"/>
-        <link type="text/css" rel="stylesheet" href="css/filesmanager.css" media="screen"/>
+    <link rel="stylesheet" href="css/common.css" media="screen"/>
+    <link rel="stylesheet" href="css/filesmanager.css" media="screen"/>
 
-        <link type="text/css" rel="stylesheet" href="platform/desktop/css/style.css" media="screen"/>
+    <link rel="stylesheet" href="platform/desktop/css/style.css" media="screen"/>
 
-        <!-- External libraries -->
+    <!-- External libraries -->
 
-        <script src="lib/jquery-1.8.3.min.js"></script>
+    <script src="lib/jquery-1.8.3.min.js"></script>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
-        <script src="https://raw.github.com/taijinlee/humanize/master/humanize.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+    <script src="https://raw.github.com/taijinlee/humanize/master/humanize.js"></script>
 
-        <script type="text/javascript" src="lib/jquery-treetable/javascripts/jquery.treeTable.js"></script>
+    <script type="text/javascript" src="lib/jquery-treetable/javascripts/jquery.treeTable.js"></script>
 
-        <script src="https://raw.github.com/piranna/SimpleSignaling/master/simpleSignaling.js"></script>
-        <script src="https://raw.github.com/pubnub/pubnub-api/master/javascript/3.3.1/pubnub-3.3.1.js"></script>
+    <script src="https://raw.github.com/piranna/SimpleSignaling/master/simpleSignaling.js"></script>
+    <script src="https://raw.github.com/pubnub/pubnub-api/master/javascript/3.3.1/pubnub-3.3.1.js"></script>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/dropbox.js/0.8.0/dropbox.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropbox.js/0.8.0/dropbox.min.js"></script>
 
-        <script src="https://raw.github.com/piranna/BoolArray.js/master/BoolArray.js"></script>
-        <script src="https://raw.github.com/piranna/DataChannel-polyfill/master/datachannel.js"></script>
-        <script src="https://raw.github.com/piranna/EventTarget.js/master/EventTarget.js"></script>
+    <script src="https://raw.github.com/piranna/BoolArray.js/master/BoolArray.js"></script>
+    <script src="https://raw.github.com/piranna/DataChannel-polyfill/master/datachannel.js"></script>
+    <script src="https://raw.github.com/piranna/EventTarget.js/master/EventTarget.js"></script>
 
-        <!-- Javascript -->
+    <!-- Javascript -->
 
-        <script src="js/webp2p/index.js"></script>
+    <script src="js/webp2p/index.js"></script>
 
-        <script src="js/CompatibilityManager.js"></script>
-        <script src="js/index.js"></script>
-        <script src="js/policy.js"></script>
+    <script src="js/CompatibilityManager.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/policy.js"></script>
 
-        <script type="text/javascript" src="platform/desktop/js/polyfills/rAF.js"></script>
+    <script type="text/javascript" src="platform/desktop/js/polyfills/rAF.js"></script>
 
-        <script type="text/javascript" src="platform/desktop/js/ui/index.js"></script>
-    </head>
-    <body>
+    <script type="text/javascript" src="platform/desktop/js/ui/index.js"></script>
+  </head>
+  <body>
 
         <!-- Tabs -->
 
@@ -97,9 +97,9 @@
                 </li>
             </ul>
 
-            <!-- Home -->
+            <!-- Home tab -->
 
-            <div id="Home">
+            <div id="Home-tab" class="only-desktop">
                 <a href="https://5apps.com/demos/piranna/shareit">
                     <img id="logo" src="images/logo.svg" alt="ShareIt!"/></a>
 
@@ -217,96 +217,123 @@
         <!-- Dialogs -->
 
         <div id="dialog-config" title="Config">
-            <ul>
+          <ul>
             <li><a href="#Sharedpoints-tab" class="ui-btn-active ui-state-persist">Sharedpoints</a></li>
-                <li><a href="#Backup">Backup</a></li>
-            </ul>
+            <li><a href="#Backup">Backup</a></li>
+          </ul>
 
-            <div id="Sharedpoints-tab">
+          <div id="Sharedpoints-tab" data-role="page" data-add-back-btn="true">
+            <div class="only-mobile" data-role="header" data-id="preferences" data-position="fixed">
+              <a href="#Home" data-icon="back">Back</a>
+              <h1>Config</h1>
 
-                <div style="max-height:425px;height:425px">
-
-                  <table id="Sharedpoints" data-role="table" data-mode="columntoggle">
-                    <thead>
-                      <tr class="ui-bar-d">
-                        <th scope="col" width="100%">Path</th>
-                        <th scope="col" data-priority="2">Shared</th>
-                        <th scope="col" data-priority="1">Remove</th>
-                      </tr>
-                    </thead>
-                    <tbody/>
-                  </table>
-
-                </div>
-
-                <a onclick="$('#files').click()">
-                    <span class="add-sharedpoint">Add shared point</span>
-                </a>
-                <input type="file" id="files" name="files[]" directory webkitdirectory multiple style="height: 20px; opacity: 0; filter:alpha(opacity: 0)"/>
+              <div data-role="navbar">
+                <ul>
+                  <li><a href="#Sharedpoints-tab" class="ui-btn-active ui-state-persist">Sharedpoints</a></li>
+                  <li><a href="#Backup">Backup</a></li>
+                </ul>
+              </div>
             </div>
 
-            <div id="Backup" data-role="page" data-add-back-btn="true">
-
-              <div id="message"></div>
-              <a data-role="button" id="Export">
-                <img src="images/Add-Files-To-Archive-64.png"/>
-                Export cache to a file
-              </a>
-	            <a data-role="button" id="Import">
-                <img src="images/extract-love.png"/>
-                Import cache from a file
-              </a>
-              <input type="file" id="import-backup" style="height: 20px; opacity: 0; filter:alpha(opacity: 0)"/>
+            <div style="max-height:425px;height:425px">
+              <table id="Sharedpoints" data-role="table" data-mode="columntoggle">
+                <thead>
+                  <tr class="ui-bar-d">
+                    <th scope="col" width="100%">Path</th>
+                    <th scope="col" data-priority="2">Shared</th>
+                    <th scope="col" data-priority="1">Remove</th>
+                  </tr>
+                </thead>
+                <tbody/>
+              </table>
             </div>
+
+            <div data-role="footer" data-position="fixed">
+              <a onclick="$('#files').click()">
+                <span class="add-sharedpoint">Add shared point</span>
+              </a>
+            </div>
+            <input type="file" id="files" name="files[]" directory webkitdirectory multiple style="height: 20px; opacity: 0; filter:alpha(opacity: 0)"/>
+          </div>
+
+          <div id="Backup" data-role="page" data-add-back-btn="true">
+            <div class="only-mobile" data-role="header" data-id="preferences" data-position="fixed">
+              <a href="#Home" data-icon="back">Back</a>
+              <h1>Config</h1>
+
+              <div data-role="navbar">
+                <ul>
+                  <li><a href="#Sharedpoints-tab" class="ui-btn-active ui-state-persist">Sharedpoints</a></li>
+                  <li><a href="#Backup">Backup</a></li>
+                </ul>
+              </div>
+            </div>
+
+            <div id="message"></div>
+            <a data-role="button" id="Export">
+              <img src="images/Add-Files-To-Archive-64.png"/>
+              Export cache to a file
+            </a>
+            <a data-role="button" id="Import">
+              <img src="images/extract-love.png"/>
+              Import cache from a file
+            </a>
+            <input type="file" id="import-backup" style="height: 20px; opacity: 0; filter:alpha(opacity: 0)"/>
+
+          </div>
 
         </div>
 
         <div id="dialog-about" title="About ShareIt!" data-role="page" data-add-back-btn="true">
-            <a href="https://github.com/piranna/ShareIt">
-                <img id="logo" src="images/logo.svg" alt="ShareIt!"/>
-            </a>
-            <h1>P2P filesharing in pure JavaScript &amp; HTML5</h1>
+          <div class="only-mobile" data-role="header" data-position="fixed">
+            <h1>About ShareIt!</h1>
+          </div>
+
+          <a href="https://5apps.com/demos/piranna/shareit">
+            <img id="logo" src="images/logo.svg" alt="ShareIt!"/>
+          </a>
+          <h1>P2P filesharing in pure JavaScript &amp; HTML5</h1>
             <br/>
             <p>
-                2012 <a href="https://www.gnu.org/licenses/agpl-3.0.html">Affero GPL</a> by <a href="mailto:piranna@gmail.com">Jesús Leganés Combarro "Piranna"</a>
-                <br/>
-                Based on original <a href="https://github.com/Miserlou/DirtyShare">DirtyShare</a> code by Rich Jones
+              2012 <a href="https://www.gnu.org/licenses/agpl-3.0.html">Affero GPL</a> by <a href="mailto:piranna@gmail.com">Jesús Leganés Combarro "Piranna"</a>
+              <br/>
+              Based on original <a href="https://github.com/Miserlou/DirtyShare">DirtyShare</a> code by Rich Jones
             </p>
             <span>
-                <label for="UID">UID:</label>
-                <input id="UID-about" value="Connecting..." readonly size="40"/>
+              <label for="UID">UID:</label>
+              <input id="UID-about" value="Connecting..." readonly size="40"/>
             </span>
             <br/>
             Based on
             <div>
-                <a href="https://www.w3.org/html/logo/">
-                    <img src="images/html5-badge-h-connectivity-css3-performance-semantics-storage.png"
-                         width="261" height="64" alt="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Performance &amp; Integration, Semantics, and Offline &amp; Storage"
-                         title="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Performance &amp; Integration, Semantics, and Offline &amp; Storage"/></a>
-                <a href="https://www.webrtc.org/">
-                    <img src="https://sites.google.com/site/webrtc/_/rsrc/1318870658554/config/customLogo.gif?revision=8" height="50" alt="WebRTC"/>
-                </a>
+              <a href="https://www.w3.org/html/logo/">
+                <img src="images/html5-badge-h-connectivity-css3-performance-semantics-storage.png"
+                     width="261" height="64" alt="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Performance &amp; Integration, Semantics, and Offline &amp; Storage"
+                     title="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Performance &amp; Integration, Semantics, and Offline &amp; Storage"/></a>
+              <a href="https://www.webrtc.org/">
+                  <img src="https://sites.google.com/site/webrtc/_/rsrc/1318870658554/config/customLogo.gif?revision=8" height="50" alt="WebRTC"/>
+              </a>
             </div>
             <br/>
             Using
             <div>
-                <a href="https://jqueryui.com/">
-                    <img src="images/JQuery_UI_logo_color_onwhite-300x72.png" alt="jQuery UI" height="50px"/>
-                </a>
+              <a href="https://jqueryui.com/">
+                <img src="images/JQuery_UI_logo_color_onwhite-300x72.png" alt="jQuery UI" height="50px"/>
+              </a>
             </div>
             <br/>
             Powered by
             <div>
-                <a href="https://5apps.com">
-                    <img src="images/5Apps-Logo-Positive-Glossy.png" alt="5 Apps" height="50px"/></a>
-                <a href="https://nodejitsu.com">
-                    <img src="https://nodejitsu.com/img/logotype-poweredby.png" alt="Nodejitsu" height="50px"/></a>
-                <a href="http://www.pubnub.com/">
-                    <img src="https://pubnub.s3.amazonaws.com/2011/powered-by-pubnub/powered-by-pubnub-200.png" alt="PubNub" height="50px"/>
-                </a>
+              <a href="https://5apps.com">
+                <img src="images/5Apps-Logo-Positive-Glossy.png" alt="5 Apps" height="50px"/></a>
+              <a href="https://nodejitsu.com">
+                <img src="https://nodejitsu.com/img/logotype-poweredby.png" alt="Nodejitsu" height="50px"/></a>
+              <a href="http://www.pubnub.com/">
+                <img src="https://pubnub.s3.amazonaws.com/2011/powered-by-pubnub/powered-by-pubnub-200.png" alt="PubNub" height="50px"/>
+              </a>
             </div>
             <a href="https://github.com/piranna/ShareIt">
-                <img alt="Fork me on GitHub" src="images/fork-me-on-github.png" id="fork_me"/>
+              <img alt="Fork me on GitHub" src="images/fork-me-on-github.png" id="fork_me"/>
             </a>
         </div>
 

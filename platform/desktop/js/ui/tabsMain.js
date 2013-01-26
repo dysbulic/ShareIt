@@ -10,7 +10,7 @@ function TabsMain(tabsId, peersManager)
     {
         activate: function(event, ui)
         {
-            $("#Home").detach()
+            $("#Home-tab").detach()
         },
 
         active: false,
@@ -160,7 +160,7 @@ function TabsMain(tabsId, peersManager)
                     if(disabled.length == 2)
                     {
                         $("#"+tabsId).tabs("option", "collapsible", true);
-                        $("#Home").appendTo("#"+tabsId);
+                        $("#Home-tab").appendTo("#"+tabsId);
                     }
 
                     // Refresh the tabs widget
