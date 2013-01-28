@@ -47,7 +47,7 @@
       <div data-role="popup" id="tools-menu-submenu" class="ui-widget-header">
         <ul data-role="listview" data-inset="true">
           <li>
-            <a id="Preferences">
+            <a href="#dialog-config">
               <span class="preferences">Preferences</span>
             </a>
           </li>
@@ -209,68 +209,53 @@
 
     <!-- Dialogs -->
 
-    <ul class="only-desktop">
-      <li><a href="#Sharedpoints-tab" class="ui-btn-active ui-state-persist">Sharedpoints</a></li>
-      <li><a href="#Backup">Backup</a></li>
-    </ul>
-
-    <div id="Sharedpoints-tab" data-role="page" data-add-back-btn="true">
+    <div id="dialog-config" title="Config" data-role="page" data-add-back-btn="true">
       <div class="only-mobile" data-role="header" data-id="preferences" data-position="fixed">
         <a href="#Home" data-icon="back">Back</a>
         <h1>Config</h1>
+      </div>
 
-        <div data-role="navbar">
-          <ul>
-            <li><a href="#Sharedpoints-tab" class="ui-btn-active ui-state-persist">Sharedpoints</a></li>
-            <li><a href="#Backup">Backup</a></li>
-          </ul>
+      <ul>
+        <li><a href="#Sharedpoints-tab" class="ui-btn-active ui-state-persist">Sharedpoints</a></li>
+        <li><a href="#Backup">Backup</a></li>
+      </ul>
+
+      <div id="Sharedpoints-tab" data-role="tab-content">
+        <div style="max-height:425px;height:425px">
+          <table id="Sharedpoints" data-role="table" data-mode="columntoggle">
+            <thead>
+              <tr class="ui-bar-d">
+                <th scope="col" width="100%">Path</th>
+                <th scope="col" data-priority="2">Shared</th>
+                <th scope="col" data-priority="1">Remove</th>
+              </tr>
+            </thead>
+            <tbody/>
+          </table>
         </div>
+
+        <div data-role="footer" data-position="fixed">
+          <a onclick="$('#files').click()">
+            <span class="add-sharedpoint">Add shared point</span>
+          </a>
+        </div>
+        <input type="file" id="files" name="files[]" directory webkitdirectory multiple style="height: 20px; opacity: 0; filter:alpha(opacity: 0)"/>
+
       </div>
 
-      <div style="max-height:425px;height:425px">
-        <table id="Sharedpoints" data-role="table" data-mode="columntoggle">
-          <thead>
-            <tr class="ui-bar-d">
-              <th scope="col" width="100%">Path</th>
-              <th scope="col" data-priority="2">Shared</th>
-              <th scope="col" data-priority="1">Remove</th>
-            </tr>
-          </thead>
-          <tbody/>
-        </table>
-      </div>
-
-      <div data-role="footer" data-position="fixed">
-        <a onclick="$('#files').click()">
-          <span class="add-sharedpoint">Add shared point</span>
+      <div id="Backup" data-role="tab-content">
+        <div id="message"></div>
+        <a data-role="button" id="Export">
+          <img src="images/Add-Files-To-Archive-64.png"/>
+          Export cache to a file
         </a>
-      </div>
-      <input type="file" id="files" name="files[]" directory webkitdirectory multiple style="height: 20px; opacity: 0; filter:alpha(opacity: 0)"/>
-    </div>
-
-    <div id="Backup" data-role="page" data-add-back-btn="true">
-      <div class="only-mobile" data-role="header" data-id="preferences" data-position="fixed">
-        <a href="#Home" data-icon="back">Back</a>
-        <h1>Config</h1>
-
-        <div data-role="navbar">
-          <ul>
-            <li><a href="#Sharedpoints-tab" class="ui-btn-active ui-state-persist">Sharedpoints</a></li>
-            <li><a href="#Backup">Backup</a></li>
-          </ul>
-        </div>
+        <a data-role="button" id="Import">
+          <img src="images/extract-love.png"/>
+          Import cache from a file
+        </a>
+        <input type="file" id="import-backup" style="height: 20px; opacity: 0; filter:alpha(opacity: 0)"/>
       </div>
 
-      <div id="message"></div>
-      <a data-role="button" id="Export">
-        <img src="images/Add-Files-To-Archive-64.png"/>
-        Export cache to a file
-      </a>
-      <a data-role="button" id="Import">
-        <img src="images/extract-love.png"/>
-        Import cache from a file
-      </a>
-      <input type="file" id="import-backup" style="height: 20px; opacity: 0; filter:alpha(opacity: 0)"/>
     </div>
 
     <div id="dialog-about" title="About ShareIt!" data-role="page" data-add-back-btn="true">
