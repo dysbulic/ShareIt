@@ -105,3 +105,6 @@ http://jabber.iitsp.com
 === Poezio ===
 http://poezio.eu/en/quick_guide.php
 anon.louiz.org
+
+== Using Multi User Chat to Push Messages ==
+http://chatmongers.com/blog/using-multi-user-chat-to-push-messages
