@@ -13,6 +13,7 @@
     <!-- Stylesheets -->
 
     <link rel="stylesheet" href="platform/mobile/lib/jquery.mobile-1.2.0/jquery.mobile-1.2.0.min.css"/>
+    <link rel="stylesheet" href="platform/mobile/lib/jQuery.mobile-Tabs/jquery.mobile.tabs.css"/>
 
     <link rel="stylesheet" href="lib/jquery-treetable/stylesheets/jquery.treeTable.css"/>
 
@@ -26,6 +27,7 @@
     <script src="lib/jquery-1.8.3.min.js"></script>
 
     <script src="platform/mobile/lib/jquery.mobile-1.2.0/jquery.mobile-1.2.0.min.js"></script>
+    <script src="platform/mobile/lib/jQuery.mobile-Tabs/jquery.mobile.tabs.js"></script>
 
     <!-- Javascript -->
 
@@ -37,7 +39,7 @@
     <!-- Tabs headers -->
 
     <div id="Home" data-role="page">
-      <div data-role="header">
+      <div class="only-mobile" data-role="header">
         <a href="#tools-menu-submenu" data-icon="gear" class="ui-btn-right" data-rel="popup">Options</a>
         <span class="ui-title" />
       </div>
@@ -45,38 +47,37 @@
       <div data-role="popup" id="tools-menu-submenu" class="ui-widget-header">
         <ul data-role="listview" data-inset="true">
           <li>
-            <a href="#Sharedpoints-tab">
+            <a id="Preferences">
               <span class="preferences">Preferences</span>
             </a>
           </li>
           <li>
-            <a href="#connectUser">
+            <a id="ConnectUser">
               <span class="user">Connect to user</span>
             </a>
           </li>
           <li>
-            <a href="#dialog-about">
+            <a id="About">
               <span class="about">About</span>
             </a>
           </li>
         </ul>
       </div>
 
-      <img id="logo" src="images/logo.svg" alt="ShareIt!"/>
+      <img class="only-mobile" id="logo" src="images/logo.svg" alt="ShareIt!"/>
 <!--
       <li style="float: right">
         <input type=search results=5 name=s>
       </li>
  -->
       <ul data-role="listview" data-inset="true">
-        <li>
+        <li class="ui-state-default ui-corner-top ui-state-disabled">
           <a href="#Downloading">Downloading</a>
         </li>
-        <li>
+        <li class="ui-state-default ui-corner-top ui-state-disabled">
           <a href="#Sharing">Sharing</a>
         </li>
       </ul>
-
     </div>
 
     <!-- Home tab -->
@@ -165,36 +166,53 @@
 
     <!-- Tabs contents -->
 
-    <table id="Downloading" data-role="table" data-mode="columntoggle">
-      <thead>
-        <tr class="ui-bar-d">
-          <th scope="col" width="100%">Filename</th>
-          <th scope="col" data-priority="6">Type</th>
-          <th scope="col" data-priority="5">Size</th>
-          <th scope="col" data-priority="4">Downloaded</th>
-          <th scope="col" data-priority="1">Progress</th>
-          <th scope="col" data-priority="5">Status</th>
-          <th scope="col" data-priority="3">Time remaining</th>
-          <th scope="col" data-priority="2">Speed</th>
-          <th scope="col" data-priority="4">Sources</th>
-          <th scope="col" data-priority="6">Date added</th>
-        </tr>
-      </thead>
-      <tbody/>
-    </table>
+    <div id="Downloading" data-role="page" data-add-back-btn="true">
+      <div class="only-mobile" data-role="header" data-position="fixed">
+        <h1>Downloading</h1>
+      </div>
 
-    <table id="Sharing" data-role="table" data-mode="columntoggle">
-      <thead>
-        <tr class="ui-bar-d">
-          <th scope="col" width="100%">Filename</th>
-          <th scope="col" data-priority="2">Type</th>
-          <th scope="col" data-priority="1">Size</th>
-        </tr>
-      </thead>
-      <tbody/>
-    </table>
+      <table id="Downloading-table" data-role="table" data-mode="columntoggle">
+        <thead>
+          <tr class="ui-bar-d">
+            <th scope="col" width="100%">Filename</th>
+            <th scope="col" data-priority="6">Type</th>
+            <th scope="col" data-priority="5">Size</th>
+            <th scope="col" data-priority="4">Downloaded</th>
+            <th scope="col" data-priority="1">Progress</th>
+            <th scope="col" data-priority="5">Status</th>
+            <th scope="col" data-priority="3">Time remaining</th>
+            <th scope="col" data-priority="2">Speed</th>
+            <th scope="col" data-priority="4">Sources</th>
+            <th scope="col" data-priority="6">Date added</th>
+          </tr>
+        </thead>
+        <tbody/>
+      </table>
+    </div>
+
+    <div id="Sharing" data-role="page" data-add-back-btn="true">
+      <div class="only-mobile" data-role="header" data-position="fixed">
+        <h1>Sharing</h1>
+      </div>
+
+      <table id="Sharing-table" data-role="table" data-mode="columntoggle">
+        <thead>
+          <tr class="ui-bar-d">
+            <th scope="col" width="100%">Filename</th>
+            <th scope="col" data-priority="2">Type</th>
+            <th scope="col" data-priority="1">Size</th>
+          </tr>
+        </thead>
+        <tbody/>
+      </table>
+    </div>
 
     <!-- Dialogs -->
+
+    <ul class="only-desktop">
+      <li><a href="#Sharedpoints-tab" class="ui-btn-active ui-state-persist">Sharedpoints</a></li>
+      <li><a href="#Backup">Backup</a></li>
+    </ul>
 
     <div id="Sharedpoints-tab" data-role="page" data-add-back-btn="true">
       <div class="only-mobile" data-role="header" data-id="preferences" data-position="fixed">
@@ -209,16 +227,18 @@
         </div>
       </div>
 
-      <table id="Sharedpoints" data-role="table" data-mode="columntoggle">
-        <thead>
-          <tr class="ui-bar-d">
-            <th scope="col" width="100%">Path</th>
-            <th scope="col" data-priority="2">Shared</th>
-            <th scope="col" data-priority="1">Remove</th>
-          </tr>
-        </thead>
-        <tbody/>
-      </table>
+      <div style="max-height:425px;height:425px">
+        <table id="Sharedpoints" data-role="table" data-mode="columntoggle">
+          <thead>
+            <tr class="ui-bar-d">
+              <th scope="col" width="100%">Path</th>
+              <th scope="col" data-priority="2">Shared</th>
+              <th scope="col" data-priority="1">Remove</th>
+            </tr>
+          </thead>
+          <tbody/>
+        </table>
+      </div>
 
       <div data-role="footer" data-position="fixed">
         <a onclick="$('#files').click()">
