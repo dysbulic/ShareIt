@@ -59,14 +59,16 @@
     <!-- Tabs headers -->
 
     <div id="Home" data-role="page">
-      <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
-        <div class="only-mobile" data-role="header">
-          <a href="#tools-menu-submenu" data-icon="gear" class="ui-btn-right" data-rel="popup">Options</a>
-          <span class="ui-title"></span>
-        </div>
+      <div class="only-mobile" data-role="header">
+        <a href="#tools-menu-submenu" data-icon="gear" class="ui-btn-right" data-rel="popup">Options</a>
+        <span class="ui-title"></span>
+      </div>
 
+      <img class="only-mobile" id="logo" src="images/logo.svg" alt="ShareIt!"/>
+
+      <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all" data-role="listview" data-inset="true">
         <li id="tools-menu">
-          <img src="images/icon_gear.png" alt="Main menu" height="37px"/>
+          <img class="only-desktop" src="images/icon_gear.png" alt="Main menu" height="37px"/>
 
           <div data-role="popup" id="tools-menu-submenu" class="ui-widget-header">
             <ul data-role="listview" data-inset="true">
@@ -89,8 +91,6 @@
           </div>
 
         </li>
-
-        <img class="only-mobile" id="logo" src="images/logo.svg" alt="ShareIt!"/>
 <!--
         <li style="float: right">
           <input type=search results=5 name=s>
@@ -103,6 +103,7 @@
           <a href="#Sharing">Sharing</a>
         </li>
       </ul>
+
     </div>
 
     <!-- Home tab -->
