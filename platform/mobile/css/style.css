@@ -3,6 +3,11 @@
     display: none;
 }
 
+.ui-li-static.ui-li.only-desktop
+{
+    display: none;
+}
+
 #Home #logo
 {
     width: 100%
