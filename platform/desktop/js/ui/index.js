@@ -4,7 +4,7 @@
  * @author Jesús Leganés Combarro "Piranna" piranna@gmail.com (webp2p)
  */
 
-var webp2p =
+var ui =
 {
   require: function(libraryName)
   {
@@ -40,14 +40,14 @@ var webp2p =
   }
 };
 
-webp2p.load(['dialogAbout',
-             'dialogConfig',
-             'filesTable',
-             'menuTools',
-             'tabDownloading',
-             'tabPeer',
-             'tabSharing',
-             'tabsMain',
-             'tableSharedpoints',
-             'ui'
-             ]);
+ui.load(['dialogAbout',
+         'dialogConfig',
+         'filesTable',
+         'menuTools',
+         'tabDownloading',
+         'tabPeer',
+         'tabSharing',
+         'tabsMain',
+         'tableSharedpoints',
+         'ui'
+         ]);

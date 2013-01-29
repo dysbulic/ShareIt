@@ -6,7 +6,9 @@ function DialogConfig(dialogId, options, sharedpointsManager)
 
     var dialog = $("#"+dialogId)
 
-    dialog.dialog(options);
+    if(!$.mobile)
+        dialog.dialog(options);
+
     dialog.tabs({active: 0})
 
 
@@ -18,7 +20,11 @@ function DialogConfig(dialogId, options, sharedpointsManager)
     this.open = function(tabIndex)
     {
         dialog.tabs("option", "active", tabIndex)
-        dialog.dialog("open");
+
+        if($.mobile)
+            $.mobile.changePage(dialog);
+        else
+            dialog.dialog("open");
     }
 
 

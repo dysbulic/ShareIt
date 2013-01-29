@@ -18,6 +18,11 @@
     text-align: center
 }
 
+#dialog-about #logo
+{
+    width: 100%
+}
+
 #fork_me {
     border: none;
     position: fixed; 
