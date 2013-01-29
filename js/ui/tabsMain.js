@@ -99,18 +99,21 @@ function TabsMain(tabsId, peersManager)
 
     tabs.on("tabsbeforeactivate", function(event, ui)
     {
-        switch(ui.newPanel['0'].id)
-        {
-            case 'Downloading':
-                if(tabDownloading.dirty)
-                    tabDownloading_update()
-                break
+        var newPanel = ui.newPanel['0']
 
-            case 'Sharing':
-                if(tabSharing.dirty)
-                    tabSharing_update()
-                break
-        }
+        if(newPanel)
+            switch(newPanel.id)
+            {
+                case 'Downloading':
+                    if(tabDownloading.dirty)
+                        tabDownloading_update()
+                    break
+
+                case 'Sharing':
+                    if(tabSharing.dirty)
+                        tabSharing_update()
+                    break
+            }
     });
 
     // Peers tabs
