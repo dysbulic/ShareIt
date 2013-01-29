@@ -10,23 +10,64 @@
 
     <link rel="SHORTCUT ICON" href="images/favicon.png"/>
 
+    <!-- Stylesheets -->
+
+    <link rel="stylesheet" href="css/common.css" media="screen"/>
+
+    <!-- Libraries -->
+
     <script src="lib/jquery-1.8.3.min.js"></script>
 
     <!-- Platform dependent -->
 
-    <link rel="stylesheet" href="platform/mobile/lib/jquery.mobile-1.2.0/jquery.mobile-1.2.0.min.css"/>
-    <link rel="stylesheet" href="platform/mobile/lib/jQuery.mobile-Tabs/jquery.mobile.tabs.css"/>
+    <script>
+      function loadjscssfile(filename, filetype)
+      {
+        // filename is a external JavaScript file
+        if(filetype=="js")
+        {
+          var fileref=document.createElement('script')
+              fileref.setAttribute("type","text/javascript")
+              fileref.setAttribute("src", filename)
+        }
 
-    <link rel="stylesheet" href="platform/mobile/css/style.css" media="screen"/>
+        // filename is an external CSS file
+        else if(filetype=="css")
+        {
+          var fileref=document.createElement("link")
+              fileref.setAttribute("rel", "stylesheet")
+              fileref.setAttribute("type", "text/css")
+              fileref.setAttribute("href", filename)
+        }
 
-    <script src="platform/mobile/lib/jquery.mobile-1.2.0/jquery.mobile-1.2.0.min.js"></script>
-    <script src="platform/mobile/lib/jQuery.mobile-Tabs/jquery.mobile.tabs.js"></script>
+        if(typeof fileref!="undefined")
+          document.getElementsByTagName("head")[0].appendChild(fileref)
+      }
 
-    <!-- Stylesheets -->
+      if(window.screen.width < 960)
+      {
+        loadjscssfile("platform/mobile/lib/jquery.mobile-1.2.0/jquery.mobile-1.2.0.min.css", 'css')
+        loadjscssfile("platform/mobile/lib/jQuery.mobile-Tabs/jquery.mobile.tabs.css", 'css')
+
+        loadjscssfile("platform/mobile/css/style.css", 'css')
+
+        loadjscssfile("platform/mobile/lib/jquery.mobile-1.2.0/jquery.mobile-1.2.0.min.js", 'js')
+        loadjscssfile("platform/mobile/lib/jQuery.mobile-Tabs/jquery.mobile.tabs.js", 'js')
+      }
+      else
+      {
+        loadjscssfile("https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/themes/base/jquery-ui.css", 'css')
+
+        loadjscssfile("platform/desktop/css/style.css", 'css')
+
+        loadjscssfile("https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js", 'js')
+      }
+    </script>
+
+    <!-- External stylesheets -->
 
     <link rel="stylesheet" href="lib/jquery-treetable/stylesheets/jquery.treeTable.css"/>
 
-    <link rel="stylesheet" href="css/common.css" media="screen"/>
     <link rel="stylesheet" href="css/filesmanager.css" media="screen"/>
 
     <!-- External libraries -->
@@ -45,6 +86,7 @@
     <script src="https://raw.github.com/piranna/EventTarget.js/master/EventTarget.js"></script>
 
     <script type="text/javascript" src="js/polyfills/rAF.js"></script>
+
     <!-- Javascript -->
 
   </head>
@@ -55,40 +97,40 @@
     <div id="Home" data-role="page">
       <div class="only-mobile" data-role="header">
         <a href="#tools-menu-submenu" data-icon="gear" class="ui-btn-right" data-rel="popup">Options</a>
-          <span class="ui-title"></span>
+        <span class="ui-title"></span>
       </div>
 
       <img class="only-mobile" id="logo" src="images/logo.svg" alt="ShareIt!"/>
 
       <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all" data-role="listview" data-inset="true">
         <li id="tools-menu">
-      <img class="only-desktop" src="images/icon_gear.png" alt="Main menu" height="37px"/>
+          <img class="only-desktop" src="images/icon_gear.png" alt="Main menu" height="37px"/>
 
-      <div data-role="popup" id="tools-menu-submenu" class="ui-widget-header">
-        <ul data-role="listview" data-inset="true">
-          <li>
-            <a href="#dialog-config">
-              <span class="preferences">Preferences</span>
-            </a>
-          </li>
-          <li>
-            <a id="ConnectUser">
-              <span class="user">Connect to user</span>
-            </a>
-          </li>
-          <li>
-            <a id="About">
-              <span class="about">About</span>
-            </a>
-          </li>
-        </ul>
-      </div>
+          <div data-role="popup" id="tools-menu-submenu" class="ui-widget-header">
+            <ul data-role="listview" data-inset="true">
+              <li>
+                <a href="#dialog-config">
+                  <span class="preferences">Preferences</span>
+                </a>
+              </li>
+              <li>
+                <a id="ConnectUser">
+                  <span class="user">Connect to user</span>
+                </a>
+              </li>
+              <li>
+                <a id="About">
+                  <span class="about">About</span>
+                </a>
+              </li>
+            </ul>
+          </div>
 
         </li>
 <!--
-      <li style="float: right">
-        <input type=search results=5 name=s>
-      </li>
+        <li style="float: right">
+          <input type=search results=5 name=s>
+        </li>
  -->
         <li class="ui-state-default ui-corner-top ui-state-disabled">
           <a href="#Downloading">Downloading</a>
@@ -296,7 +338,7 @@
       </p>
       <span>
         <label for="UID">UID:</label>
-          <input id="UID-about" value="Connecting..." readonly size="40"/>
+        <input id="UID-about" value="Connecting..." readonly size="40"/>
       </span>
       <br/>
       Based on

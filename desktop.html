@@ -10,21 +10,64 @@
 
     <link rel="SHORTCUT ICON" href="images/favicon.png"/>
 
+    <!-- Stylesheets -->
+
+    <link rel="stylesheet" href="css/common.css" media="screen"/>
+
+    <!-- Libraries -->
+
     <script src="lib/jquery-1.8.3.min.js"></script>
 
     <!-- Platform dependent -->
 
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/themes/base/jquery-ui.css"/>
+    <script>
+      function loadjscssfile(filename, filetype)
+      {
+        // filename is a external JavaScript file
+        if(filetype=="js")
+        {
+          var fileref=document.createElement('script')
+              fileref.setAttribute("type","text/javascript")
+              fileref.setAttribute("src", filename)
+        }
 
-    <link rel="stylesheet" href="platform/desktop/css/style.css" media="screen"/>
+        // filename is an external CSS file
+        else if(filetype=="css")
+        {
+          var fileref=document.createElement("link")
+              fileref.setAttribute("rel", "stylesheet")
+              fileref.setAttribute("type", "text/css")
+              fileref.setAttribute("href", filename)
+        }
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+        if(typeof fileref!="undefined")
+          document.getElementsByTagName("head")[0].appendChild(fileref)
+      }
 
-    <!-- Stylesheets -->
+      if(window.screen.width < 960)
+      {
+        loadjscssfile("platform/mobile/lib/jquery.mobile-1.2.0/jquery.mobile-1.2.0.min.css", 'css')
+        loadjscssfile("platform/mobile/lib/jQuery.mobile-Tabs/jquery.mobile.tabs.css", 'css')
+
+        loadjscssfile("platform/mobile/css/style.css", 'css')
+
+        loadjscssfile("platform/mobile/lib/jquery.mobile-1.2.0/jquery.mobile-1.2.0.min.js", 'js')
+        loadjscssfile("platform/mobile/lib/jQuery.mobile-Tabs/jquery.mobile.tabs.js", 'js')
+      }
+      else
+      {
+        loadjscssfile("https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/themes/base/jquery-ui.css", 'css')
+
+        loadjscssfile("platform/desktop/css/style.css", 'css')
+
+        loadjscssfile("https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js", 'js')
+      }
+    </script>
+
+    <!-- External stylesheets -->
 
     <link rel="stylesheet" href="lib/jquery-treetable/stylesheets/jquery.treeTable.css"/>
 
-    <link rel="stylesheet" href="css/common.css" media="screen"/>
     <link rel="stylesheet" href="css/filesmanager.css" media="screen"/>
 
     <!-- External libraries -->
@@ -312,7 +355,7 @@
                width="261" height="64" alt="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Performance &amp; Integration, Semantics, and Offline &amp; Storage"
                title="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Performance &amp; Integration, Semantics, and Offline &amp; Storage"/></a>
         <a href="https://www.webrtc.org/">
-            <img src="https://sites.google.com/site/webrtc/_/rsrc/1318870658554/config/customLogo.gif?revision=8" height="50" alt="WebRTC"/>
+          <img src="https://sites.google.com/site/webrtc/_/rsrc/1318870658554/config/customLogo.gif?revision=8" height="50" alt="WebRTC"/>
         </a>
       </div>
       <br/>
