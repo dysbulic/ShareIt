@@ -21,49 +21,55 @@
     <!-- Platform dependent -->
 
     <script>
-      function loadjscssfile(filename, filetype)
+      function loadfile(platform, filename)
       {
-        // filename is a external JavaScript file
-        if(filetype=="js")
+        var path = 'platform/'+platform+'/'+filename
+
+        var fileref
+
+        switch(filename.split('.').pop())
         {
-          var fileref=document.createElement('script')
-              fileref.setAttribute("type","text/javascript")
-              fileref.setAttribute("src", filename)
+          case 'js':  // filename is a external JavaScript file
+            fileref=document.createElement('script')
+            fileref.setAttribute("type","text/javascript")
+            fileref.setAttribute("src", path)
+            break
+
+          case 'css': // filename is an external CSS file
+            fileref=document.createElement("link")
+            fileref.setAttribute("rel", "stylesheet")
+            fileref.setAttribute("type", "text/css")
+            fileref.setAttribute("href", path)
+            break
+
+          default:
+            console.error('File '+filename+' is not from a known type')
+            return
         }
 
-        // filename is an external CSS file
-        else if(filetype=="css")
-        {
-          var fileref=document.createElement("link")
-              fileref.setAttribute("rel", "stylesheet")
-              fileref.setAttribute("type", "text/css")
-              fileref.setAttribute("href", filename)
-        }
-
-        if(typeof fileref!="undefined")
-          document.getElementsByTagName("head")[0].appendChild(fileref)
+        document.getElementsByTagName("head")[0].appendChild(fileref)
       }
 
       // Mobile
       if(window.screen.width < 960)
       {
-        loadjscssfile("platform/mobile/lib/jquery.mobile-1.2.0/jquery.mobile-1.2.0.min.css", 'css')
-        loadjscssfile("platform/mobile/lib/jQuery.mobile-Tabs/jquery.mobile.tabs.css", 'css')
+        loadfile('mobile', "lib/jquery.mobile-1.2.0/jquery.mobile-1.2.0.min.css")
+        loadfile('mobile', "lib/jQuery.mobile-Tabs/jquery.mobile.tabs.css")
 
-        loadjscssfile("platform/mobile/css/style.css", 'css')
+        loadfile('mobile', "css/style.css", 'css')
 
-        loadjscssfile("platform/mobile/lib/jquery.mobile-1.2.0/jquery.mobile-1.2.0.min.js", 'js')
-        loadjscssfile("platform/mobile/lib/jQuery.mobile-Tabs/jquery.mobile.tabs.js", 'js')
+        loadfile('mobile', "lib/jquery.mobile-1.2.0/jquery.mobile-1.2.0.min.js")
+        loadfile('mobile', "lib/jQuery.mobile-Tabs/jquery.mobile.tabs.js")
       }
 
       // Desktop
       else
       {
-        loadjscssfile("platform/desktop/lib/jquery-ui-1.9.1/jquery-ui.css", 'css')
+        loadfile('desktop', "lib/jquery-ui-1.9.1/jquery-ui.css")
 
-        loadjscssfile("platform/desktop/css/style.css", 'css')
+        loadfile('desktop', "css/style.css")
 
-        loadjscssfile("platform/desktop/lib/jquery-ui-1.9.1/jquery-ui.min.js", 'js')
+        loadfile('desktop', "lib/jquery-ui-1.9.1/jquery-ui.min.js")
       }
     </script>
 
