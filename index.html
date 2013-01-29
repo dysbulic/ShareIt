@@ -44,6 +44,7 @@
           document.getElementsByTagName("head")[0].appendChild(fileref)
       }
 
+      // Mobile
       if(window.screen.width < 960)
       {
         loadjscssfile("platform/mobile/lib/jquery.mobile-1.2.0/jquery.mobile-1.2.0.min.css", 'css')
@@ -54,13 +55,15 @@
         loadjscssfile("platform/mobile/lib/jquery.mobile-1.2.0/jquery.mobile-1.2.0.min.js", 'js')
         loadjscssfile("platform/mobile/lib/jQuery.mobile-Tabs/jquery.mobile.tabs.js", 'js')
       }
+
+      // Desktop
       else
       {
-        loadjscssfile("https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/themes/base/jquery-ui.css", 'css')
+        loadjscssfile("platform/desktop/lib/jquery-ui-1.9.1/jquery-ui.css", 'css')
 
         loadjscssfile("platform/desktop/css/style.css", 'css')
 
-        loadjscssfile("https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js", 'js')
+        loadjscssfile("platform/desktop/lib/jquery-ui-1.9.1/jquery-ui.min.js", 'js')
       }
     </script>
 
