@@ -1,4 +1,4 @@
-function DialogConfig(dialogId, options, sharedpointsManager)
+function DialogConfig(dialogId, options, cacheBackup, sharedpointsManager)
 {
     EventTarget.call(this)
 
@@ -94,57 +94,55 @@ function DialogConfig(dialogId, options, sharedpointsManager)
 
 
     // Backup tab
-    this.setCacheBackup = function(cacheBackup)
+
+    // Export
+    dialog.find("#Export").click(function()
     {
-        // Export
-        dialog.find("#Export").click(function()
+        policy(function()
         {
-            policy(function()
+            cacheBackup.export(function(blob)
             {
-                cacheBackup.export(function(blob)
+                if(blob)
                 {
-                    if(blob)
-                    {
-                        var date = new Date()
-                        var name = 'WebP2P-CacheBackup_'+date.toISOString()+'.zip'
+                    var date = new Date()
+                    var name = 'WebP2P-CacheBackup_'+date.toISOString()+'.zip'
 
-                        savetodisk(blob, name)
-                    }
-                    else
-                        alert("Cache has no files")
-                },
-                undefined,
-                function()
-                {
-                    console.error("There was an error exporting the cache")
-                })
-            })
-        })
-
-        // Import
-        var input = dialog.find('#import-backup')
-
-        input.change(function(event)
-        {
-            var file = event.target.files[0]
-
-            policy(function()
-            {
-                cacheBackup.import(file)
-
-                // Reset the input after got the backup file
-                input.val("")
+                    savetodisk(blob, name)
+                }
+                else
+                    alert("Cache has no files")
             },
+            undefined,
             function()
             {
-                // Reset the input after NOT accepting the policy
-                input.val("")
+                console.error("There was an error exporting the cache")
             })
-        });
-
-        dialog.find("#Import").click(function()
-        {
-            input.click()
         })
-    }
+    })
+
+    // Import
+    var input = dialog.find('#import-backup')
+
+    input.change(function(event)
+    {
+        var file = event.target.files[0]
+
+        policy(function()
+        {
+            cacheBackup.import(file)
+
+            // Reset the input after got the backup file
+            input.val("")
+        },
+        function()
+        {
+            // Reset the input after NOT accepting the policy
+            input.val("")
+        })
+    });
+
+    dialog.find("#Import").click(function()
+    {
+        input.click()
+    })
 }
