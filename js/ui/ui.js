@@ -51,12 +51,13 @@ function UI(cacheBackup, sharedpointsManager, peersManager)
         console.error("Not connected to any peer")
 
         // Allow backup of cache if there are items
-        self.preferencesDialogOpen(1)
+        dialogConfig.preferencesDialogOpen(1)
     })
 
 
     // Tabs
-    var tabsMain = new TabsMain("tabs", peersManager)
+    var tabsMain = new TabsMain("tabs", peersManager,
+                                dialogConfig.preferencesDialogOpen)
 
     // Set UID on user interface
     peersManager.addEventListener("uid", function(event)
@@ -77,7 +78,7 @@ function UI(cacheBackup, sharedpointsManager, peersManager)
                 // Create connection with the other peer
                 peersManager.connectTo(uid, function(channel)
                 {
-                    tabsMain.openOrCreatePeer(uid, self.preferencesDialogOpen,
+                    tabsMain.openOrCreatePeer(uid, dialogConfig.preferencesDialogOpen,
                                               peersManager, channel)
                 },
                 function(uid, peer, channel)

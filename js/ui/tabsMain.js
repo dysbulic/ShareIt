@@ -1,4 +1,4 @@
-function TabsMain(tabsId, peersManager)
+function TabsMain(tabsId, peersManager, preferencesDialogOpen)
 {
     EventTarget.call(this)
 
@@ -20,8 +20,7 @@ function TabsMain(tabsId, peersManager)
 
 
     // Downloading tab
-    var tabDownloading = new TabDownloading('Downloading',
-                                            this.preferencesDialogOpen)
+    var tabDownloading = new TabDownloading('Downloading', preferencesDialogOpen)
 
     function tabDownloading_update()
     {
@@ -62,7 +61,7 @@ function TabsMain(tabsId, peersManager)
 
 
     // Sharing tab
-    var tabSharing = new TabSharing('Sharing', this.preferencesDialogOpen)
+    var tabSharing = new TabSharing('Sharing', preferencesDialogOpen)
 
     function tabSharing_update()
     {
