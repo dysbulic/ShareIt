@@ -13,8 +13,7 @@ function load()
         var sharedpointsManager = new SharedpointsManager(db, peersManager)
 
         // Init user interface
-        var ui = new UI(cacheBackup, sharedpointsManager)
-            ui.setPeersManager(peersManager)
+        new UI(cacheBackup, sharedpointsManager, peersManager)
     })
 }
 
