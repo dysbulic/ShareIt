@@ -1,10 +1,10 @@
 function DialogAbout(dialogId, options) {
-  var dialog = $("#" + dialogId)
+  var dialog = $('#' + dialogId);
 
-  if(!$.mobile) dialog.dialog(options);
+  if (!$.mobile) dialog.dialog(options);
 
   this.open = function() {
-    if($.mobile) $.mobile.changePage("#" + dialogId);
-    else dialog.dialog("open");
-  }
+    if ($.mobile) $.mobile.changePage('#' + dialogId);
+    else dialog.dialog('open');
+  };
 }

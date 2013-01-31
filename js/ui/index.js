@@ -11,20 +11,20 @@ var ui = {
   },
 
   load: function(includes) {
-    var scripts = document.getElementsByTagName("script");
+    var scripts = document.getElementsByTagName('script');
     var path = './',
-      i;
-    for(i = 0; i < scripts.length; i++) {
-      var src = scripts.item(i).src
-      var regex = /ui\/index\.js$/
-      if(src && src.match(regex)) {
+        i;
+    for (i = 0; i < scripts.length; i++) {
+      var src = scripts.item(i).src;
+      var regex = /ui\/index\.js$/;
+      if (src && src.match(regex)) {
         path = src.replace(regex, 'ui/');
         break;
       }
     }
 
-    for(i = 0; i < includes.length; i++)
-    this.require(path + includes[i] + '.js');
+    for (i = 0; i < includes.length; i++)
+      this.require(path + includes[i] + '.js');
   },
 
   bind: function(fn, obj, optArg) {
