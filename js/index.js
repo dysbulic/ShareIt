@@ -3,11 +3,8 @@ function load()
     // Init database
     DB_init(function(db)
     {
-        // Init PeersManager
-        var peersManager = new PeersManager(db)
-
-        // Init user interface
-        new UI(peersManager)
+        // Init PeersManager and set it to the user interface
+        UI(new PeersManager(db))
     })
 }
 

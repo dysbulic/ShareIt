@@ -1,9 +1,7 @@
 function UI(peersManager)
 {
-    EventTarget.call(this)
-
-    var self = this
-
+    var isDownloading = false
+    var isSharing = false
 
     var dialog_options =
     {
@@ -119,11 +117,11 @@ function UI(peersManager)
             return
 
         // Downloading
-        if(self.isDownloading)
+        if(isDownloading)
             return "You are currently downloading files."
 
         // Sharing
-        if(self.isSharing)
+        if(isSharing)
             return "You are currently sharing files."
 
         // Routing (connected to at least two peers or handshake servers)
