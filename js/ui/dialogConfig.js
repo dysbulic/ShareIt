@@ -1,4 +1,4 @@
-function DialogConfig(dialogId, options, cacheBackup, sharedpointsManager)
+function DialogConfig(dialogId, options, peersManager)
 {
     EventTarget.call(this)
 
@@ -10,6 +10,10 @@ function DialogConfig(dialogId, options, cacheBackup, sharedpointsManager)
         dialog.dialog(options);
 
     dialog.tabs({active: 0})
+
+
+    var cacheBackup = peersManager.cacheBackup
+    var sharedpointsManager = peersManager.sharedpointsManager
 
 
     /**

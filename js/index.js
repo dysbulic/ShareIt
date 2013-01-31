@@ -6,14 +6,8 @@ function load()
         // Init PeersManager
         var peersManager = new PeersManager(db)
 
-        // Init cache backup system
-        var cacheBackup = new CacheBackup(db, peersManager)
-
-        // Init sharedpoints manager
-        var sharedpointsManager = new SharedpointsManager(db, peersManager)
-
         // Init user interface
-        new UI(cacheBackup, sharedpointsManager, peersManager)
+        new UI(peersManager)
     })
 }
 

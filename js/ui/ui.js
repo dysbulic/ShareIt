@@ -1,4 +1,4 @@
-function UI(cacheBackup, sharedpointsManager, peersManager)
+function UI(peersManager)
 {
     EventTarget.call(this)
 
@@ -29,7 +29,7 @@ function UI(cacheBackup, sharedpointsManager, peersManager)
 
     // Config dialog
     var dialogConfig = new DialogConfig("dialog-config", dialog_options,
-                                        cacheBackup, sharedpointsManager);
+                                        peersManager);
 
     peersManager.addEventListener("sharedpoints.update", function()
     {
