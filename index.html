@@ -21,10 +21,8 @@
     <!-- Platform dependent -->
 
     <script>
-      function loadfile(platform, filename)
+      function loadfile(filename)
       {
-        var path = 'platform/'+platform+'/'+filename
-
         var fileref
 
         switch(filename.split('.').pop())
@@ -32,14 +30,14 @@
           case 'js':  // filename is a external JavaScript file
             fileref=document.createElement('script')
             fileref.setAttribute("type","text/javascript")
-            fileref.setAttribute("src", path)
+            fileref.setAttribute("src", filename)
             break
 
           case 'css': // filename is an external CSS file
             fileref=document.createElement("link")
             fileref.setAttribute("rel", "stylesheet")
             fileref.setAttribute("type", "text/css")
-            fileref.setAttribute("href", path)
+            fileref.setAttribute("href", filename)
             break
 
           default:
@@ -53,23 +51,23 @@
       // Mobile
       if(window.screen.width < 960)
       {
-        loadfile('mobile', "lib/jquery.mobile-1.2.0/jquery.mobile-1.2.0.min.css")
-        loadfile('mobile', "lib/jQuery.mobile-Tabs/jquery.mobile.tabs.css")
+        loadfile("lib/jquery.mobile/jquery.mobile.min.css")
+        loadfile("lib/jquery.mobile-tabs/jquery.mobile.tabs.css")
 
-        loadfile('mobile', "css/style.css", 'css')
+        loadfile("css/mobile.css")
 
-        loadfile('mobile', "lib/jquery.mobile-1.2.0/jquery.mobile-1.2.0.min.js")
-        loadfile('mobile', "lib/jQuery.mobile-Tabs/jquery.mobile.tabs.js")
+        loadfile("lib/jquery.mobile/jquery.mobile.min.js")
+        loadfile("lib/jquery.mobile-tabs/jquery.mobile.tabs.js")
       }
 
       // Desktop
       else
       {
-        loadfile('desktop', "lib/jquery-ui-1.9.1/jquery-ui.css")
+        loadfile("lib/jquery-ui/jquery-ui.css")
 
-        loadfile('desktop', "css/style.css")
+        loadfile("css/desktop.css")
 
-        loadfile('desktop', "lib/jquery-ui-1.9.1/jquery-ui.min.js")
+        loadfile("lib/jquery-ui/jquery-ui.min.js")
       }
     </script>
 
