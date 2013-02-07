@@ -53,7 +53,15 @@ good Javascript idioms. This rules includes:
 
 * open blocks on new line (also for objects and lists)
 * using two spaces for indentation
-* no space between function name and parenthesis (specially on 'if' clauses)
+* no space between function name and parenthesis (this include 'if' and 'for'
+  statements)
 * lines should not be longer than 80 characters. Period.
+* no empty line at end of document
+* no lines with only spaces or tabs
+* no spaces of tabs at the end of a line
+* all functions, classes and events will be commented in JsDoc, with no space
+  between the JsDoc and its element
+* at least one empty line between fragments of code with different purposses,
+  also inside a function
 
 External libs and polyfills are not required to follow this styleguide.
