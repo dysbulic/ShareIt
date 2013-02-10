@@ -1,6 +1,5 @@
-function TabsMain(tabsId, peersManager, preferencesDialogOpen) {
-  EventTarget.call(this);
-
+function TabsMain(tabsId, peersManager, preferencesDialogOpen)
+{
   var self = this;
 
   var tabs = $('#' + tabsId);
@@ -19,9 +18,12 @@ function TabsMain(tabsId, peersManager, preferencesDialogOpen) {
   // Downloading tab
   var tabDownloading = new TabDownloading('Downloading', preferencesDialogOpen);
 
-  function tabDownloading_update() {
-    tabDownloading.dirty = requestAnimationFrame(function() {
-      peersManager.files_downloading(function(filelist) {
+  function tabDownloading_update()
+  {
+    tabDownloading.dirty = requestAnimationFrame(function()
+    {
+      peersManager.files_downloading(function(filelist)
+      {
         self.isDownloading = filelist.length;
         tabDownloading.update(filelist);
 
@@ -30,9 +32,11 @@ function TabsMain(tabsId, peersManager, preferencesDialogOpen) {
     }, tabDownloading.tbody);
   }
 
-  function tabDownloading_checkAndUpdate() {
+  function tabDownloading_checkAndUpdate()
+  {
     // Only update the sharing tab if it's active
-    if (tabs.tabs('option', 'active') != 0) {
+    if (tabs.tabs('option', 'active') != 0)
+    {
       tabs.tabs('enable', 0);
       tabs.tabs('option', 'collapsible', false);
       return;
@@ -42,14 +46,12 @@ function TabsMain(tabsId, peersManager, preferencesDialogOpen) {
   }
 
   peersManager.addEventListener('transfer.begin', tabDownloading_checkAndUpdate);
-  peersManager.addEventListener('transfer.update', function(event) {
+  peersManager.addEventListener('transfer.update', function(event)
+  {
     var type = event.data[0];
     var value = event.data[1];
 
-    tabDownloading.dispatchEvent({
-      type: type,
-      data: [value]
-    });
+    $(tabDownloading).trigger(type, [value]);
   });
   peersManager.addEventListener('transfer.end', tabDownloading_checkAndUpdate);
 
@@ -57,9 +59,12 @@ function TabsMain(tabsId, peersManager, preferencesDialogOpen) {
   // Sharing tab
   var tabSharing = new TabSharing('Sharing', preferencesDialogOpen);
 
-  function tabSharing_update() {
-    tabSharing.dirty = requestAnimationFrame(function() {
-      peersManager.files_sharing(function(filelist) {
+  function tabSharing_update()
+  {
+    tabSharing.dirty = requestAnimationFrame(function()
+    {
+      peersManager.files_sharing(function(filelist)
+      {
         self.isSharing = filelist.length;
         tabSharing.update(filelist);
 
@@ -162,33 +167,30 @@ function TabsMain(tabsId, peersManager, preferencesDialogOpen) {
         }
       });
 
-      peersManager.addEventListener('transfer.begin', function(event) {
+      peersManager.addEventListener('transfer.begin', function(event)
+      {
         var fileentry = event.data[0];
 
-        tabPeer.dispatchEvent({
-          type: fileentry.hash + '.begin'
-        });
+        $(tabPeer).trigger(fileentry.hash + '.begin');
       });
-      peersManager.addEventListener('transfer.update', function(event) {
+      peersManager.addEventListener('transfer.update', function(event)
+      {
         var fileentry = event.data[0];
         var value = event.data[1];
 
-        tabPeer.dispatchEvent({
-          type: fileentry.hash + '.update',
-          data: [value]
-        });
+        $(tabPeer).trigger(fileentry.hash + '.update', [value]);
       });
-      peersManager.addEventListener('transfer.end', function(event) {
+      peersManager.addEventListener('transfer.end', function(event)
+      {
         var fileentry = event.data[0];
 
-        tabPeer.dispatchEvent({
-          type: fileentry.hash + '.end'
-        });
+        $(tabPeer).trigger(fileentry.hash + '.end');
       });
 
       // Get notified when this channel files list is updated
       // and update the UI peer files table
-      channel.addEventListener('fileslist._updated', function(event) {
+      channel.addEventListener('fileslist._updated', function(event)
+      {
         var fileslist = event.data[0];
 
         tabPeer.update(fileslist);
@@ -196,10 +198,10 @@ function TabsMain(tabsId, peersManager, preferencesDialogOpen) {
 
       // Request the peer's files list
       var SEND_UPDATES = 1;
-      //            var SMALL_FILES_ACCELERATOR = 2
+//      var SMALL_FILES_ACCELERATOR = 2
       var flags = SEND_UPDATES;
-      //            if()
-      //                flags |= SMALL_FILES_ACCELERATOR
+//      if()
+//        flags |= SMALL_FILES_ACCELERATOR
       channel.fileslist_query(flags);
     }
   };

@@ -1,13 +1,13 @@
-function TabDownloading(tableId, preferencesDialogOpen) {
-  EventTarget.call(this);
-
+function TabDownloading(tableId, preferencesDialogOpen)
+{
   var self = this;
 
   var table = document.getElementById(tableId);
   this.tbody = table.getElementsByTagName('tbody')[0];
 
 
-  function noFilesCaption() {
+  function noFilesCaption()
+  {
     // Compose no files shared content (fail-back)
     var cell = spanedCell(table);
     cell.appendChild(document.createTextNode('There are no downloads, '));
@@ -31,7 +31,8 @@ function TabDownloading(tableId, preferencesDialogOpen) {
   this.noFilesCaption = noFilesCaption();
 
 
-  function rowFactory(fileentry) {
+  function rowFactory(fileentry)
+  {
     var tr = document.createElement('TR');
 
     var td = document.createElement('TD');
@@ -64,12 +65,11 @@ function TabDownloading(tableId, preferencesDialogOpen) {
     var td_progress = document.createElement('TD');
     td_progress.appendChild(document.createTextNode('0%'));
 
-    self.addEventListener(fileentry.hash, function(event) {
-      var value = event.data[0];
-
+    $(self).on(fileentry.hash, function(event, value)
+    {
       var progress = document.createTextNode(Math.floor(value * 100) + '%');
 
-      while (td_progress.firstChild)
+      while(td_progress.firstChild)
         td_progress.removeChild(td_progress.firstChild);
       td_progress.appendChild(progress);
     });
@@ -121,7 +121,7 @@ function TabDownloading(tableId, preferencesDialogOpen) {
 
       // Add file row
       var tr = rowFactory(fileentry);
-      //                tr.id = path + name
+//          tr.id = path + name
       if (child) tr.setAttribute('class', 'child-of-' + child);
 
       this.tbody.appendChild(tr);
@@ -129,11 +129,13 @@ function TabDownloading(tableId, preferencesDialogOpen) {
   };
 
 
-  this.update = function(fileslist) {
+  this.update = function(fileslist)
+  {
     // Enable the tab if at least one file is being downloaded. This will
     // only happen the first time, others the tab will be already enabled
     // and the no files shared content will be shown.
-    if (fileslist.length) {
+    if (fileslist.length)
+    {
       $('#tabs').tabs('enable', 0);
       $('#tabs').tabs('option', 'collapsible', false);
     }

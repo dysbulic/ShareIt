@@ -31,10 +31,7 @@ function UI(peersManager)
 
   peersManager.addEventListener('sharedpoints.update', function()
   {
-    dialogConfig.dispatchEvent(
-    {
-      type: 'sharedpoints.update'
-    });
+    $(dialogConfig).trigger('sharedpoints.update');
   });
 
 

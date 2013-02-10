@@ -1,6 +1,5 @@
-function TabPeer(uid, tabsId, preferencesDialogOpen, onclickFactory) {
-  EventTarget.call(this);
-
+function TabPeer(uid, tabsId, preferencesDialogOpen, onclickFactory)
+{
   var table = document.createElement('TABLE');
   table.id = tabsId + '-' + uid;
   $(table).appendTo('#' + tabsId);
@@ -100,15 +99,16 @@ function TabPeer(uid, tabsId, preferencesDialogOpen, onclickFactory) {
     } else if (fileentry.blob) div.open(fileentry.blob);
     else div.transfer();
 
-    self.addEventListener(fileentry.hash + '.begin', function(event) {
+    $(self).on(fileentry.hash + '.begin', function(event)
+    {
       div.progressbar();
     });
-    self.addEventListener(fileentry.hash + '.update', function(event) {
-      var value = event.data[0];
-
+    $(self).on(fileentry.hash + '.update', function(event, value)
+    {
       div.progressbar(value);
     });
-    self.addEventListener(fileentry.hash + '.end', function(event) {
+    $(self).on(fileentry.hash + '.end', function(event)
+    {
       div.open(fileentry.blob);
     });
 

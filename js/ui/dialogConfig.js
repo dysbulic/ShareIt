@@ -1,7 +1,5 @@
 function DialogConfig(dialogId, options, peersManager)
 {
-    EventTarget.call(this)
-
   var self = this;
 
   var dialog = $('#' + dialogId);
@@ -52,7 +50,7 @@ function DialogConfig(dialogId, options, peersManager)
     });
   }
 
-  this.addEventListener('sharedpoints.update', sharedpoints_update);
+  $(this).on('sharedpoints.update', sharedpoints_update);
 
   this.preferencesDialogOpen = function(tabIndex)
   {
@@ -77,9 +75,7 @@ function DialogConfig(dialogId, options, peersManager)
     {
       sharedpointsManager.addSharedpoint_Folder(files, function()
       {
-        self.dispatchEvent({
-          type: 'sharedpoints.update'
-        });
+        $(self).trigger('sharedpoints.update');
       },
       function()
       {
