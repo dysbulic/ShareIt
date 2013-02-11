@@ -161,7 +161,7 @@ function TabsMain(tabsId, peersManager, preferencesDialogOpen)
             // Begin transfer of file
             peersManager._transferbegin(fileentry);
 
-            // Don't buble click event
+            // Don't bubble click event
             return false;
           });
         }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <title>ShareIt!</title>
 
@@ -20,7 +20,7 @@
 
     <!-- Platform dependent -->
 
-    <script>
+    <script type="text/javascript">//<![CDATA[
       function loadfile(filename)
       {
         var fileref
@@ -69,7 +69,7 @@
 
         loadfile("lib/jquery-ui/jquery-ui.min.js")
       }
-    </script>
+    //]]></script>
 
     <!-- External stylesheets -->
 
@@ -138,7 +138,7 @@
 
         </li>
         <li id="search">
-          <input type=search results=5 name=s>
+          <input type="search" results="5" name="s"/>
         </li>
         <li class="ui-state-default ui-corner-top ui-state-disabled">
           <a href="#Downloading">Downloading</a>
